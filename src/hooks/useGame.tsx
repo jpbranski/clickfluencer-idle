@@ -116,6 +116,7 @@ export function GameProvider({ children }: GameProviderProps) {
 
   useEffect(() => {
     let mounted = true;
+    let cleanup: (() => void) | undefined;
 
     async function initialize() {
       try {
@@ -162,8 +163,8 @@ export function GameProvider({ children }: GameProviderProps) {
           }, GAMEPLAY.autoSaveInterval);
         }
 
-        return () => {
-          mounted = false;
+        // Store cleanup function
+        cleanup = () => {
           unsubscribe();
           engine.stop();
           if (autoSaveIntervalRef.current)
@@ -181,8 +182,10 @@ export function GameProvider({ children }: GameProviderProps) {
     }
 
     initialize();
+
     return () => {
       mounted = false;
+      if (cleanup) cleanup();
     };
   }, []);
 
@@ -217,7 +220,7 @@ export function GameProvider({ children }: GameProviderProps) {
     html.classList.add('dark');
     
     // Add new theme class
-    html.classList.add(`theme-\${themeId}`);
+    html.classList.add(`theme-${themeId}`);
     
     // Save to localStorage
     localStorage.setItem("game_theme", themeId);

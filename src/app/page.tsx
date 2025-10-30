@@ -10,6 +10,7 @@ import { ThemeCard } from '@/components/ThemeCard';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import { EventToasts } from '@/components/EventToasts';
 import { OfflineEarningsModal } from '@/components/OfflineEarningsModal';
+import { ShareButtons } from '@/components/ShareButtons';
 import { formatNumber } from '@/game/format';
 import { getGeneratorCost, canAfford, canAffordShards } from '@/game/state';
 import { getAwardDropRate } from '@/game/actions';
@@ -107,6 +108,16 @@ export default function HomePage() {
             </button>
           </div>
 
+          {/* Banner Ad Space - Under Title */}
+          <div className="mb-4 flex justify-center">
+            <div
+              id="banner-ad-top"
+              className="w-full max-w-3xl h-24 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center text-gray-500 dark:text-gray-400 text-sm"
+            >
+              Ad Space (728x90 or responsive)
+            </div>
+          </div>
+
           {/* Currency Bar - removed reputation */}
           <CurrencyBar
             followers={state.followers}
@@ -142,7 +153,7 @@ export default function HomePage() {
                 </div>
                 <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
                   <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                    Total Earned
+                    Score
                   </div>
                   <div className="text-lg font-bold number-display text-gray-900 dark:text-white">
                     {formatNumber(state.stats.totalFollowersEarned)}
@@ -158,6 +169,12 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
+
+            {/* Share Buttons */}
+            <ShareButtons
+              creds={state.followers}
+              score={state.stats.totalFollowersEarned}
+            />
           </div>
 
           {/* Middle & Right Columns - Tabbed Content */}
@@ -322,6 +339,16 @@ export default function HomePage() {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+
+        {/* Banner Ad Space - Below Game */}
+        <div className="mt-8 flex justify-center">
+          <div
+            id="banner-ad-bottom"
+            className="w-full max-w-3xl h-24 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center text-gray-500 dark:text-gray-400 text-sm"
+          >
+            Ad Space (728x90 or responsive)
           </div>
         </div>
       </div>

@@ -10,7 +10,7 @@
  * - UI components: Used to show prestige availability and rewards
  * 
  * Game Rules:
- * - Prestige threshold: 1 Billion (1e9) Reach (followers)
+ * - Prestige threshold: 1 Billion (1e9) Creds (followers)
  * - Reward formula: Math.floor((reach / 1e9) ^ 0.4)
  * - Bonus: +10% to all production per Reputation point
  */
