@@ -3,16 +3,11 @@
 @tailwind utilities;
 
 /* -------------------------------------------------------
-   Root Theme Variables (still usable in custom CSS)
+   Root color variables (kept for future use)
 ------------------------------------------------------- */
 @layer base {
   :root {
     --radius: 0.5rem;
-  }
-
-  /* Light Mode Defaults */
-  html {
-    color-scheme: light;
   }
 
   .dark {
@@ -21,7 +16,7 @@
 }
 
 /* -------------------------------------------------------
-   Base Element Styles
+   Base element styles (Tailwind 3 safe)
 ------------------------------------------------------- */
 @layer base {
   * {
@@ -43,7 +38,7 @@
     @apply m-0;
   }
 
-  /* Scrollbar styling */
+  /* Scrollbar */
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -63,7 +58,7 @@
 }
 
 /* -------------------------------------------------------
-   Utility & Component Layers
+   Utilities & Components
 ------------------------------------------------------- */
 @layer utilities {
   /* Text selection */
@@ -71,7 +66,7 @@
     @apply bg-purple-500/30 dark:bg-purple-400/30;
   }
 
-  /* Focus-visible ring */
+  /* Focus ring */
   .focus-visible-ring {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2;
   }
@@ -81,12 +76,12 @@
     @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400;
   }
 
-  /* Card component */
+  /* Card */
   .card {
     @apply rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm;
   }
 
-  /* Glassmorphism */
+  /* Glass effect */
   .glass {
     @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm;
   }
@@ -97,16 +92,15 @@
     @apply font-mono;
   }
 
-  /* Float animation */
+  /* Animations */
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
   @keyframes float {
     0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-10px); }
+    50% { transform: translateY(-10px); }
   }
 
-  /* Scale-in animation */
   .animate-scale-in {
     animation: scale-in 0.2s ease-out;
   }
@@ -115,11 +109,11 @@
     100% { transform: scale(1); opacity: 1; }
   }
 
-  /* Click & hover effects */
+  /* Click / hover */
   .click-effect { @apply active:scale-95 transition-transform duration-100; }
   .pulse-on-hover { @apply hover:animate-pulse; }
 
-  /* Non-selectable UI text */
+  /* Disable text selection */
   .no-select {
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -133,11 +127,9 @@
 }
 
 /* -------------------------------------------------------
-   Miscellaneous Animations
+   Misc animations & toast styles
 ------------------------------------------------------- */
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 .spinner {
   border: 3px solid rgba(0, 0, 0, 0.1);
   border-left-color: currentColor;
@@ -147,17 +139,13 @@
   animation: spin 1s linear infinite;
 }
 
-/* Toast notifications */
-.toast-enter {
-  animation: toast-enter 0.3s ease-out;
-}
+.toast-enter { animation: toast-enter 0.3s ease-out; }
 @keyframes toast-enter {
   from { transform: translateX(100%); opacity: 0; }
   to   { transform: translateX(0); opacity: 1; }
 }
-.toast-exit {
-  animation: toast-exit 0.2s ease-in;
-}
+
+.toast-exit { animation: toast-exit 0.2s ease-in; }
 @keyframes toast-exit {
   from { transform: translateX(0); opacity: 1; }
   to   { transform: translateX(100%); opacity: 0; }
