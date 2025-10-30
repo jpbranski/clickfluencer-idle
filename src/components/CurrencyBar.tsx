@@ -5,8 +5,7 @@
  * 
  * Displays game currencies with icons and formatted numbers:
  * - Followers (Reach)
- * - Shards (Influence Shards)
- * - Reputation (Clout/Prestige Currency)
+ * - Awards (Premium currency from drops)
  */
 
 import { formatNumber, formatNumberCompact } from '@/game/format';
@@ -14,15 +13,14 @@ import { formatNumber, formatNumberCompact } from '@/game/format';
 interface CurrencyBarProps {
   followers: number;
   shards: number;
-  reputation: number;
   followersPerSecond: number;
+  awardDropRate?: number;
   compact?: boolean;
 }
 
 export function CurrencyBar({
   followers,
   shards,
-  reputation,
   followersPerSecond,
   compact = false,
 }: CurrencyBarProps) {
@@ -66,57 +64,28 @@ export function CurrencyBar({
         {/* Vertical Divider */}
         <div className="hidden sm:block w-px h-12 bg-gray-300 dark:bg-gray-600" aria-hidden="true" />
 
-        {/* Shards (Premium Currency) */}
+        {/* Awards (Premium Currency) */}
         <div className="flex items-center gap-2 min-w-[120px]">
           <div 
             className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center"
             aria-hidden="true"
           >
-            <span className="text-2xl" role="img" aria-label="shards">
+            <span className="text-2xl" role="img" aria-label="awards">
               💎
             </span>
           </div>
           <div className="flex-1 min-w-0">
             <div className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide font-semibold">
-              Shards
+              Awards
             </div>
             <div 
               className="text-lg font-bold number-display truncate text-purple-600 dark:text-purple-400"
-              aria-label={`${shards} shards`}
+              aria-label={`${shards} awards`}
             >
               {shards.toLocaleString()}
             </div>
             <div className="text-xs text-gray-500 dark:text-gray-500">
-              Premium
-            </div>
-          </div>
-        </div>
-
-        {/* Vertical Divider */}
-        <div className="hidden sm:block w-px h-12 bg-gray-300 dark:bg-gray-600" aria-hidden="true" />
-
-        {/* Reputation (Prestige Currency) */}
-        <div className="flex items-center gap-2 min-w-[120px]">
-          <div 
-            className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-600 flex items-center justify-center"
-            aria-hidden="true"
-          >
-            <span className="text-2xl" role="img" aria-label="reputation">
-              ⭐
-            </span>
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide font-semibold">
-              Clout
-            </div>
-            <div 
-              className="text-lg font-bold number-display truncate text-yellow-600 dark:text-yellow-400"
-              aria-label={`${reputation} reputation points`}
-            >
-              {reputation}
-            </div>
-            <div className="text-xs text-gray-500 dark:text-gray-500">
-              +{(reputation * 10).toFixed(0)}% bonus
+              {(awardDropRate * 100).toFixed(1)}% drop rate
             </div>
           </div>
         </div>
@@ -127,9 +96,7 @@ export function CurrencyBar({
         <div className="sm:hidden mt-2 text-center text-xs text-gray-600 dark:text-gray-400">
           <span>Reach: {formatNumber(followers)}</span>
           <span className="mx-2">•</span>
-          <span>Shards: {shards}</span>
-          <span className="mx-2">•</span>
-          <span>Clout: {reputation}</span>
+          <span>Awards: {shards}</span>
         </div>
       )}
     </div>

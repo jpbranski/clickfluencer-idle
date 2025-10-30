@@ -3,8 +3,9 @@
 /**
  * ThemeCard.tsx - Theme Display Component
  * 
- * Shows cosmetic themes that can be unlocked with shards
+ * Shows cosmetic themes that can be unlocked with awards
  * Displays bonus multiplier and active state
+ * Bonuses are permanent once unlocked!
  */
 
 import { Theme } from '@/game/state';
@@ -29,12 +30,20 @@ export function ThemeCard({
 }: ThemeCardProps) {
   const getThemeGradient = (themeId: string): string => {
     switch (themeId) {
+      case 'light':
+        return 'from-blue-100 to-blue-300';
       case 'default':
-        return 'from-gray-400 to-gray-600';
+        return 'from-gray-700 to-gray-900';
       case 'neon':
         return 'from-pink-400 via-purple-500 to-cyan-500';
       case 'nature':
         return 'from-green-400 to-emerald-600';
+      case 'terminal':
+        return 'from-green-900 to-black';
+      case 'cherry':
+        return 'from-pink-300 to-rose-500';
+      case 'gold':
+        return 'from-yellow-400 to-amber-600';
       default:
         return 'from-purple-400 to-pink-500';
     }
@@ -67,6 +76,19 @@ export function ThemeCard({
           </span>
         </div>
       )}
+      
+      {/* Unlocked Badge */}
+      {theme.unlocked && !isActive && (
+        <div className="absolute top-2 right-2">
+          <span
+            className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-green-500 text-white"
+            role="status"
+            aria-label="Unlocked theme"
+          >
+            ✓ Owned
+          </span>
+        </div>
+      )}
 
       {/* Theme Preview */}
       <div
@@ -82,10 +104,17 @@ export function ThemeCard({
 
       {/* Theme Info */}
       <div className="mb-3">
-        <h3 className="text-sm font-bold mb-1">{theme.name.substring(2)}</h3>
+        <h3 className="text-sm font-bold mb-1 text-gray-900 dark:text-white">{theme.name.substring(2)}</h3>
         {bonusPercent > 0 && (
-          <div className="text-xs text-purple-600 dark:text-purple-400 font-semibold">
-            +{formatPercent(bonusPercent / 100)} Production Bonus
+          <div className="text-xs font-semibold mb-1">
+            <span className="text-purple-600 dark:text-purple-400">
+              +{formatPercent(bonusPercent / 100)} Production
+            </span>
+          </div>
+        )}
+        {theme.unlocked && bonusPercent > 0 && (
+          <div className="text-xs text-green-600 dark:text-green-400 font-medium">
+            🎉 Bonus Active!
           </div>
         )}
       </div>
@@ -106,9 +135,9 @@ export function ThemeCard({
             </span>
           </div>
 
-          {!canAfford && (
+          {!canAfford && theme.cost > 0 && (
             <div className="text-xs text-center text-gray-500 dark:text-gray-500">
-              Need {theme.cost - currentShards} more shards
+              Need {theme.cost - currentShards} more awards
             </div>
           )}
 
@@ -125,7 +154,7 @@ export function ThemeCard({
                 : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed'
               }
             `}
-            aria-label={`Unlock ${theme.name} for ${theme.cost} shards`}
+            aria-label={`Unlock ${theme.name} for ${theme.cost} awards`}
           >
             Unlock
           </button>

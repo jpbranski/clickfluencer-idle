@@ -34,7 +34,7 @@ export interface Upgrade {
 }
 
 export interface UpgradeEffect {
-  type: 'clickMultiplier' | 'generatorMultiplier' | 'globalMultiplier' | 'special';
+  type: 'clickMultiplier' | 'generatorMultiplier' | 'globalMultiplier' | 'special' | 'awardDropRate';
   value: number;
   targetGeneratorId?: string;
 }
@@ -42,7 +42,7 @@ export interface UpgradeEffect {
 export interface Theme {
   id: string;
   name: string;
-  cost: number; // Cost in Shards
+  cost: number; // Cost in Awards
   unlocked: boolean;
   active: boolean;
   bonusMultiplier: number;
@@ -69,7 +69,7 @@ export interface Statistics {
   totalGeneratorsPurchased: number;
   totalUpgradesPurchased: number;
   prestigeCount: number;
-  shardsEarned: number;
+  shardsEarned: number; // Awards earned
   playTime: number; // milliseconds
   lastTickTime: number;
   runStartTime: number;
@@ -78,7 +78,7 @@ export interface Statistics {
 export interface GameState {
   // Core Resources
   followers: number;
-  shards: number; // Premium currency from random drops
+  shards: number; // Awards (premium currency from random drops)
   reputation: number; // Prestige currency
   
   // Generators (content creation systems)
@@ -183,7 +183,7 @@ export const INITIAL_UPGRADES: Upgrade[] = [
     id: 'editing_software',
     name: '✂️ Editing Software',
     description: 'Photo Posts produce 2x followers',
-    cost: 500,
+    cost: 2500, // Increased from 500
     purchased: false,
     effect: { type: 'generatorMultiplier', value: 2, targetGeneratorId: 'photo' },
   },
@@ -191,16 +191,56 @@ export const INITIAL_UPGRADES: Upgrade[] = [
     id: 'viral_strategy',
     name: '🔥 Viral Strategy',
     description: 'All production increased by 50%',
-    cost: 5000,
+    cost: 50000, // Increased from 5000
     purchased: false,
     effect: { type: 'globalMultiplier', value: 1.5 },
+  },
+  {
+    id: 'award_luck_1',
+    name: '💎 Lucky Charm I',
+    description: 'Award drop rate: 0.3% → 0.6%',
+    cost: 1000,
+    purchased: false,
+    effect: { type: 'awardDropRate', value: 0.003 },
+  },
+  {
+    id: 'award_luck_2',
+    name: '💎 Lucky Charm II',
+    description: 'Award drop rate: 0.6% → 0.9%',
+    cost: 10000,
+    purchased: false,
+    effect: { type: 'awardDropRate', value: 0.003 },
+  },
+  {
+    id: 'award_luck_3',
+    name: '💎 Lucky Charm III',
+    description: 'Award drop rate: 0.9% → 1.2%',
+    cost: 100000,
+    purchased: false,
+    effect: { type: 'awardDropRate', value: 0.003 },
+  },
+  {
+    id: 'award_luck_4',
+    name: '💎 Lucky Charm IV',
+    description: 'Award drop rate: 1.2% → 1.5%',
+    cost: 1000000,
+    purchased: false,
+    effect: { type: 'awardDropRate', value: 0.003 },
   },
 ];
 
 export const INITIAL_THEMES: Theme[] = [
   {
+    id: 'light',
+    name: '☀️ Light',
+    cost: 0,
+    unlocked: true,
+    active: false,
+    bonusMultiplier: 1.0,
+  },
+  {
     id: 'default',
-    name: '🌐 Default',
+    name: '🌙 Dark',
     cost: 0,
     unlocked: true,
     active: true,
@@ -221,6 +261,30 @@ export const INITIAL_THEMES: Theme[] = [
     unlocked: false,
     active: false,
     bonusMultiplier: 1.10,
+  },
+  {
+    id: 'terminal',
+    name: '💻 Terminal',
+    cost: 50,
+    unlocked: false,
+    active: false,
+    bonusMultiplier: 1.15,
+  },
+  {
+    id: 'cherry',
+    name: '🌸 Cherry Blossom',
+    cost: 100,
+    unlocked: false,
+    active: false,
+    bonusMultiplier: 1.20,
+  },
+  {
+    id: 'gold',
+    name: '✨ Gold',
+    cost: 1000,
+    unlocked: false,
+    active: false,
+    bonusMultiplier: 1.50,
   },
 ];
 
@@ -289,6 +353,23 @@ export function getClickPower(state: GameState): number {
 }
 
 /**
+ * Calculate cumulative theme bonus from all unlocked themes
+ * Bonus applies permanently when themes are unlocked
+ */
+export function getThemeBonus(state: GameState): number {
+  let totalBonus = 1;
+  
+  state.themes
+    .filter(t => t.unlocked)
+    .forEach(t => {
+      // Multiply bonuses (e.g., 1.05 * 1.10 = 1.155)
+      totalBonus *= t.bonusMultiplier;
+    });
+  
+  return totalBonus;
+}
+
+/**
  * Calculate total followers per second from all generators
  * Factors in: base generator output + upgrades + events + reputation + themes
  */
@@ -325,11 +406,8 @@ export function getFollowersPerSecond(state: GameState): number {
   // Apply reputation bonus (+10% per reputation point)
   total *= (1 + state.reputation * 0.10);
   
-  // Apply active theme bonus
-  const activeTheme = state.themes.find(t => t.active);
-  if (activeTheme) {
-    total *= activeTheme.bonusMultiplier;
-  }
+  // Apply cumulative theme bonuses (all unlocked themes)
+  total *= getThemeBonus(state);
   
   // Apply active event multipliers
   state.activeEvents.forEach(event => {
@@ -343,11 +421,11 @@ export function getFollowersPerSecond(state: GameState): number {
 
 /**
  * Check if a generator should be unlocked based on followers
- * Unlock thresholds are roughly 50% of the cost
+ * Unlock thresholds are roughly 100% of the base cost
  */
 export function shouldUnlockGenerator(generator: Generator, followers: number): boolean {
   if (generator.unlocked) return false;
-  return followers >= generator.baseCost * 0.5;
+  return followers >= generator.baseCost * 1.0;
 }
 
 /**
@@ -378,7 +456,7 @@ export function canAfford(followers: number, cost: number): boolean {
 }
 
 /**
- * Check if player can afford a shard purchase
+ * Check if player can afford an award purchase
  */
 export function canAffordShards(shards: number, cost: number): boolean {
   return shards >= cost;

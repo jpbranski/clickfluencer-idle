@@ -167,7 +167,7 @@ export function GeneratorCard({
       ) : (
         <div className="text-center py-3">
           <div className="text-xs text-gray-500 dark:text-gray-500">
-            Reach {formatNumber(generator.baseCost * 0.5)} to unlock
+            Reach {formatNumber(generator.baseCost)} to unlock
           </div>
         </div>
       )}

@@ -6,7 +6,7 @@
  * Features:
  * - Integrated with useGame() hook (no props needed)
  * - Throttles clicks to ≤20 clicks/second (50ms min)
- * - Randomizes yield by ±5%
+ * - Shows exact click power value
  * - Floating number visual feedback
  * - Respects prefers-reduced-motion
  */
@@ -33,15 +33,15 @@ export default function PostButton() {
     if (now - lastClickTime.current < THROTTLE_MS) return;
     lastClickTime.current = now;
 
-    const randomFactor = 0.95 + Math.random() * 0.1;
-    const actualYield = Math.floor(clickPower * randomFactor);
+    // Show exact click power (no randomization to prevent +0 display)
+    const actualYield = Math.floor(clickPower);
 
     setIsPressed(true);
     setTimeout(() => setIsPressed(false), 100);
 
     const rect = e.currentTarget.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const clickY = e.clientY - rect.top;
+    const clickX = e.clientX - rect.left + (Math.random() * 20 - 10); // Random offset ±10px
+    const clickY = e.clientY - rect.top + (Math.random() * 20 - 10); // Random offset ±10px
     const newFloating = {
       id: clickIdCounter.current++,
       value: actualYield,
@@ -117,6 +117,7 @@ export default function PostButton() {
             style={{
               left: floating.x,
               top: floating.y,
+              textShadow: '0 0 4px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.6)',
             }}
           >
             +{floating.value}

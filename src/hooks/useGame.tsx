@@ -191,22 +191,35 @@ export function GameProvider({ children }: GameProviderProps) {
   // ============================================================================
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("game_theme");
-    if (savedTheme) {
-      setCurrentTheme(savedTheme);
-      applyTheme(savedTheme);
+    // Always enable dark mode
+    if (typeof document !== 'undefined') {
+      document.documentElement.classList.add('dark');
     }
+
+    // Apply saved theme or default to 'default' (dark theme)
+    const savedTheme = localStorage.getItem("game_theme") || "default";
+    setCurrentTheme(savedTheme);
+    applyTheme(savedTheme);
   }, []);
 
   const applyTheme = useCallback((themeId: string) => {
     if (typeof document === "undefined") return;
 
     const html = document.documentElement;
+    
+    // Remove old theme classes (but keep 'dark' class)
     html.className = html.className
       .split(" ")
       .filter((cls) => !cls.startsWith("theme-"))
       .join(" ");
-    html.classList.add(`theme-${themeId}`);
+    
+    // Always ensure dark mode is enabled
+    html.classList.add('dark');
+    
+    // Add new theme class
+    html.classList.add(`theme-\${themeId}`);
+    
+    // Save to localStorage
     localStorage.setItem("game_theme", themeId);
   }, []);
 

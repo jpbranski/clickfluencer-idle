@@ -14,7 +14,7 @@
  * - clickPost: Manual clicking for followers
  * - buyGenerator: Purchase content generators
  * - buyUpgrade: Purchase permanent upgrades
- * - purchaseTheme: Buy cosmetic themes with shards
+ * - purchaseTheme: Buy cosmetic themes with awards
  * - applyEvent: Activate random events
  * - tick: Process one game tick (passive generation)
  */
@@ -39,8 +39,29 @@ import { executePrestige, resetForPrestige } from './prestige';
 // CONSTANTS
 // ============================================================================
 
-export const SHARD_DROP_CHANCE = 0.0003; // 0.03% chance per click
+export const SHARD_DROP_CHANCE = 0.003; // 0.3% chance per click (changed from 0.03%)
 export const BASE_TICK_RATE = 250; // milliseconds between ticks
+
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
+/**
+ * Calculate current award drop rate based on purchased upgrades
+ * Base: 0.3%, each Lucky Charm upgrade adds +0.3%
+ * Max with all 4 upgrades: 1.5%
+ */
+function getAwardDropRate(state: GameState): number {
+  let dropRate = SHARD_DROP_CHANCE;
+  
+  state.upgrades
+    .filter(u => u.purchased && u.effect.type === 'awardDropRate')
+    .forEach(u => {
+      dropRate += u.effect.value;
+    });
+  
+  return dropRate;
+}
 
 // ============================================================================
 // ACTION RESULTS
@@ -64,7 +85,7 @@ export interface ClickResult extends ActionResult {
 /**
  * Execute a manual click
  * - Grants followers based on click power
- * - Small chance to drop a shard (0.03%)
+ * - 0.3%-1.5% chance to drop an award
  * - Updates statistics
  */
 export function clickPost(state: GameState): ClickResult {
@@ -72,8 +93,8 @@ export function clickPost(state: GameState): ClickResult {
   const eventMultiplier = getClickEventMultiplier(state);
   const followersGained = clickPower * eventMultiplier;
   
-  // Check for shard drop (0.03% chance)
-  const shardDropped = Math.random() < SHARD_DROP_CHANCE;
+  // Check for award drop (Variable chance based on upgrades)
+  const shardDropped = Math.random() < getAwardDropRate(state);
   
   const newState: GameState = {
     ...state,
@@ -255,9 +276,9 @@ export function buyUpgrade(state: GameState, upgradeId: string): ActionResult {
 // ============================================================================
 
 /**
- * Purchase a theme with shards
+ * Purchase a theme with awards
  * - Unlocks the theme for use
- * - Does not automatically activate it
+ * - Bonus applies immediately and permanently
  */
 export function purchaseTheme(state: GameState, themeId: string): ActionResult {
   const theme = state.themes.find(t => t.id === themeId);
@@ -282,7 +303,7 @@ export function purchaseTheme(state: GameState, themeId: string): ActionResult {
     return {
       success: false,
       state,
-      message: 'Not enough shards',
+      message: 'Not enough awards',
     };
   }
   
@@ -304,7 +325,7 @@ export function purchaseTheme(state: GameState, themeId: string): ActionResult {
 }
 
 /**
- * Activate a theme
+ * Activate a theme (visual only, bonus is always active when unlocked)
  * - Deactivates current theme
  * - Activates selected theme
  * - Theme must be unlocked
@@ -435,7 +456,7 @@ export function tick(state: GameState, deltaTime: number): GameState {
  * Execute prestige
  * - Resets most progress
  * - Awards reputation based on followers
- * - Preserves certain elements (shards, themes, stats)
+ * - Preserves certain elements (awards, themes, stats)
  */
 export function prestige(state: GameState): ActionResult {
   const result = executePrestige(state);
