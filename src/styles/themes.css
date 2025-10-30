@@ -12,7 +12,7 @@
  */
 
 /* ============================================================================
-   BASE THEME (Default Light)
+   BASE THEME (Default Dark)
    ============================================================================ */
 
 :root,
@@ -98,6 +98,58 @@
   --color-border: 240 3.7% 15.9%;
   --color-input: 240 3.7% 15.9%;
   --color-ring: 263 70% 50%;
+}
+
+/* ============================================================================
+   LIGHT THEME
+   ============================================================================ */
+
+.theme-light {
+  /* Primary colors */
+  --color-primary: 262 83% 58%;
+  --color-primary-foreground: 0 0% 100%;
+
+  /* Background colors */
+  --color-background: 0 0% 100%;
+  --color-foreground: 240 10% 3.9%;
+
+  /* Surface colors */
+  --color-card: 0 0% 100%;
+  --color-card-foreground: 240 10% 3.9%;
+
+  --color-popover: 0 0% 100%;
+  --color-popover-foreground: 240 10% 3.9%;
+
+  /* Accent colors */
+  --color-secondary: 240 4.8% 95.9%;
+  --color-secondary-foreground: 240 5.9% 10%;
+
+  --color-muted: 240 4.8% 95.9%;
+  --color-muted-foreground: 240 3.8% 46.1%;
+
+  --color-accent: 240 4.8% 95.9%;
+  --color-accent-foreground: 240 5.9% 10%;
+
+  /* Status colors */
+  --color-destructive: 0 84.2% 60.2%;
+  --color-destructive-foreground: 0 0% 98%;
+
+  --color-success: 142 76% 36%;
+  --color-success-foreground: 0 0% 100%;
+
+  --color-warning: 38 92% 50%;
+  --color-warning-foreground: 0 0% 100%;
+
+  --color-info: 199 89% 48%;
+  --color-info-foreground: 0 0% 100%;
+
+  /* Border and input */
+  --color-border: 240 5.9% 90%;
+  --color-input: 240 5.9% 90%;
+  --color-ring: 262 83% 58%;
+
+  /* Radius */
+  --radius: 0.5rem;
 }
 
 /* ============================================================================
