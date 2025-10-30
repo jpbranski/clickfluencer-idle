@@ -2,9 +2,9 @@
 
 /**
  * CurrencyBar.tsx - Currency Display Component
- * 
+ *
  * Displays game currencies with icons and formatted numbers:
- * - Followers (Reach)
+ * - Followers (Creds)
  * - Awards (Premium currency from drops)
  */
 
@@ -46,7 +46,7 @@ export function CurrencyBar({
           </div>
           <div className="flex-1 min-w-0">
             <div className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide font-semibold">
-              Reach
+              Creds
             </div>
             <div 
               className="text-lg font-bold number-display truncate"
@@ -86,7 +86,7 @@ export function CurrencyBar({
               {shards.toLocaleString()}
             </div>
             <div className="text-xs text-gray-500 dark:text-gray-500">
-              {(awardDropRate * 100).toFixed(1)}% drop rate
+              {((awardDropRate || 0) * 100).toFixed(1)}% drop rate
             </div>
           </div>
         </div>
@@ -95,7 +95,7 @@ export function CurrencyBar({
       {/* Mobile Compact View Alternative */}
       {compact && (
         <div className="sm:hidden mt-2 text-center text-xs text-gray-600 dark:text-gray-400">
-          <span>Reach: {formatNumber(followers)}</span>
+          <span>Creds: {formatNumber(followers)}</span>
           <span className="mx-2">•</span>
           <span>Awards: {shards}</span>
         </div>
