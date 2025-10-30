@@ -51,7 +51,7 @@ export const BASE_TICK_RATE = 250; // milliseconds between ticks
  * Base: 0.3%, each Lucky Charm upgrade adds +0.3%
  * Max with all 4 upgrades: 1.5%
  */
-function getAwardDropRate(state: GameState): number {
+export function getAwardDropRate(state: GameState): number {
   let dropRate = SHARD_DROP_CHANCE;
   
   state.upgrades
