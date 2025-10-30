@@ -22,6 +22,7 @@ export function CurrencyBar({
   followers,
   shards,
   followersPerSecond,
+  awardDropRate,
   compact = false,
 }: CurrencyBarProps) {
   return (
