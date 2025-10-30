@@ -211,24 +211,42 @@ export function GameProvider({ children }: GameProviderProps) {
     if (typeof document === "undefined") return;
 
     const html = document.documentElement;
+    const body = document.body;
 
-    // Remove old theme classes and dark class
+    // Clean up old theme classes
     html.className = html.className
       .split(" ")
       .filter((cls) => !cls.startsWith("theme-") && cls !== "dark")
       .join(" ");
 
-    // Add dark mode for all themes except 'light'
-    if (themeId !== 'light') {
-      html.classList.add('dark');
+    // Apply dark mode for all except light
+    if (themeId !== "light") {
+      html.classList.add("dark");
     }
 
-    // Add new theme class
+    // Add theme-* class
     html.classList.add(`theme-${themeId}`);
 
-    // Save to localStorage
+    // 🔹 NEW: update data attribute for CSS theme system
+    body.dataset.theme = themeId;
+
+    // 🔹 NEW: update meta theme-color for browser UI
+    const themeColors: Record<string, string> = {
+      light: "#ffffff",
+      default: "#0a0a0a",
+      neon: "#ff00ff",
+      nature: "#059669",
+      terminal: "#001900",
+      cherry: "#db2777",
+      gold: "#facc15",
+    };
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", themeColors[themeId] || "#0a0a0a");
+
+    // Persist theme
     localStorage.setItem("game_theme", themeId);
   }, []);
+
 
   const setTheme = useCallback(
     (themeId: string) => {

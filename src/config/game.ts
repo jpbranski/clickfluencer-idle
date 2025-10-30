@@ -74,7 +74,7 @@ export const BALANCE = {
   REPUTATION_BONUS: 0.10, // 10% per point
   
   // Shards (premium currency)
-  SHARD_DROP_CHANCE: 0.0003, // 0.03% per click
+  SHARD_DROP_CHANCE: .0003, // 0.03% per click
   SHARD_DROP_AVERAGE: 333, // ~1 shard per 333 clicks
   
   // Events

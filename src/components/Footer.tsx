@@ -2,11 +2,12 @@
 
 /**
  * Footer.tsx - Site Footer Component
- * 
+ *
  * Features:
  * - Fixed at bottom or below content
- * - Links: About, Privacy Policy, Contact, Support
+ * - Links: About, Privacy Policy, Terms of Service
  * - Copyright notice
+ * - Contact message
  * - Dark mode support
  * - Responsive design
  */
@@ -17,10 +18,9 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   const links = [
-    { label: 'About', href: '#about' },
-    { label: 'Privacy Policy', href: '#privacy' },
-    { label: 'Contact', href: '#contact' },
-    { label: 'Support', href: '#support' },
+    { label: 'About', href: '/about' },
+    { label: 'Privacy Policy', href: '/privacy-policy' },
+    { label: 'Terms of Service', href: '/terms-of-service' },
   ];
 
   return (
@@ -75,6 +75,20 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Contact / Info Section */}
+        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800 text-center text-sm text-gray-600 dark:text-gray-400">
+          <p>
+            Contact{' '}
+            <a
+              href="mailto:dev@jpbranski.com"
+              className="text-purple-600 dark:text-purple-400 hover:underline"
+            >
+              dev@jpbranski.com
+            </a>{' '}
+            for feedback, collaboration, or bug reports.
+          </p>
+        </div>
+
         {/* Additional Info */}
         <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800">
           <div className="text-xs text-center text-gray-500 dark:text-gray-500">
@@ -116,7 +130,7 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Mobile-friendly Version Info */}
+        {/* Version Info */}
         <div className="mt-4 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-xs text-gray-600 dark:text-gray-400">
             <span
@@ -132,18 +146,11 @@ export function Footer() {
 }
 
 /**
- * Alternative Fixed Footer Layout (uncomment to use)
- * 
  * For a footer that stays at the bottom of the viewport:
  * 
- * 1. Add this to your layout.tsx or main container:
- *    <div className="min-h-screen flex flex-col">
- *      <main className="flex-1">
- *        {children}
- *      </main>
- *      <Footer />
- *    </div>
- * 
- * 2. Or use fixed positioning by changing the footer className to:
- *    "fixed bottom-0 left-0 right-0 z-40"
+ * Wrap your layout in:
+ * <div className="min-h-screen flex flex-col">
+ *   <main className="flex-1">{children}</main>
+ *   <Footer />
+ * </div>
  */
