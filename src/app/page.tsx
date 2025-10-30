@@ -1,21 +1,26 @@
 'use client';
 
+import PostButton from '@/components/PostButton';
+import { useGame } from '@/hooks/useGame';
 import { useEffect, useState } from 'react';
-
-// Import game components (to be created)
-// import { ClickerPanel } from '@/components/ClickerPanel';
-// import { GeneratorPanel } from '@/components/GeneratorPanel';
-// import { StatsPanel } from '@/components/StatsPanel';
-// import { UpgradesPanel } from '@/components/UpgradesPanel';
+import { formatNumber, formatRate } from '@/game/format';
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
+  
+  // ✅ Connect to game state
+  const { 
+    state, 
+    isLoading, 
+    clickPower, 
+    followersPerSecond 
+  } = useGame();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted) {
+  if (!mounted || isLoading || !state) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
@@ -49,14 +54,11 @@ export default function HomePage() {
                 Tap to Grow
               </h2>
               <div className="flex flex-col items-center justify-center space-y-4">
-                <button
-                  className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 active:scale-95 transition-all shadow-xl text-white text-4xl font-bold"
-                  aria-label="Click to gain followers"
-                >
-                  👆
-                </button>
+                <PostButton />
                 <div className="text-center">
-                  <div className="text-3xl font-bold">0</div>
+                  <div className="text-3xl font-bold number-display">
+                    {formatNumber(state.followers)}
+                  </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
                     Followers
                   </div>
@@ -72,19 +74,25 @@ export default function HomePage() {
                   <span className="text-gray-600 dark:text-gray-400">
                     Per Click:
                   </span>
-                  <span className="font-semibold">1</span>
+                  <span className="font-semibold number-display">
+                    {formatNumber(clickPower, 0)}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">
                     Per Second:
                   </span>
-                  <span className="font-semibold">0</span>
+                  <span className="font-semibold number-display">
+                    {formatRate(followersPerSecond)}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">
                     Total Clicks:
                   </span>
-                  <span className="font-semibold">0</span>
+                  <span className="font-semibold number-display">
+                    {state.stats.totalClicks.toLocaleString()}
+                  </span>
                 </div>
               </div>
             </div>

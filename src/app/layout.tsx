@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Footer } from '@/components/Footer';
+import { GameProvider } from '@/hooks/useGame';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -67,14 +68,18 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
+
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="antialiased bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100 min-h-screen">
-        <main className="pb-20">{children}</main> {/* adds space under content */}
-        <Footer /> {/* or just hardcode `fixed bottom-0` inside Footer */}
+    <html lang="en">
+      <body className="antialiased bg-background text-foreground min-h-screen">
+        <GameProvider>
+          {children}
+        </GameProvider>
       </body>
     </html>
   );

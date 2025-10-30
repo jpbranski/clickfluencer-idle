@@ -1,80 +1,69 @@
 'use client';
 
 /**
- * PostButton.tsx - Main Clicker Component
- * 
+ * PostButton.tsx - Main Clicker Component (Context Integrated)
+ *
  * Features:
- * - Throttles clicks to ≤20 clicks/second (50ms minimum between clicks)
- * - Randomizes yield by ±5% per click
+ * - Integrated with useGame() hook (no props needed)
+ * - Throttles clicks to ≤20 clicks/second (50ms min)
+ * - Randomizes yield by ±5%
+ * - Floating number visual feedback
  * - Respects prefers-reduced-motion
- * - Visual feedback with animations
- * - ARIA accessible
  */
 
 import { useState, useRef } from 'react';
+import { useGame } from '@/hooks/useGame';
 
-interface PostButtonProps {
-  onClick: () => void;
-  clickPower: number;
-  disabled?: boolean;
-}
+export default function PostButton() {
+  const { handleClick, clickPower, isLoading, state } = useGame();
 
-export function PostButton({ onClick, clickPower, disabled = false }: PostButtonProps) {
   const [isPressed, setIsPressed] = useState(false);
-  const [floatingNumbers, setFloatingNumbers] = useState<Array<{ id: number; value: number; x: number; y: number }>>([]);
+  const [floatingNumbers, setFloatingNumbers] = useState<
+    Array<{ id: number; value: number; x: number; y: number }>
+  >([]);
   const lastClickTime = useRef<number>(0);
   const clickIdCounter = useRef<number>(0);
-  
-  // Throttle: Maximum 20 clicks per second = 50ms between clicks
+
   const THROTTLE_MS = 50;
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (disabled) return;
+  const handleClickWrapper = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (isLoading || !state) return;
 
     const now = Date.now();
-    if (now - lastClickTime.current < THROTTLE_MS) {
-      // Throttle exceeded, ignore click
-      return;
-    }
-
+    if (now - lastClickTime.current < THROTTLE_MS) return;
     lastClickTime.current = now;
 
-    // Randomize yield by ±5%
-    const randomFactor = 0.95 + Math.random() * 0.1; // 0.95 to 1.05
+    const randomFactor = 0.95 + Math.random() * 0.1;
     const actualYield = Math.floor(clickPower * randomFactor);
 
-    // Visual feedback
     setIsPressed(true);
     setTimeout(() => setIsPressed(false), 100);
 
-    // Create floating number effect
     const rect = e.currentTarget.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const clickY = e.clientY - rect.top;
-    
     const newFloating = {
       id: clickIdCounter.current++,
       value: actualYield,
       x: clickX,
       y: clickY,
     };
+    setFloatingNumbers((prev) => [...prev, newFloating]);
+    setTimeout(
+      () => setFloatingNumbers((prev) => prev.filter((f) => f.id !== newFloating.id)),
+      1000
+    );
 
-    setFloatingNumbers(prev => [...prev, newFloating]);
-
-    // Remove floating number after animation
-    setTimeout(() => {
-      setFloatingNumbers(prev => prev.filter(f => f.id !== newFloating.id));
-    }, 1000);
-
-    // Execute click callback
-    onClick();
+    handleClick(); // triggers the actual game logic
   };
+
+  const disabled = isLoading || !state;
 
   return (
     <div className="relative flex flex-col items-center justify-center">
       {/* Main Click Button */}
       <button
-        onClick={handleClick}
+        onClick={handleClickWrapper}
         disabled={disabled}
         className={`
           relative w-48 h-48 rounded-full
@@ -90,12 +79,15 @@ export function PostButton({ onClick, clickPower, disabled = false }: PostButton
           ${isPressed ? 'scale-95' : 'scale-100 hover:scale-105'}
           ${disabled ? 'opacity-50' : 'opacity-100'}
         `}
-        aria-label={`Click to gain ${clickPower} followers per click`}
+        aria-label={`Click to gain ${clickPower.toFixed(0)} followers`}
         aria-disabled={disabled}
       >
-        {/* Button Icon/Emoji */}
         <div className="flex flex-col items-center justify-center text-white">
-          <span className="text-6xl motion-reduce:animate-none animate-bounce-slow" role="img" aria-label="hand pointing up">
+          <span
+            className="text-6xl motion-reduce:animate-none animate-bounce-slow"
+            role="img"
+            aria-label="hand pointing up"
+          >
             👆
           </span>
           <span className="mt-2 text-sm font-semibold uppercase tracking-wide">
@@ -103,9 +95,8 @@ export function PostButton({ onClick, clickPower, disabled = false }: PostButton
           </span>
         </div>
 
-        {/* Ripple Effect */}
         {!disabled && (
-          <div 
+          <div
             className={`
               absolute inset-0 rounded-full
               bg-white/20 blur-md
@@ -119,7 +110,7 @@ export function PostButton({ onClick, clickPower, disabled = false }: PostButton
 
       {/* Floating Numbers */}
       <div className="pointer-events-none absolute inset-0" aria-live="polite" aria-atomic="true">
-        {floatingNumbers.map(floating => (
+        {floatingNumbers.map((floating) => (
           <div
             key={floating.id}
             className="absolute text-2xl font-bold text-green-500 motion-reduce:hidden animate-float-up"
@@ -150,18 +141,3 @@ export function PostButton({ onClick, clickPower, disabled = false }: PostButton
     </div>
   );
 }
-
-// Add floating animation to globals.css if not already present
-// @keyframes float-up {
-//   0% {
-//     opacity: 1;
-//     transform: translateY(0);
-//   }
-//   100% {
-//     opacity: 0;
-//     transform: translateY(-50px);
-//   }
-// }
-// .animate-float-up {
-//   animation: float-up 1s ease-out forwards;
-// }
