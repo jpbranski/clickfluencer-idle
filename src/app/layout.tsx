@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import { Footer } from '@/components/Footer';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -68,13 +69,12 @@ export const viewport: Viewport = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="antialiased bg-background text-foreground min-h-screen">
-        {children}
+      <body className="antialiased bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100 min-h-screen">
+        <main className="pb-20">{children}</main> {/* adds space under content */}
+        <Footer /> {/* or just hardcode `fixed bottom-0` inside Footer */}
       </body>
     </html>
   );
