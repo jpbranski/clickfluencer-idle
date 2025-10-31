@@ -1,6 +1,5 @@
 'use client';
 
-import { useThemeManager } from '@/hooks/useThemeManager';
 import type { Theme } from '@/types/theme';
 
 interface ThemeCardProps {
@@ -20,11 +19,9 @@ export function ThemeCard({
   onActivate,
   currentShards,
 }: ThemeCardProps) {
-  const { changeTheme } = useThemeManager();
-
+  // No need for useThemeManager - useGame handles both game state and visual theme
   const handleActivate = () => {
-    onActivate();               // game logic
-    changeTheme(theme.id);      // visual theme
+    onActivate(); // This will update game state AND apply visual theme via useGame
   };
 
   const handlePurchase = () => onPurchase();

@@ -7,5 +7,5 @@ export interface Theme {
   cost: number;
   unlocked: boolean;
   active: boolean;
-  bonusMultiplier?: number; // make optional
+  bonusMultiplier: number; // required for gameplay bonuses
 }
