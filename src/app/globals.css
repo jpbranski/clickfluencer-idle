@@ -84,11 +84,6 @@
     @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400;
   }
 
-  /* Card */
-  .card {
-    @apply rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm;
-  }
-
   /* Glass effect */
   .glass {
     @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm;
@@ -195,5 +190,85 @@
   to {
     transform: translateX(100%);
     opacity: 0;
+  }
+}
+
+/* -------------------------------------------------------
+   THEME-DRIVEN UTILITIES
+------------------------------------------------------- */
+@layer utilities {
+  /* === Theme semantic utilities === */
+
+  /* Background layers */
+  .bg-background { background: var(--background); } /* allows gradients */
+  .bg-surface    { background-color: var(--surface); }
+  .bg-card       { background-color: var(--card); }
+
+  /* Text colors */
+  .text-foreground { color: var(--foreground); }
+  .text-muted      { color: var(--muted); }
+  .text-accent-foreground { color: var(--accent-foreground); }
+
+  /* Borders */
+  .border-border { border-color: var(--border); }
+
+  /* Accent helpers */
+  .bg-accent   { background-color: var(--accent); }
+  .ring-accent { --tw-ring-color: var(--accent); }
+  .shadow-accent { box-shadow: 0 0 12px var(--accent); }
+
+  /* === Common component patterns === */
+
+  /* Card base (final semantic version) */
+  .card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem; /* rounded-xl */
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition;
+  }
+
+  .btn-accent {
+    @apply btn hover:opacity-90;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  .btn-muted {
+    @apply btn hover:opacity-90;
+    background-color: var(--border);
+    color: var(--muted);
+  }
+
+  /* Badges */
+  .badge {
+    @apply text-xs px-2 py-1 rounded-full;
+  }
+
+  .badge-accent {
+    @apply badge;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  .badge-muted {
+    @apply badge;
+    background-color: var(--border);
+    color: var(--foreground);
+    opacity: 0.7;
+  }
+
+  /* Optional text transparency helpers */
+  .text-foreground-dimmed {
+    color: var(--foreground);
+    opacity: 0.7;
+  }
+
+  .text-muted-strong {
+    color: var(--muted);
+    opacity: 0.9;
   }
 }
