@@ -140,14 +140,17 @@ export function GameProvider({ children }: GameProviderProps) {
     async function initialize() {
       try {
         const result = await loadGame();
+        console.log("[useGame] loadGame result ->", result);
 
         let initialState: GameState;
         if (result.success && result.data) {
+          console.log("[useGame] Loading saved state");
           initialState = result.data;
           if (result.restoredFromBackup) {
             console.warn("Restored from backup due to corrupted save");
           }
         } else {
+          console.log("[useGame] No save found, creating initial state");
           const { createInitialState } = await import("@/game/state");
           initialState = createInitialState();
         }

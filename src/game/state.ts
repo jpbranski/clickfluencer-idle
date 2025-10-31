@@ -40,6 +40,7 @@ export interface Upgrade {
 export interface UpgradeEffect {
   type:
     | "clickMultiplier"
+    | "clickAdditive"
     | "generatorMultiplier"
     | "globalMultiplier"
     | "special"
@@ -181,46 +182,46 @@ export const INITIAL_GENERATORS: Generator[] = [
 ];
 
 export const INITIAL_UPGRADES: Upgrade[] = [
-  // 5-tier Better Camera system
+  // 5-tier Better Camera system (additive bonuses)
   {
     id: "better_camera_1",
-    name: "💪 Better Camera I",
-    description: "Double your click power",
-    cost: 50,
+    name: "📸 Better Camera I",
+    description: "Adds +1 to base click power",
+    cost: 500,
     purchased: false,
-    effect: { type: "clickMultiplier", value: 2 },
+    effect: { type: "clickAdditive", value: 1 },
   },
   {
     id: "better_camera_2",
-    name: "💪 Better Camera II",
-    description: "Triple your click power",
-    cost: 500,
+    name: "📸 Better Camera II",
+    description: "Adds +2 to base click power",
+    cost: 1500,
     purchased: false,
-    effect: { type: "clickMultiplier", value: 3 },
+    effect: { type: "clickAdditive", value: 2 },
   },
   {
     id: "better_camera_3",
-    name: "💪 Better Camera III",
-    description: "4x your click power",
-    cost: 5000,
+    name: "📸 Better Camera III",
+    description: "Adds +3 to base click power",
+    cost: 4500,
     purchased: false,
-    effect: { type: "clickMultiplier", value: 4 },
+    effect: { type: "clickAdditive", value: 3 },
   },
   {
     id: "better_camera_4",
-    name: "💪 Better Camera IV",
-    description: "5x your click power",
-    cost: 50000,
+    name: "📸 Better Camera IV",
+    description: "Adds +5 to base click power",
+    cost: 13500,
     purchased: false,
-    effect: { type: "clickMultiplier", value: 5 },
+    effect: { type: "clickAdditive", value: 5 },
   },
   {
     id: "better_camera_5",
-    name: "💪 Better Camera V",
-    description: "10x your click power!",
-    cost: 500000,
+    name: "📸 Better Camera V",
+    description: "Adds +8 to base click power",
+    cost: 40500,
     purchased: false,
-    effect: { type: "clickMultiplier", value: 10 },
+    effect: { type: "clickAdditive", value: 8 },
   },
   {
     id: "editing_software",
@@ -246,13 +247,13 @@ export const INITIAL_UPGRADES: Upgrade[] = [
   {
     id: "ai_enhancements",
     name: "🤖 AI Enhancements",
-    description: "+1% to all production (infinite)",
-    cost: 10000,
+    description: "+5% to click power per level (infinite)",
+    cost: 1000000,
     purchased: false,
-    effect: { type: "globalMultiplier", value: 1.01 },
+    effect: { type: "globalMultiplier", value: 1.05 },
     maxLevel: undefined, // infinite
     currentLevel: 0,
-    costMultiplier: 1.15, // cost increases 15% per level
+    costMultiplier: 1.35, // cost increases 35% per level
   },
   {
     id: "award_luck_1",
@@ -340,10 +341,19 @@ export function getGeneratorCost(generator: Generator): number {
 
 /**
  * Calculate click power (followers per click)
- * Factors in: base click (1) + click upgrades + reputation bonus + theme bonuses
+ * Factors in: base click (1) + additive upgrades + multipliers + AI enhancements + reputation + theme bonuses
  */
 export function getClickPower(state: GameState): number {
-  let power = 1;
+  let basePower = 1;
+
+  // Apply additive click upgrades (Better Camera)
+  state.upgrades
+    .filter((u) => u.purchased && u.effect.type === "clickAdditive")
+    .forEach((u) => {
+      basePower += u.effect.value;
+    });
+
+  let power = basePower;
 
   // Apply click multiplier upgrades
   state.upgrades
@@ -352,15 +362,24 @@ export function getClickPower(state: GameState): number {
       power *= u.effect.value;
     });
 
+  // Apply AI Enhancements (global multiplier that applies to click power)
+  state.upgrades
+    .filter((u) => u.purchased && u.effect.type === "globalMultiplier" && u.id === "ai_enhancements")
+    .forEach((u) => {
+      if (u.currentLevel !== undefined && u.currentLevel > 0) {
+        // Apply 5% per level: (base + additive) * 1.05^level
+        power *= Math.pow(u.effect.value, u.currentLevel);
+      }
+    });
+
   // Apply reputation bonus (+10% per reputation point)
   power *= 1 + state.reputation * 0.1;
 
-  // Apply theme bonuses (unlocked themes provide permanent bonuses)
-  state.themes
-    .filter((theme) => theme.unlocked)
-    .forEach((theme) => {
-      power *= theme.bonusMultiplier;
-    });
+  // Apply active theme bonus (only the active theme)
+  const activeTheme = state.themes.find((t) => t.active);
+  if (activeTheme) {
+    power *= activeTheme.bonusMultiplier;
+  }
 
   return power;
 }
@@ -393,9 +412,9 @@ export function getFollowersPerSecond(state: GameState): number {
     total += generatorOutput;
   });
 
-  // Apply global multipliers (including infinite upgrades)
+  // Apply global multipliers (excluding AI Enhancements which only affects click power)
   state.upgrades
-    .filter((u) => u.purchased && u.effect.type === "globalMultiplier")
+    .filter((u) => u.purchased && u.effect.type === "globalMultiplier" && u.id !== "ai_enhancements")
     .forEach((u) => {
       if (u.currentLevel !== undefined && u.currentLevel > 0) {
         // Infinite upgrade - apply effect once per level
@@ -409,12 +428,11 @@ export function getFollowersPerSecond(state: GameState): number {
   // Apply reputation bonus (+10% per reputation point)
   total *= 1 + state.reputation * 0.1;
 
-  // Apply theme bonuses (unlocked themes provide permanent bonuses)
-  state.themes
-    .filter((theme) => theme.unlocked)
-    .forEach((theme) => {
-      total *= theme.bonusMultiplier;
-    });
+  // Apply active theme bonus (only the active theme)
+  const activeTheme = state.themes.find((t) => t.active);
+  if (activeTheme) {
+    total *= activeTheme.bonusMultiplier;
+  }
 
   // Apply active event multipliers
   state.activeEvents.forEach((event) => {
