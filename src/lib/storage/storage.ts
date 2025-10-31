@@ -1,6 +1,6 @@
 /**
  * storage.ts - Storage Orchestrator
- * 
+ *
  * Manages game save data with:
  * - Automatic driver selection (IndexedDB primary, localStorage fallback)
  * - Base64 + JSON encoding
@@ -8,7 +8,7 @@
  * - Rolling 3-backup system
  * - Version-based migrations
  * - Corruption detection and recovery
- * 
+ *
  * Connected to:
  * - indexedDb.ts: Primary storage driver
  * - localStorage.ts: Fallback storage driver
@@ -26,7 +26,7 @@ import {
   pruneBackupsInIndexedDB,
   isIndexedDBAvailable,
   StoredData,
-} from './indexedDb';
+} from "./indexedDb";
 
 import {
   saveToLocalStorage,
@@ -37,15 +37,15 @@ import {
   loadBackupsFromLocalStorage,
   pruneBackupsInLocalStorage,
   isLocalStorageAvailable,
-} from './localStorage';
+} from "./localStorage";
 
-import { generateChecksum, verifyChecksum, generateId } from '../crypto/hash';
+import { generateChecksum, verifyChecksum, generateId } from "../crypto/hash";
 
 // ============================================================================
 // CONSTANTS
 // ============================================================================
 
-export const SAVE_KEY = 'game_save';
+export const SAVE_KEY = "game_save";
 export const CURRENT_VERSION = 1;
 export const MAX_BACKUPS = 3;
 
@@ -73,7 +73,7 @@ export interface LoadResult<T = unknown> {
   usedFallback?: boolean;
 }
 
-export type StorageDriver = 'indexeddb' | 'localstorage';
+export type StorageDriver = "indexeddb" | "localstorage";
 
 // ============================================================================
 // DRIVER SELECTION
@@ -89,17 +89,17 @@ function detectDriver(): StorageDriver {
   if (preferredDriver) return preferredDriver;
 
   if (isIndexedDBAvailable()) {
-    preferredDriver = 'indexeddb';
-    return 'indexeddb';
+    preferredDriver = "indexeddb";
+    return "indexeddb";
   }
 
   if (isLocalStorageAvailable()) {
-    console.warn('IndexedDB unavailable, using localStorage fallback');
-    preferredDriver = 'localstorage';
-    return 'localstorage';
+    console.warn("IndexedDB unavailable, using localStorage fallback");
+    preferredDriver = "localstorage";
+    return "localstorage";
   }
 
-  throw new Error('No storage driver available');
+  throw new Error("No storage driver available");
 }
 
 /**
@@ -125,18 +125,18 @@ export function getStorageDriver(): StorageDriver {
  */
 function encodeData<T>(data: T): string {
   const json = JSON.stringify(data);
-  
+
   // Use btoa for base64 encoding (browser-compatible)
   // For Unicode support, first encode to UTF-8
   const encoder = new TextEncoder();
   const utf8Array = encoder.encode(json);
-  
+
   // Convert to binary string
-  let binaryString = '';
+  let binaryString = "";
   for (let i = 0; i < utf8Array.length; i++) {
     binaryString += String.fromCharCode(utf8Array[i]);
   }
-  
+
   return btoa(binaryString);
 }
 
@@ -146,16 +146,16 @@ function encodeData<T>(data: T): string {
 function decodeData<T>(encoded: string): T {
   // Decode base64
   const binaryString = atob(encoded);
-  
+
   // Convert to UTF-8
   const bytes = new Uint8Array(binaryString.length);
   for (let i = 0; i < binaryString.length; i++) {
     bytes[i] = binaryString.charCodeAt(i);
   }
-  
+
   const decoder = new TextDecoder();
   const json = decoder.decode(bytes);
-  
+
   return JSON.parse(json) as T;
 }
 
@@ -183,7 +183,7 @@ function migrateSaveData<T>(saveData: SaveData<T>): SaveData<T> {
 function applyMigration<T>(
   saveData: SaveData<T>,
   fromVersion: number,
-  toVersion: number
+  toVersion: number,
 ): SaveData<T> {
   console.log(`Migrating save data from v${fromVersion} to v${toVersion}`);
 
@@ -211,7 +211,7 @@ async function createBackup(data: string, checksum: string): Promise<void> {
   const driver = detectDriver();
   const backupId = generateId();
 
-  if (driver === 'indexeddb') {
+  if (driver === "indexeddb") {
     await saveBackupToIndexedDB(backupId, SAVE_KEY, data, checksum);
     await pruneBackupsInIndexedDB(SAVE_KEY, MAX_BACKUPS);
   } else {
@@ -225,19 +225,20 @@ async function createBackup(data: string, checksum: string): Promise<void> {
  */
 async function restoreFromBackup(): Promise<StoredData | null> {
   const driver = detectDriver();
-  
-  const backups = driver === 'indexeddb'
-    ? await loadBackupsFromIndexedDB(SAVE_KEY)
-    : loadBackupsFromLocalStorage(SAVE_KEY);
+
+  const backups =
+    driver === "indexeddb"
+      ? await loadBackupsFromIndexedDB(SAVE_KEY)
+      : loadBackupsFromLocalStorage(SAVE_KEY);
 
   // Try each backup from newest to oldest
   for (const backup of backups) {
     try {
       // Verify checksum
       const isValid = await verifyChecksum(backup.value, backup.checksum);
-      
+
       if (isValid) {
-        console.log('Successfully restored from backup');
+        console.log("Successfully restored from backup");
         return {
           key: backup.key,
           value: backup.value,
@@ -246,7 +247,7 @@ async function restoreFromBackup(): Promise<StoredData | null> {
         };
       }
     } catch (error) {
-      console.error('Backup verification failed:', error);
+      console.error("Backup verification failed:", error);
     }
   }
 
@@ -259,7 +260,7 @@ async function restoreFromBackup(): Promise<StoredData | null> {
 
 /**
  * Save game data
- * 
+ *
  * @param data - Data to save
  * @returns Result with success status
  */
@@ -293,13 +294,16 @@ export async function save<T>(data: T): Promise<SaveResult> {
     }
 
     // Save to storage
-    if (driver === 'indexeddb') {
+    if (driver === "indexeddb") {
       try {
         await saveToIndexedDB(SAVE_KEY, encoded, checksum);
         return { success: true };
       } catch (error) {
         // Fallback to localStorage on error
-        console.error('IndexedDB save failed, falling back to localStorage:', error);
+        console.error(
+          "IndexedDB save failed, falling back to localStorage:",
+          error,
+        );
         saveToLocalStorage(SAVE_KEY, encoded, checksum);
         return { success: true, usedFallback: true };
       }
@@ -308,10 +312,10 @@ export async function save<T>(data: T): Promise<SaveResult> {
       return { success: true };
     }
   } catch (error) {
-    console.error('Save failed:', error);
+    console.error("Save failed:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }
@@ -322,7 +326,7 @@ export async function save<T>(data: T): Promise<SaveResult> {
 
 /**
  * Load game data
- * 
+ *
  * @returns Result with loaded data or error
  */
 export async function load<T>(): Promise<LoadResult<T>> {
@@ -331,15 +335,15 @@ export async function load<T>(): Promise<LoadResult<T>> {
 
     // Load from storage
     let stored: StoredData | null = null;
-    
-    if (driver === 'indexeddb') {
+
+    if (driver === "indexeddb") {
       try {
         stored = await loadFromIndexedDB(SAVE_KEY);
       } catch (error) {
-        console.error('IndexedDB load failed, trying localStorage:', error);
+        console.error("IndexedDB load failed, trying localStorage:", error);
         stored = loadFromLocalStorage(SAVE_KEY);
         if (stored) {
-          console.log('Loaded from localStorage fallback');
+          console.log("Loaded from localStorage fallback");
         }
       }
     } else {
@@ -349,7 +353,7 @@ export async function load<T>(): Promise<LoadResult<T>> {
     if (!stored) {
       return {
         success: false,
-        error: 'No save data found',
+        error: "No save data found",
       };
     }
 
@@ -357,17 +361,17 @@ export async function load<T>(): Promise<LoadResult<T>> {
     const isValid = await verifyChecksum(stored.value, stored.checksum);
 
     if (!isValid) {
-      console.warn('Save corrupted, restoring backup.');
-      
+      console.warn("Save corrupted, restoring backup.");
+
       // Attempt to restore from backup
       const backup = await restoreFromBackup();
-      
+
       if (backup) {
         stored = backup;
       } else {
         return {
           success: false,
-          error: 'Save corrupted and no valid backup found',
+          error: "Save corrupted and no valid backup found",
         };
       }
     }
@@ -376,9 +380,8 @@ export async function load<T>(): Promise<LoadResult<T>> {
     const decoded = decodeData<SaveData<T>>(stored.value);
 
     // Migrate if needed
-    const migrated = decoded.version < CURRENT_VERSION
-      ? migrateSaveData(decoded)
-      : decoded;
+    const migrated =
+      decoded.version < CURRENT_VERSION ? migrateSaveData(decoded) : decoded;
 
     return {
       success: true,
@@ -386,10 +389,10 @@ export async function load<T>(): Promise<LoadResult<T>> {
       restoredFromBackup: !isValid,
     };
   } catch (error) {
-    console.error('Load failed:', error);
+    console.error("Load failed:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }
@@ -404,8 +407,8 @@ export async function load<T>(): Promise<LoadResult<T>> {
 export async function exists(): Promise<boolean> {
   try {
     const driver = detectDriver();
-    
-    if (driver === 'indexeddb') {
+
+    if (driver === "indexeddb") {
       return await existsInIndexedDB(SAVE_KEY);
     } else {
       return existsInLocalStorage(SAVE_KEY);
@@ -422,7 +425,7 @@ export async function deleteSave(): Promise<SaveResult> {
   try {
     const driver = detectDriver();
 
-    if (driver === 'indexeddb') {
+    if (driver === "indexeddb") {
       await deleteFromIndexedDB(SAVE_KEY);
       await pruneBackupsInIndexedDB(SAVE_KEY, 0); // Delete all backups
     } else {
@@ -434,7 +437,7 @@ export async function deleteSave(): Promise<SaveResult> {
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }
@@ -444,7 +447,7 @@ export async function deleteSave(): Promise<SaveResult> {
  */
 export async function exportSave<T>(): Promise<string | null> {
   const result = await load<T>();
-  
+
   if (!result.success || !result.data) {
     return null;
   }
@@ -464,17 +467,16 @@ export async function exportSave<T>(): Promise<string | null> {
 export async function importSave<T>(json: string): Promise<SaveResult> {
   try {
     const saveData = JSON.parse(json) as SaveData<T>;
-    
+
     // Migrate if needed
-    const migrated = saveData.version < CURRENT_VERSION
-      ? migrateSaveData(saveData)
-      : saveData;
+    const migrated =
+      saveData.version < CURRENT_VERSION ? migrateSaveData(saveData) : saveData;
 
     return await save(migrated.data);
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Invalid save data',
+      error: error instanceof Error ? error.message : "Invalid save data",
     };
   }
 }

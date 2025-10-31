@@ -181,7 +181,7 @@ export function GameProvider({ children }: GameProviderProps) {
       } catch (err) {
         if (mounted) {
           setError(
-            err instanceof Error ? err.message : "Failed to initialize game"
+            err instanceof Error ? err.message : "Failed to initialize game",
           );
           setIsLoading(false);
         }
@@ -247,13 +247,12 @@ export function GameProvider({ children }: GameProviderProps) {
     localStorage.setItem("game_theme", themeId);
   }, []);
 
-
   const setTheme = useCallback(
     (themeId: string) => {
       setCurrentTheme(themeId);
       applyTheme(themeId);
     },
-    [applyTheme]
+    [applyTheme],
   );
 
   // ============================================================================
@@ -287,27 +286,27 @@ export function GameProvider({ children }: GameProviderProps) {
         return result;
       });
     },
-    [state]
+    [state],
   );
 
   const handleBuyUpgrade = useCallback(
     (upgradeId: string) => {
       if (!engineRef.current || !state) return;
       engineRef.current.executeAction((currentState) =>
-        buyUpgrade(currentState, upgradeId)
+        buyUpgrade(currentState, upgradeId),
       );
     },
-    [state]
+    [state],
   );
 
   const handlePurchaseTheme = useCallback(
     (themeId: string) => {
       if (!engineRef.current || !state) return;
       engineRef.current.executeAction((currentState) =>
-        purchaseTheme(currentState, themeId)
+        purchaseTheme(currentState, themeId),
       );
     },
-    [state]
+    [state],
   );
 
   const handleActivateTheme = useCallback(
@@ -319,7 +318,7 @@ export function GameProvider({ children }: GameProviderProps) {
         return result;
       });
     },
-    [state, setTheme]
+    [state, setTheme],
   );
 
   const handlePrestige = useCallback(() => {
@@ -335,11 +334,11 @@ export function GameProvider({ children }: GameProviderProps) {
         state: updateSetting(
           currentState,
           key as keyof GameState["settings"],
-          value
+          value,
         ),
       }));
     },
-    [state]
+    [state],
   );
 
   const handleExportSave = useCallback(async () => {
@@ -411,9 +410,7 @@ export function GameProvider({ children }: GameProviderProps) {
     dismissOfflineProgress,
   };
 
-  return (
-    <GameContext.Provider value={value}>{children}</GameContext.Provider>
-  );
+  return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 }
 
 // ============================================================================

@@ -1,15 +1,15 @@
 /**
  * actions.ts - Core Gameplay Actions
- * 
+ *
  * This module contains all game actions that mutate state.
  * Each action is a pure function that takes state and returns new state.
- * 
+ *
  * Connected to:
  * - state.ts: Reads and mutates game state
  * - engine.ts: Called by game loop and user interactions
  * - prestige.ts: Used for prestige action
  * - UI components: Triggered by user interactions
- * 
+ *
  * Actions:
  * - clickPost: Manual clicking for followers
  * - buyGenerator: Purchase content generators
@@ -32,8 +32,8 @@ import {
   canAfford,
   canAffordShards,
   getClickEventMultiplier,
-} from './state';
-import { executePrestige, resetForPrestige } from './prestige';
+} from "./state";
+import { executePrestige, resetForPrestige } from "./prestige";
 
 // ============================================================================
 // CONSTANTS
@@ -53,13 +53,13 @@ export const BASE_TICK_RATE = 250; // milliseconds between ticks
  */
 export function getAwardDropRate(state: GameState): number {
   let dropRate = SHARD_DROP_CHANCE;
-  
+
   state.upgrades
-    .filter(u => u.purchased && u.effect.type === 'awardDropRate')
-    .forEach(u => {
+    .filter((u) => u.purchased && u.effect.type === "awardDropRate")
+    .forEach((u) => {
       dropRate += u.effect.value;
     });
-  
+
   return dropRate;
 }
 
@@ -92,10 +92,10 @@ export function clickPost(state: GameState): ClickResult {
   const clickPower = getClickPower(state);
   const eventMultiplier = getClickEventMultiplier(state);
   const followersGained = clickPower * eventMultiplier;
-  
+
   // Check for award drop (Variable chance based on upgrades)
   const shardDropped = Math.random() < getAwardDropRate(state);
-  
+
   const newState: GameState = {
     ...state,
     followers: state.followers + followersGained,
@@ -107,7 +107,7 @@ export function clickPost(state: GameState): ClickResult {
       shardsEarned: state.stats.shardsEarned + (shardDropped ? 1 : 0),
     },
   };
-  
+
   return {
     success: true,
     state: newState,
@@ -127,40 +127,43 @@ export function clickPost(state: GameState): ClickResult {
  * - Updates cost for next purchase
  * - Updates statistics
  */
-export function buyGenerator(state: GameState, generatorId: string): ActionResult {
-  const generator = state.generators.find(g => g.id === generatorId);
-  
+export function buyGenerator(
+  state: GameState,
+  generatorId: string,
+): ActionResult {
+  const generator = state.generators.find((g) => g.id === generatorId);
+
   if (!generator) {
     return {
       success: false,
       state,
-      message: 'Generator not found',
+      message: "Generator not found",
     };
   }
-  
+
   if (!generator.unlocked) {
     return {
       success: false,
       state,
-      message: 'Generator not unlocked yet',
+      message: "Generator not unlocked yet",
     };
   }
-  
+
   const cost = getGeneratorCost(generator);
-  
+
   if (!canAfford(state.followers, cost)) {
     return {
       success: false,
       state,
-      message: 'Not enough followers',
+      message: "Not enough followers",
     };
   }
-  
+
   // Update generator count and deduct cost
-  const newGenerators = state.generators.map(g =>
-    g.id === generatorId ? { ...g, count: g.count + 1 } : g
+  const newGenerators = state.generators.map((g) =>
+    g.id === generatorId ? { ...g, count: g.count + 1 } : g,
   );
-  
+
   const newState: GameState = {
     ...state,
     followers: state.followers - cost,
@@ -170,7 +173,7 @@ export function buyGenerator(state: GameState, generatorId: string): ActionResul
       totalGeneratorsPurchased: state.stats.totalGeneratorsPurchased + 1,
     },
   };
-  
+
   return {
     success: true,
     state: newState,
@@ -185,27 +188,27 @@ export function buyGenerator(state: GameState, generatorId: string): ActionResul
 export function buyGeneratorBulk(
   state: GameState,
   generatorId: string,
-  count: number
+  count: number,
 ): ActionResult {
   let currentState = state;
   let purchased = 0;
-  
+
   for (let i = 0; i < count; i++) {
     const result = buyGenerator(currentState, generatorId);
     if (!result.success) break;
     currentState = result.state;
     purchased++;
   }
-  
+
   if (purchased === 0) {
     return {
       success: false,
       state,
-      message: 'Cannot afford any generators',
+      message: "Cannot afford any generators",
     };
   }
-  
-  const generator = state.generators.find(g => g.id === generatorId);
+
+  const generator = state.generators.find((g) => g.id === generatorId);
   return {
     success: true,
     state: currentState,
@@ -224,36 +227,36 @@ export function buyGeneratorBulk(
  * - Marks upgrade as purchased
  */
 export function buyUpgrade(state: GameState, upgradeId: string): ActionResult {
-  const upgrade = state.upgrades.find(u => u.id === upgradeId);
-  
+  const upgrade = state.upgrades.find((u) => u.id === upgradeId);
+
   if (!upgrade) {
     return {
       success: false,
       state,
-      message: 'Upgrade not found',
+      message: "Upgrade not found",
     };
   }
-  
+
   if (upgrade.purchased) {
     return {
       success: false,
       state,
-      message: 'Already purchased',
+      message: "Already purchased",
     };
   }
-  
+
   if (!canAfford(state.followers, upgrade.cost)) {
     return {
       success: false,
       state,
-      message: 'Not enough followers',
+      message: "Not enough followers",
     };
   }
-  
-  const newUpgrades = state.upgrades.map(u =>
-    u.id === upgradeId ? { ...u, purchased: true } : u
+
+  const newUpgrades = state.upgrades.map((u) =>
+    u.id === upgradeId ? { ...u, purchased: true } : u,
   );
-  
+
   const newState: GameState = {
     ...state,
     followers: state.followers - upgrade.cost,
@@ -263,7 +266,7 @@ export function buyUpgrade(state: GameState, upgradeId: string): ActionResult {
       totalUpgradesPurchased: state.stats.totalUpgradesPurchased + 1,
     },
   };
-  
+
   return {
     success: true,
     state: newState,
@@ -281,42 +284,42 @@ export function buyUpgrade(state: GameState, upgradeId: string): ActionResult {
  * - Bonus applies immediately and permanently
  */
 export function purchaseTheme(state: GameState, themeId: string): ActionResult {
-  const theme = state.themes.find(t => t.id === themeId);
-  
+  const theme = state.themes.find((t) => t.id === themeId);
+
   if (!theme) {
     return {
       success: false,
       state,
-      message: 'Theme not found',
+      message: "Theme not found",
     };
   }
-  
+
   if (theme.unlocked) {
     return {
       success: false,
       state,
-      message: 'Theme already unlocked',
+      message: "Theme already unlocked",
     };
   }
-  
+
   if (!canAffordShards(state.shards, theme.cost)) {
     return {
       success: false,
       state,
-      message: 'Not enough awards',
+      message: "Not enough awards",
     };
   }
-  
-  const newThemes = state.themes.map(t =>
-    t.id === themeId ? { ...t, unlocked: true } : t
+
+  const newThemes = state.themes.map((t) =>
+    t.id === themeId ? { ...t, unlocked: true } : t,
   );
-  
+
   const newState: GameState = {
     ...state,
     shards: state.shards - theme.cost,
     themes: newThemes,
   };
-  
+
   return {
     success: true,
     state: newState,
@@ -331,34 +334,34 @@ export function purchaseTheme(state: GameState, themeId: string): ActionResult {
  * - Theme must be unlocked
  */
 export function activateTheme(state: GameState, themeId: string): ActionResult {
-  const theme = state.themes.find(t => t.id === themeId);
-  
+  const theme = state.themes.find((t) => t.id === themeId);
+
   if (!theme) {
     return {
       success: false,
       state,
-      message: 'Theme not found',
+      message: "Theme not found",
     };
   }
-  
+
   if (!theme.unlocked) {
     return {
       success: false,
       state,
-      message: 'Theme not unlocked',
+      message: "Theme not unlocked",
     };
   }
-  
-  const newThemes = state.themes.map(t => ({
+
+  const newThemes = state.themes.map((t) => ({
     ...t,
     active: t.id === themeId,
   }));
-  
+
   const newState: GameState = {
     ...state,
     themes: newThemes,
   };
-  
+
   return {
     success: true,
     state: newState,
@@ -381,7 +384,7 @@ export function applyEvent(state: GameState, event: RandomEvent): GameState {
     active: true,
     endTime: Date.now() + event.duration,
   };
-  
+
   return {
     ...state,
     activeEvents: [...state.activeEvents, eventWithEndTime],
@@ -396,9 +399,9 @@ export function applyEvent(state: GameState, event: RandomEvent): GameState {
 export function removeExpiredEvents(state: GameState): GameState {
   const now = Date.now();
   const activeEvents = state.activeEvents.filter(
-    event => event.endTime && event.endTime > now
+    (event) => event.endTime && event.endTime > now,
   );
-  
+
   return {
     ...state,
     activeEvents,
@@ -421,15 +424,15 @@ export function tick(state: GameState, deltaTime: number): GameState {
   const followersPerSecond = getFollowersPerSecond(state);
   const secondsElapsed = deltaTime / 1000;
   const followersGained = followersPerSecond * secondsElapsed;
-  
+
   // Update generators unlock status
-  const newGenerators = state.generators.map(g => {
+  const newGenerators = state.generators.map((g) => {
     if (shouldUnlockGenerator(g, state.followers)) {
       return { ...g, unlocked: true };
     }
     return g;
   });
-  
+
   // Remove expired events
   let newState: GameState = {
     ...state,
@@ -441,10 +444,10 @@ export function tick(state: GameState, deltaTime: number): GameState {
       lastTickTime: Date.now(),
     },
   };
-  
+
   // Clean up expired events
   newState = removeExpiredEvents(newState);
-  
+
   return newState;
 }
 
@@ -460,7 +463,7 @@ export function tick(state: GameState, deltaTime: number): GameState {
  */
 export function prestige(state: GameState): ActionResult {
   const result = executePrestige(state);
-  
+
   if (!result.success) {
     return {
       success: false,
@@ -468,9 +471,9 @@ export function prestige(state: GameState): ActionResult {
       message: result.message,
     };
   }
-  
+
   const newState = resetForPrestige(state, result.reputationGained);
-  
+
   return {
     success: true,
     state: newState,
@@ -485,10 +488,10 @@ export function prestige(state: GameState): ActionResult {
 /**
  * Update a setting
  */
-export function updateSetting<K extends keyof GameState['settings']>(
+export function updateSetting<K extends keyof GameState["settings"]>(
   state: GameState,
   key: K,
-  value: GameState['settings'][K]
+  value: GameState["settings"][K],
 ): GameState {
   return {
     ...state,

@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
 /**
  * EventLog.tsx - Event History Component
- * 
+ *
  * Displays a chronological log of recent events
  * Shows past events with timestamps
  */
 
-import { useState } from 'react';
+import { useState } from "react";
 
 interface EventLogEntry {
   id: string;
   name: string;
   description: string;
   timestamp: number;
-  type: 'event' | 'achievement' | 'milestone' | 'prestige';
+  type: "event" | "achievement" | "milestone" | "prestige";
 }
 
 interface EventLogProps {
@@ -26,35 +26,37 @@ export function EventLog({ entries, maxEntries = 50 }: EventLogProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const displayEntries = entries.slice(0, maxEntries);
-  const visibleEntries = isExpanded ? displayEntries : displayEntries.slice(0, 5);
+  const visibleEntries = isExpanded
+    ? displayEntries
+    : displayEntries.slice(0, 5);
 
   const getEntryIcon = (type: string): string => {
     switch (type) {
-      case 'event':
-        return '✨';
-      case 'achievement':
-        return '🏆';
-      case 'milestone':
-        return '🎯';
-      case 'prestige':
-        return '⭐';
+      case "event":
+        return "✨";
+      case "achievement":
+        return "🏆";
+      case "milestone":
+        return "🎯";
+      case "prestige":
+        return "⭐";
       default:
-        return '📝';
+        return "📝";
     }
   };
 
   const getEntryColor = (type: string): string => {
     switch (type) {
-      case 'event':
-        return 'text-purple-600 dark:text-purple-400';
-      case 'achievement':
-        return 'text-yellow-600 dark:text-yellow-400';
-      case 'milestone':
-        return 'text-blue-600 dark:text-blue-400';
-      case 'prestige':
-        return 'text-orange-600 dark:text-orange-400';
+      case "event":
+        return "text-purple-600 dark:text-purple-400";
+      case "achievement":
+        return "text-yellow-600 dark:text-yellow-400";
+      case "milestone":
+        return "text-blue-600 dark:text-blue-400";
+      case "prestige":
+        return "text-orange-600 dark:text-orange-400";
       default:
-        return 'text-gray-600 dark:text-gray-400';
+        return "text-gray-600 dark:text-gray-400";
     }
   };
 
@@ -70,7 +72,7 @@ export function EventLog({ entries, maxEntries = 50 }: EventLogProps) {
     if (hours > 0) return `${hours}h ago`;
     if (minutes > 0) return `${minutes}m ago`;
     if (seconds > 0) return `${seconds}s ago`;
-    return 'just now';
+    return "just now";
   };
 
   if (displayEntries.length === 0) {
@@ -79,7 +81,9 @@ export function EventLog({ entries, maxEntries = 50 }: EventLogProps) {
         <h3 className="text-lg font-bold mb-4">Event Log</h3>
         <div className="text-center py-8 text-gray-500 dark:text-gray-500">
           <div className="text-4xl mb-2">📝</div>
-          <p className="text-sm">No events yet. Keep playing to see your history!</p>
+          <p className="text-sm">
+            No events yet. Keep playing to see your history!
+          </p>
         </div>
       </div>
     );
@@ -91,7 +95,8 @@ export function EventLog({ entries, maxEntries = 50 }: EventLogProps) {
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold">Event Log</h3>
         <span className="text-xs text-gray-500 dark:text-gray-500">
-          {displayEntries.length} {displayEntries.length === 1 ? 'entry' : 'entries'}
+          {displayEntries.length}{" "}
+          {displayEntries.length === 1 ? "entry" : "entries"}
         </span>
       </div>
 
@@ -149,7 +154,9 @@ export function EventLog({ entries, maxEntries = 50 }: EventLogProps) {
           "
           aria-expanded={isExpanded}
         >
-          {isExpanded ? '↑ Show Less' : `↓ Show More (${displayEntries.length - 5})`}
+          {isExpanded
+            ? "↑ Show Less"
+            : `↓ Show More (${displayEntries.length - 5})`}
         </button>
       )}
 

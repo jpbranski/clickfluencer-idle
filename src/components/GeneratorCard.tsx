@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
 /**
  * GeneratorCard.tsx - Content Generator Display Component
- * 
+ *
  * Shows:
  * - Generator name and icon
  * - Owned count
@@ -11,8 +11,12 @@
  * - Buy button (single or bulk)
  */
 
-import { formatNumber, formatRate, formatTimeUntilAffordable } from '@/game/format';
-import { Generator } from '@/game/state';
+import {
+  formatNumber,
+  formatRate,
+  formatTimeUntilAffordable,
+} from "@/game/format";
+import { Generator } from "@/game/state";
 
 interface GeneratorCardProps {
   generator: Generator & {
@@ -38,20 +42,26 @@ export function GeneratorCard({
   };
 
   const timeUntilAffordable = !canAfford
-    ? formatTimeUntilAffordable(generator.cost, currentFollowers, followersPerSecond)
+    ? formatTimeUntilAffordable(
+        generator.cost,
+        currentFollowers,
+        followersPerSecond,
+      )
     : null;
 
   return (
     <div
       className={`
         relative p-4 rounded-lg border-2 transition-all duration-200
-        ${generator.unlocked
-          ? 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'
-          : 'bg-gray-100 dark:bg-gray-900 border-gray-300 dark:border-gray-800 opacity-60'
+        ${
+          generator.unlocked
+            ? "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+            : "bg-gray-100 dark:bg-gray-900 border-gray-300 dark:border-gray-800 opacity-60"
         }
-        ${canAfford && generator.unlocked
-          ? 'shadow-lg hover:shadow-xl hover:border-purple-300 dark:hover:border-purple-600'
-          : 'shadow'
+        ${
+          canAfford && generator.unlocked
+            ? "shadow-lg hover:shadow-xl hover:border-purple-300 dark:hover:border-purple-600"
+            : "shadow"
         }
         motion-reduce:transition-none
       `}
@@ -60,7 +70,7 @@ export function GeneratorCard({
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <span className="text-2xl" role="img" aria-label={generator.name}>
-            {generator.name.split(' ')[0]}
+            {generator.name.split(" ")[0]}
           </span>
           <div className="flex-1 min-w-0">
             <h3 className="text-sm font-bold truncate">
@@ -109,19 +119,21 @@ export function GeneratorCard({
             <span
               className={`text-sm font-bold number-display ${
                 canAfford
-                  ? 'text-green-600 dark:text-green-400'
-                  : 'text-red-600 dark:text-red-400'
+                  ? "text-green-600 dark:text-green-400"
+                  : "text-red-600 dark:text-red-400"
               }`}
             >
               {formatNumber(generator.cost)}
             </span>
           </div>
 
-          {!canAfford && timeUntilAffordable && timeUntilAffordable !== 'Can afford now' && (
-            <div className="text-xs text-center text-gray-500 dark:text-gray-500">
-              {timeUntilAffordable}
-            </div>
-          )}
+          {!canAfford &&
+            timeUntilAffordable &&
+            timeUntilAffordable !== "Can afford now" && (
+              <div className="text-xs text-center text-gray-500 dark:text-gray-500">
+                {timeUntilAffordable}
+              </div>
+            )}
 
           {/* Buy Buttons */}
           <div className="flex gap-2">
@@ -133,9 +145,10 @@ export function GeneratorCard({
                 transition-all duration-150
                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400
                 motion-reduce:transition-none
-                ${canAfford
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white active:scale-95'
-                  : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed'
+                ${
+                  canAfford
+                    ? "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white active:scale-95"
+                    : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed"
                 }
               `}
               aria-label={`Buy one ${generator.name} for ${formatNumber(generator.cost)} followers`}
@@ -152,9 +165,10 @@ export function GeneratorCard({
                   transition-all duration-150
                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400
                   motion-reduce:transition-none
-                  ${canAfford
-                    ? 'bg-purple-600 hover:bg-purple-700 text-white active:scale-95'
-                    : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed'
+                  ${
+                    canAfford
+                      ? "bg-purple-600 hover:bg-purple-700 text-white active:scale-95"
+                      : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed"
                   }
                 `}
                 aria-label={`Buy 10 ${generator.name}`}

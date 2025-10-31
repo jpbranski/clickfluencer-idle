@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { motion } from 'framer-motion';
+import Link from "next/link";
+import { motion } from "framer-motion";
 
 export default function AboutPage() {
   return (
@@ -18,9 +18,9 @@ export default function AboutPage() {
             About Clickfluencer Idle
           </h1>
           <p className="max-w-2xl mx-auto text-lg text-gray-600 dark:text-gray-400">
-            A cozy-chaotic idle game experiment by{' '}
-            <span className="font-semibold text-purple-500">JP the Pirate</span> — 
-            blending humor, systems design, and creator culture into something
+            A cozy-chaotic idle game experiment by{" "}
+            <span className="font-semibold text-purple-500">JP the Pirate</span>{" "}
+            — blending humor, systems design, and creator culture into something
             weirdly addictive.
           </p>
         </div>
@@ -29,11 +29,14 @@ export default function AboutPage() {
       {/* Mission */}
       <section className="relative z-10 px-6 py-16">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-semibold mb-4">The Mission</h2>
+          <h2 className="text-2xl sm:text-3xl font-semibold mb-4">
+            The Mission
+          </h2>
           <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-            Clickfluencer Idle isn't just about clicks — it's about the creative grind.
-            Built to explore how we measure progress, attention, and success in
-            online spaces, it's a satire, a sandbox, and a systems experiment all in one.
+            Clickfluencer Idle isn't just about clicks — it's about the creative
+            grind. Built to explore how we measure progress, attention, and
+            success in online spaces, it's a satire, a sandbox, and a systems
+            experiment all in one.
           </p>
         </div>
       </section>
@@ -42,12 +45,15 @@ export default function AboutPage() {
       <section className="px-6 py-16 bg-gray-50 dark:bg-gray-900/60 border-y border-gray-200 dark:border-gray-800">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h3 className="text-2xl font-semibold mb-4">Built with Curiosity</h3>
+            <h3 className="text-2xl font-semibold mb-4">
+              Built with Curiosity
+            </h3>
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Clickfluencer Idle is an experiment in shared creativity — a space where players,
-                builders, and curious minds can laugh at the grind, explore systems, and find joy in
-                progress together. It's a playful reminder that learning and community can be just as
-                rewarding as any leaderboard.
+              Clickfluencer Idle is an experiment in shared creativity — a space
+              where players, builders, and curious minds can laugh at the grind,
+              explore systems, and find joy in progress together. It's a playful
+              reminder that learning and community can be just as rewarding as
+              any leaderboard.
             </p>
           </div>
           <div className="bg-gradient-to-br from-purple-600/10 via-pink-500/10 to-blue-500/10 rounded-2xl p-6 border border-gray-200 dark:border-gray-800 shadow-md">
@@ -66,23 +72,20 @@ export default function AboutPage() {
       <section className="px-6 py-16 text-center">
         <h3 className="text-2xl font-semibold mb-4">Tech Stack</h3>
         <p className="max-w-2xl mx-auto text-gray-600 dark:text-gray-400 mb-8">
-          Built using a modern, performant stack focused on developer experience and scalability.
+          Built using a modern, performant stack focused on developer experience
+          and scalability.
         </p>
         <div className="flex flex-wrap justify-center gap-3 text-sm">
-          {[
-            'Next.js',
-            'React',
-            'TypeScript',
-            'Tailwind CSS',
-            'PostgreSQL',
-          ].map((tech) => (
-            <span
-              key={tech}
-              className="px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700"
-            >
-              {tech}
-            </span>
-          ))}
+          {["Next.js", "React", "TypeScript", "Tailwind CSS", "PostgreSQL"].map(
+            (tech) => (
+              <span
+                key={tech}
+                className="px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700"
+              >
+                {tech}
+              </span>
+            ),
+          )}
         </div>
       </section>
 
@@ -91,9 +94,10 @@ export default function AboutPage() {
         <div className="max-w-4xl mx-auto text-center">
           <h3 className="text-2xl font-semibold mb-4">Behind the Project</h3>
           <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-            Clickfluencer Idle is part of a larger 3-year career roadmap — a series of projects
-            designed to blend creativity, systems thinking, and entrepreneurship. Each release
-            builds toward a portfolio of real users, real revenue, and real learning.
+            Clickfluencer Idle is part of a larger 3-year career roadmap — a
+            series of projects designed to blend creativity, systems thinking,
+            and entrepreneurship. Each release builds toward a portfolio of real
+            users, real revenue, and real learning.
           </p>
         </div>
       </section>
@@ -120,7 +124,7 @@ export default function AboutPage() {
           </Link>
           <span>•</span>
           <Link
-            href="https://linkedin.com/in/jpbranski"
+            href="https://linkedin.com/in/jonathanbranski"
             target="_blank"
             rel="noopener noreferrer"
             className="text-purple-500 hover:underline"

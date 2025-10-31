@@ -1,9 +1,9 @@
 /**
  * format.ts - Large Number & Time Formatting Utilities
- * 
+ *
  * This module provides formatting functions for displaying large numbers
  * and time durations in human-readable formats.
- * 
+ *
  * Connected to:
  * - All UI components: Used for displaying followers, costs, time
  * - engine.ts: Formats offline progress messages
@@ -14,22 +14,22 @@
 // ============================================================================
 
 const NUMBER_SUFFIXES = [
-  { value: 1e3, suffix: 'K' },    // Thousand
-  { value: 1e6, suffix: 'M' },    // Million
-  { value: 1e9, suffix: 'B' },    // Billion
-  { value: 1e12, suffix: 'T' },   // Trillion
-  { value: 1e15, suffix: 'Qa' },  // Quadrillion
-  { value: 1e18, suffix: 'Qi' },  // Quintillion
-  { value: 1e21, suffix: 'Sx' },  // Sextillion
-  { value: 1e24, suffix: 'Sp' },  // Septillion
-  { value: 1e27, suffix: 'Oc' },  // Octillion
-  { value: 1e30, suffix: 'No' },  // Nonillion
-  { value: 1e33, suffix: 'Dc' },  // Decillion
-  { value: 1e36, suffix: 'UDc' }, // Undecillion
-  { value: 1e39, suffix: 'DDc' }, // Duodecillion
-  { value: 1e42, suffix: 'TDc' }, // Tredecillion
-  { value: 1e45, suffix: 'QaD' }, // Quattuordecillion
-  { value: 1e48, suffix: 'QiD' }, // Quindecillion
+  { value: 1e3, suffix: "K" }, // Thousand
+  { value: 1e6, suffix: "M" }, // Million
+  { value: 1e9, suffix: "B" }, // Billion
+  { value: 1e12, suffix: "T" }, // Trillion
+  { value: 1e15, suffix: "Qa" }, // Quadrillion
+  { value: 1e18, suffix: "Qi" }, // Quintillion
+  { value: 1e21, suffix: "Sx" }, // Sextillion
+  { value: 1e24, suffix: "Sp" }, // Septillion
+  { value: 1e27, suffix: "Oc" }, // Octillion
+  { value: 1e30, suffix: "No" }, // Nonillion
+  { value: 1e33, suffix: "Dc" }, // Decillion
+  { value: 1e36, suffix: "UDc" }, // Undecillion
+  { value: 1e39, suffix: "DDc" }, // Duodecillion
+  { value: 1e42, suffix: "TDc" }, // Tredecillion
+  { value: 1e45, suffix: "QaD" }, // Quattuordecillion
+  { value: 1e48, suffix: "QiD" }, // Quindecillion
 ];
 
 /**
@@ -40,9 +40,10 @@ const NUMBER_SUFFIXES = [
  *   formatNumber(1000000000) => "1.00B"
  */
 export function formatNumber(num: number, decimals: number = 2): string {
-  if (num < 0) return '-' + formatNumber(-num, decimals);
-  if (num < 1000) return num.toFixed(decimals === 0 ? 0 : Math.min(decimals, 2));
-  
+  if (num < 0) return "-" + formatNumber(-num, decimals);
+  if (num < 1000)
+    return num.toFixed(decimals === 0 ? 0 : Math.min(decimals, 2));
+
   // Find the appropriate suffix
   for (let i = NUMBER_SUFFIXES.length - 1; i >= 0; i--) {
     const { value, suffix } = NUMBER_SUFFIXES[i];
@@ -51,7 +52,7 @@ export function formatNumber(num: number, decimals: number = 2): string {
       return formatted + suffix;
     }
   }
-  
+
   return num.toFixed(decimals);
 }
 
@@ -72,7 +73,7 @@ export function formatNumberCompact(num: number): string {
  *   formatInteger(1000000) => "1,000,000"
  */
 export function formatInteger(num: number): string {
-  return Math.floor(num).toLocaleString('en-US');
+  return Math.floor(num).toLocaleString("en-US");
 }
 
 /**
@@ -82,7 +83,7 @@ export function formatInteger(num: number): string {
  *   formatPercent(0.0325) => "3.25%"
  */
 export function formatPercent(value: number, decimals: number = 2): string {
-  return (value * 100).toFixed(decimals) + '%';
+  return (value * 100).toFixed(decimals) + "%";
 }
 
 /**
@@ -92,7 +93,7 @@ export function formatPercent(value: number, decimals: number = 2): string {
  *   formatRate(1500) => "1.50K/s"
  */
 export function formatRate(rate: number): string {
-  return formatNumber(rate, 2) + '/s';
+  return formatNumber(rate, 2) + "/s";
 }
 
 /**
@@ -102,7 +103,7 @@ export function formatRate(rate: number): string {
  *   formatMultiplier(1.5) => "×1.50"
  */
 export function formatMultiplier(multiplier: number): string {
-  return '×' + multiplier.toFixed(2);
+  return "×" + multiplier.toFixed(2);
 }
 
 // ============================================================================
@@ -121,7 +122,7 @@ export function formatTime(ms: number): string {
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
-  
+
   if (days > 0) {
     return `${days}d ${hours % 24}h`;
   }
@@ -145,26 +146,26 @@ export function formatTimeDetailed(ms: number): string {
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
-  
+
   const parts: string[] = [];
-  
+
   if (days > 0) {
-    parts.push(`${days} ${days === 1 ? 'day' : 'days'}`);
+    parts.push(`${days} ${days === 1 ? "day" : "days"}`);
   }
   if (hours % 24 > 0) {
-    parts.push(`${hours % 24} ${hours % 24 === 1 ? 'hour' : 'hours'}`);
+    parts.push(`${hours % 24} ${hours % 24 === 1 ? "hour" : "hours"}`);
   }
   if (minutes % 60 > 0) {
-    parts.push(`${minutes % 60} ${minutes % 60 === 1 ? 'minute' : 'minutes'}`);
+    parts.push(`${minutes % 60} ${minutes % 60 === 1 ? "minute" : "minutes"}`);
   }
   if (seconds % 60 > 0 && days === 0) {
-    parts.push(`${seconds % 60} ${seconds % 60 === 1 ? 'second' : 'seconds'}`);
+    parts.push(`${seconds % 60} ${seconds % 60 === 1 ? "second" : "seconds"}`);
   }
-  
-  if (parts.length === 0) return '0 seconds';
+
+  if (parts.length === 0) return "0 seconds";
   if (parts.length === 1) return parts[0];
-  
-  return parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1];
+
+  return parts.slice(0, -1).join(", ") + " and " + parts[parts.length - 1];
 }
 
 /**
@@ -178,7 +179,7 @@ export function formatTimeCompact(ms: number): string {
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
-  
+
   if (days > 0) {
     return `${days}d ${hours % 24}h`;
   }
@@ -202,8 +203,8 @@ export function formatCountdown(ms: number): string {
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
-  
-  return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+  return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 }
 
 // ============================================================================
@@ -230,14 +231,14 @@ export function formatCost(cost: number, current: number): string {
 export function formatTimeUntilAffordable(
   cost: number,
   current: number,
-  perSecond: number
+  perSecond: number,
 ): string {
-  if (current >= cost) return 'Can afford now';
-  if (perSecond <= 0) return 'Never';
-  
+  if (current >= cost) return "Can afford now";
+  if (perSecond <= 0) return "Never";
+
   const remaining = cost - current;
   const secondsNeeded = remaining / perSecond;
-  
+
   return formatTime(secondsNeeded * 1000);
 }
 
@@ -252,15 +253,17 @@ export function formatTimeUntilAffordable(
  *   parseFormattedNumber("2.5M") => 2500000
  */
 export function parseFormattedNumber(str: string): number {
-  const match = str.match(/^([\d.]+)([KMBTQ]|Qa|Qi|Sx|Sp|Oc|No|Dc|UDc|DDc|TDc|QaD|QiD)?$/);
+  const match = str.match(
+    /^([\d.]+)([KMBTQ]|Qa|Qi|Sx|Sp|Oc|No|Dc|UDc|DDc|TDc|QaD|QiD)?$/,
+  );
   if (!match) return parseFloat(str) || 0;
-  
+
   const [, numStr, suffix] = match;
   const num = parseFloat(numStr);
-  
+
   if (!suffix) return num;
-  
-  const suffixData = NUMBER_SUFFIXES.find(s => s.suffix === suffix);
+
+  const suffixData = NUMBER_SUFFIXES.find((s) => s.suffix === suffix);
   return suffixData ? num * suffixData.value : num;
 }
 

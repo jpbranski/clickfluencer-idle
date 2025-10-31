@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * CookieConsent.tsx - GDPR-Compliant Cookie Consent Banner
@@ -13,7 +13,7 @@
  * - Accessible and responsive design
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 interface CookiePreferences {
   necessary: boolean; // Always true, cannot be disabled
@@ -21,8 +21,8 @@ interface CookiePreferences {
   advertising: boolean;
 }
 
-const CONSENT_KEY = 'cookie_consent';
-const CONSENT_VERSION = '1.0';
+const CONSENT_KEY = "cookie_consent";
+const CONSENT_VERSION = "1.0";
 
 export function CookieConsent() {
   const [showBanner, setShowBanner] = useState(false);
@@ -58,22 +58,22 @@ export function CookieConsent() {
 
   const applyConsent = (prefs: CookiePreferences) => {
     // Update Google Analytics consent
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('consent', 'update', {
-        analytics_storage: prefs.analytics ? 'granted' : 'denied',
-        ad_storage: prefs.advertising ? 'granted' : 'denied',
-        ad_user_data: prefs.advertising ? 'granted' : 'denied',
-        ad_personalization: prefs.advertising ? 'granted' : 'denied',
+    if (typeof window !== "undefined" && (window as any).gtag) {
+      (window as any).gtag("consent", "update", {
+        analytics_storage: prefs.analytics ? "granted" : "denied",
+        ad_storage: prefs.advertising ? "granted" : "denied",
+        ad_user_data: prefs.advertising ? "granted" : "denied",
+        ad_personalization: prefs.advertising ? "granted" : "denied",
       });
     }
 
     // Update Google Ads consent
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('consent', 'default', {
-        ad_storage: prefs.advertising ? 'granted' : 'denied',
-        ad_user_data: prefs.advertising ? 'granted' : 'denied',
-        ad_personalization: prefs.advertising ? 'granted' : 'denied',
-        analytics_storage: prefs.analytics ? 'granted' : 'denied',
+    if (typeof window !== "undefined" && (window as any).gtag) {
+      (window as any).gtag("consent", "default", {
+        ad_storage: prefs.advertising ? "granted" : "denied",
+        ad_user_data: prefs.advertising ? "granted" : "denied",
+        ad_personalization: prefs.advertising ? "granted" : "denied",
+        analytics_storage: prefs.analytics ? "granted" : "denied",
       });
     }
   };
@@ -144,8 +144,9 @@ export function CookieConsent() {
                 id="cookie-consent-description"
                 className="text-sm text-gray-600 dark:text-gray-400"
               >
-                We use cookies to enhance your browsing experience, serve personalized ads or content,
-                and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.
+                We use cookies to enhance your browsing experience, serve
+                personalized ads or content, and analyze our traffic. By
+                clicking "Accept All", you consent to our use of cookies.
               </p>
             </div>
           </div>
@@ -174,8 +175,9 @@ export function CookieConsent() {
                     id="cookie-necessary-desc"
                     className="text-xs text-gray-600 dark:text-gray-400 mt-1"
                   >
-                    These cookies are essential for the website to function and cannot be disabled.
-                    They store your game progress and settings.
+                    These cookies are essential for the website to function and
+                    cannot be disabled. They store your game progress and
+                    settings.
                   </p>
                 </div>
               </div>
@@ -187,7 +189,10 @@ export function CookieConsent() {
                   id="cookie-analytics"
                   checked={preferences.analytics}
                   onChange={(e) =>
-                    setPreferences({ ...preferences, analytics: e.target.checked })
+                    setPreferences({
+                      ...preferences,
+                      analytics: e.target.checked,
+                    })
                   }
                   className="mt-1 w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 cursor-pointer"
                   aria-describedby="cookie-analytics-desc"
@@ -203,8 +208,9 @@ export function CookieConsent() {
                     id="cookie-analytics-desc"
                     className="text-xs text-gray-600 dark:text-gray-400 mt-1"
                   >
-                    These cookies help us understand how visitors interact with our website
-                    by collecting and reporting information anonymously (Google Analytics).
+                    These cookies help us understand how visitors interact with
+                    our website by collecting and reporting information
+                    anonymously (Google Analytics).
                   </p>
                 </div>
               </div>
@@ -216,7 +222,10 @@ export function CookieConsent() {
                   id="cookie-advertising"
                   checked={preferences.advertising}
                   onChange={(e) =>
-                    setPreferences({ ...preferences, advertising: e.target.checked })
+                    setPreferences({
+                      ...preferences,
+                      advertising: e.target.checked,
+                    })
                   }
                   className="mt-1 w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 cursor-pointer"
                   aria-describedby="cookie-advertising-desc"
@@ -232,8 +241,8 @@ export function CookieConsent() {
                     id="cookie-advertising-desc"
                     className="text-xs text-gray-600 dark:text-gray-400 mt-1"
                   >
-                    These cookies are used to make advertising messages more relevant to you
-                    and your interests (Google Ads).
+                    These cookies are used to make advertising messages more
+                    relevant to you and your interests (Google Ads).
                   </p>
                 </div>
               </div>
@@ -289,7 +298,8 @@ export function CookieConsent() {
           {/* Privacy Policy Link */}
           <div className="mt-4 text-center">
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              By using our site, you acknowledge that you have read and understand our{' '}
+              By using our site, you acknowledge that you have read and
+              understand our{" "}
               <a
                 href="/privacy-policy"
                 className="text-purple-600 dark:text-purple-400 hover:underline"
@@ -297,8 +307,8 @@ export function CookieConsent() {
                 rel="noopener noreferrer"
               >
                 Privacy Policy
-              </a>{' '}
-              and{' '}
+              </a>{" "}
+              and{" "}
               <a
                 href="/cookie-policy"
                 className="text-purple-600 dark:text-purple-400 hover:underline"

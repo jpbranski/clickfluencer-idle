@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * PostButton.tsx - Main Clicker Component (Context Integrated)
@@ -11,8 +11,8 @@
  * - Respects prefers-reduced-motion
  */
 
-import { useState, useRef } from 'react';
-import { useGame } from '@/hooks/useGame';
+import { useState, useRef } from "react";
+import { useGame } from "@/hooks/useGame";
 
 export default function PostButton() {
   const { handleClick, clickPower, isLoading, state } = useGame();
@@ -50,8 +50,11 @@ export default function PostButton() {
     };
     setFloatingNumbers((prev) => [...prev, newFloating]);
     setTimeout(
-      () => setFloatingNumbers((prev) => prev.filter((f) => f.id !== newFloating.id)),
-      1000
+      () =>
+        setFloatingNumbers((prev) =>
+          prev.filter((f) => f.id !== newFloating.id),
+        ),
+      1000,
     );
 
     handleClick(); // triggers the actual game logic
@@ -76,8 +79,8 @@ export default function PostButton() {
           transition-all duration-150 ease-out
           motion-reduce:transition-none
           focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-400
-          ${isPressed ? 'scale-95' : 'scale-100 hover:scale-105'}
-          ${disabled ? 'opacity-50' : 'opacity-100'}
+          ${isPressed ? "scale-95" : "scale-100 hover:scale-105"}
+          ${disabled ? "opacity-50" : "opacity-100"}
         `}
         aria-label={`Click to gain ${clickPower.toFixed(0)} followers`}
         aria-disabled={disabled}
@@ -101,7 +104,7 @@ export default function PostButton() {
               absolute inset-0 rounded-full
               bg-white/20 blur-md
               motion-reduce:hidden
-              ${isPressed ? 'animate-ping' : 'hidden'}
+              ${isPressed ? "animate-ping" : "hidden"}
             `}
             aria-hidden="true"
           />
@@ -109,7 +112,11 @@ export default function PostButton() {
       </button>
 
       {/* Floating Numbers */}
-      <div className="pointer-events-none absolute inset-0" aria-live="polite" aria-atomic="true">
+      <div
+        className="pointer-events-none absolute inset-0"
+        aria-live="polite"
+        aria-atomic="true"
+      >
         {floatingNumbers.map((floating) => (
           <div
             key={floating.id}
@@ -117,7 +124,7 @@ export default function PostButton() {
             style={{
               left: floating.x,
               top: floating.y,
-              textShadow: '0 0 4px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.6)',
+              textShadow: "0 0 4px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.6)",
             }}
           >
             +{floating.value}

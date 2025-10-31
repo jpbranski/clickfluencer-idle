@@ -1,26 +1,32 @@
-'use client';
+"use client";
 
 /**
  * Footer.tsx - Site Footer Component
  *
  * Features:
  * - Fixed at bottom or below content
- * - Links: About, Privacy Policy, Terms of Service
+ * - Links: About, Privacy Policy, Terms of Service, Acknowledgements, Report Bug
  * - Copyright notice
  * - Contact message
  * - Dark mode support
  * - Responsive design
  */
 
-import Link from 'next/link';
+import Link from "next/link";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
   const links = [
-    { label: 'About', href: '/about' },
-    { label: 'Privacy Policy', href: '/privacy-policy' },
-    { label: 'Terms of Service', href: '/terms-of-service' },
+    { label: "About", href: "/about" },
+    { label: "Privacy Policy", href: "/privacy-policy" },
+    { label: "Terms of Service", href: "/terms-of-service" },
+    { label: "Acknowledgements", href: "/acknowledgements" },
+    {
+      label: "Report Bug",
+      href: "https://github.com/jpbranski/clickfluencer-idle/issues",
+      external: true,
+    },
   ];
 
   return (
@@ -46,6 +52,8 @@ export function Footer() {
               <span key={link.href} className="flex items-center gap-2">
                 <Link
                   href={link.href}
+                  target={link.external ? "_blank" : undefined}
+                  rel={link.external ? "noopener noreferrer" : undefined}
                   className="
                     text-sm text-gray-600 dark:text-gray-400
                     hover:text-purple-600 dark:hover:text-purple-400
@@ -78,14 +86,14 @@ export function Footer() {
         {/* Contact / Info Section */}
         <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800 text-center text-sm text-gray-600 dark:text-gray-400">
           <p>
-            Contact{' '}
+            Contact{" "}
             <a
               href="mailto:dev@jpbranski.com"
               className="text-purple-600 dark:text-purple-400 hover:underline"
             >
               dev@jpbranski.com
-            </a>{' '}
-            for feedback, collaboration, or bug reports.
+            </a>{" "}
+            for feedback, collaboration, or support.
           </p>
         </div>
 
@@ -93,10 +101,10 @@ export function Footer() {
         <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800">
           <div className="text-xs text-center text-gray-500 dark:text-gray-500">
             <p className="mb-2">
-              Built with{' '}
+              Built with{" "}
               <span role="img" aria-label="heart">
                 ❤️
-              </span>{' '}
+              </span>{" "}
               using Next.js, React, and Tailwind CSS
             </p>
             <p className="flex items-center justify-center gap-2 flex-wrap">
@@ -147,7 +155,7 @@ export function Footer() {
 
 /**
  * For a footer that stays at the bottom of the viewport:
- * 
+ *
  * Wrap your layout in:
  * <div className="min-h-screen flex flex-col">
  *   <main className="flex-1">{children}</main>

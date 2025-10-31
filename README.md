@@ -116,6 +116,7 @@ clickfluencer-idle/
 ## Performance
 
 The game uses:
+
 - IndexedDB for persistent local storage
 - React 19 for optimal rendering
 - Next.js App Router for code splitting

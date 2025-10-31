@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
 /**
  * EventToasts.tsx - Active Event Display Component
- * 
+ *
  * Shows active random events as toast notifications with:
  * - Event name and description
  * - Countdown timer
@@ -10,9 +10,9 @@
  * - Auto-remove when expired
  */
 
-import { useState, useEffect } from 'react';
-import { RandomEvent } from '@/game/state';
-import { formatCountdown } from '@/game/format';
+import { useState, useEffect } from "react";
+import { RandomEvent } from "@/game/state";
+import { formatCountdown } from "@/game/format";
 
 interface EventToastsProps {
   events: RandomEvent[];
@@ -32,27 +32,27 @@ export function EventToasts({ events }: EventToastsProps) {
 
   const getEventIcon = (type: string): string => {
     switch (type) {
-      case 'followerMultiplier':
-        return '🔥';
-      case 'clickMultiplier':
-        return '⭐';
-      case 'generatorMultiplier':
-        return '📈';
+      case "followerMultiplier":
+        return "🔥";
+      case "clickMultiplier":
+        return "⭐";
+      case "generatorMultiplier":
+        return "📈";
       default:
-        return '✨';
+        return "✨";
     }
   };
 
   const getEventColor = (type: string): string => {
     switch (type) {
-      case 'followerMultiplier':
-        return 'from-orange-400 to-red-500';
-      case 'clickMultiplier':
-        return 'from-yellow-400 to-orange-500';
-      case 'generatorMultiplier':
-        return 'from-green-400 to-emerald-500';
+      case "followerMultiplier":
+        return "from-orange-400 to-red-500";
+      case "clickMultiplier":
+        return "from-yellow-400 to-orange-500";
+      case "generatorMultiplier":
+        return "from-green-400 to-emerald-500";
       default:
-        return 'from-purple-400 to-pink-500';
+        return "from-purple-400 to-pink-500";
     }
   };
 
@@ -68,9 +68,17 @@ export function EventToasts({ events }: EventToastsProps) {
       aria-live="polite"
     >
       {events.map((event) => {
-        const timeRemaining = event.endTime ? Math.max(0, event.endTime - currentTime) : 0;
+        const timeRemaining = event.endTime
+          ? Math.max(0, event.endTime - currentTime)
+          : 0;
         const progress = event.endTime
-          ? Math.max(0, Math.min(100, ((event.duration - timeRemaining) / event.duration) * 100))
+          ? Math.max(
+              0,
+              Math.min(
+                100,
+                ((event.duration - timeRemaining) / event.duration) * 100,
+              ),
+            )
           : 0;
 
         return (
@@ -89,7 +97,7 @@ export function EventToasts({ events }: EventToastsProps) {
             <div className="relative h-1 bg-gray-200 dark:bg-gray-700">
               <div
                 className={`absolute inset-y-0 left-0 bg-gradient-to-r ${getEventColor(
-                  event.effect.type
+                  event.effect.type,
                 )} transition-all duration-1000 ease-linear`}
                 style={{ width: `${progress}%` }}
                 aria-hidden="true"

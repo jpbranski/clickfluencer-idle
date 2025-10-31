@@ -1,23 +1,25 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useGame } from '@/hooks/useGame';
-import PostButton from '@/components/PostButton';
-import { CurrencyBar } from '@/components/CurrencyBar';
-import { GeneratorCard } from '@/components/GeneratorCard';
-import { UpgradeCard } from '@/components/UpgradeCard';
-import { ThemeCard } from '@/components/ThemeCard';
-import { SettingsDialog } from '@/components/SettingsDialog';
-import { EventToasts } from '@/components/EventToasts';
-import { OfflineEarningsModal } from '@/components/OfflineEarningsModal';
-import { ShareButtons } from '@/components/ShareButtons';
-import { formatNumber } from '@/game/format';
-import { getGeneratorCost, canAfford, canAffordShards } from '@/game/state';
-import { getAwardDropRate } from '@/game/actions';
+import { useState, useEffect } from "react";
+import { useGame } from "@/hooks/useGame";
+import PostButton from "@/components/PostButton";
+import { CurrencyBar } from "@/components/CurrencyBar";
+import { GeneratorCard } from "@/components/GeneratorCard";
+import { UpgradeCard } from "@/components/UpgradeCard";
+import { ThemeCard } from "@/components/ThemeCard";
+import { SettingsDialog } from "@/components/SettingsDialog";
+import { EventToasts } from "@/components/EventToasts";
+import { OfflineEarningsModal } from "@/components/OfflineEarningsModal";
+import { ShareButtons } from "@/components/ShareButtons";
+import { formatNumber } from "@/game/format";
+import { getGeneratorCost, canAfford, canAffordShards } from "@/game/state";
+import { getAwardDropRate } from "@/game/actions";
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
-  const [activeTab, setActiveTab] = useState<'generators' | 'upgrades' | 'themes'>('generators');
+  const [activeTab, setActiveTab] = useState<
+    "generators" | "upgrades" | "themes"
+  >("generators");
   const [showSettings, setShowSettings] = useState(false);
 
   const {
@@ -101,9 +103,24 @@ export default function HomePage() {
               className="p-2 rounded-lg hover:bg-white/50 dark:hover:bg-gray-800/50 transition-colors"
               aria-label="Settings"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
               </svg>
             </button>
           </div>
@@ -141,7 +158,9 @@ export default function HomePage() {
 
             {/* Quick Stats */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-              <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Quick Stats</h2>
+              <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                Quick Stats
+              </h2>
               <div className="space-y-3">
                 <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
                   <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">
@@ -182,31 +201,31 @@ export default function HomePage() {
             {/* Tab Navigation */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-2 flex gap-2">
               <button
-                onClick={() => setActiveTab('generators')}
+                onClick={() => setActiveTab("generators")}
                 className={`flex-1 px-4 py-3 rounded-lg font-semibold transition-colors ${
-                  activeTab === 'generators'
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                  activeTab === "generators"
+                    ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+                    : "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
                 }`}
               >
                 📈 Generators
               </button>
               <button
-                onClick={() => setActiveTab('upgrades')}
+                onClick={() => setActiveTab("upgrades")}
                 className={`flex-1 px-4 py-3 rounded-lg font-semibold transition-colors ${
-                  activeTab === 'upgrades'
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                  activeTab === "upgrades"
+                    ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+                    : "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
                 }`}
               >
                 ⚡ Upgrades
               </button>
               <button
-                onClick={() => setActiveTab('themes')}
+                onClick={() => setActiveTab("themes")}
                 className={`flex-1 px-4 py-3 rounded-lg font-semibold transition-colors ${
-                  activeTab === 'themes'
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                  activeTab === "themes"
+                    ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+                    : "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
                 }`}
               >
                 🎨 Themes
@@ -216,22 +235,28 @@ export default function HomePage() {
             {/* Tab Content */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
               {/* Generators Tab */}
-              {activeTab === 'generators' && (
+              {activeTab === "generators" && (
                 <div>
-                  <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Content Generators</h2>
+                  <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+                    Content Generators
+                  </h2>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-                    Purchase automated content systems to generate followers passively
+                    Purchase automated content systems to generate followers
+                    passively
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {state.generators.map((generator) => {
                       const cost = getGeneratorCost(generator);
-                      const totalProduction = generator.baseFollowersPerSecond * generator.count;
+                      const totalProduction =
+                        generator.baseFollowersPerSecond * generator.count;
                       return (
                         <GeneratorCard
                           key={generator.id}
                           generator={{ ...generator, cost, totalProduction }}
                           canAfford={canAfford(state.followers, cost)}
-                          onBuy={(count) => handleBuyGenerator(generator.id, count)}
+                          onBuy={(count) =>
+                            handleBuyGenerator(generator.id, count)
+                          }
                           followersPerSecond={followersPerSecond}
                           currentFollowers={state.followers}
                         />
@@ -242,13 +267,15 @@ export default function HomePage() {
               )}
 
               {/* Upgrades Tab */}
-              {activeTab === 'upgrades' && (
+              {activeTab === "upgrades" && (
                 <div>
-                  <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Upgrades</h2>
+                  <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+                    Upgrades
+                  </h2>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
                     Purchase permanent improvements to boost your production
                   </p>
-                  
+
                   {/* Prestige Section */}
                   {canPrestige && (
                     <div className="mb-6 p-6 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg">
@@ -258,10 +285,18 @@ export default function HomePage() {
                             ⭐ Prestige Available!
                           </div>
                           <div className="text-sm opacity-90">
-                            Reset your progress to gain <span className="font-bold">{reputationGain} Reputation</span>
+                            Reset your progress to gain{" "}
+                            <span className="font-bold">
+                              {reputationGain} Reputation
+                            </span>
                           </div>
                           <div className="text-xs opacity-75 mt-1">
-                            New bonus: ×{((1 + (state.reputation + reputationGain) * 0.10) * 100).toFixed(0)}% production
+                            New bonus: ×
+                            {(
+                              (1 + (state.reputation + reputationGain) * 0.1) *
+                              100
+                            ).toFixed(0)}
+                            % production
                           </div>
                         </div>
                         <button
@@ -273,7 +308,7 @@ export default function HomePage() {
                       </div>
                     </div>
                   )}
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {state.upgrades.map((upgrade) => (
                       <UpgradeCard
@@ -284,7 +319,7 @@ export default function HomePage() {
                       />
                     ))}
                   </div>
-                  {state.upgrades.every(u => u.purchased) && (
+                  {state.upgrades.every((u) => u.purchased) && (
                     <div className="mt-6 text-center p-8 bg-green-50 dark:bg-green-900/20 rounded-lg">
                       <div className="text-4xl mb-2">🎉</div>
                       <div className="text-lg font-bold text-green-700 dark:text-green-400">
@@ -299,15 +334,18 @@ export default function HomePage() {
               )}
 
               {/* Themes Tab */}
-              {activeTab === 'themes' && (
+              {activeTab === "themes" && (
                 <div>
-                  <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Themes</h2>
+                  <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+                    Themes
+                  </h2>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-                    Unlock cosmetic themes with awards. Bonuses apply <strong>permanently</strong> once unlocked!
+                    Unlock cosmetic themes with awards. Bonuses apply{" "}
+                    <strong>permanently</strong> once unlocked!
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {state.themes.map((theme) => {
-                      const activeTheme = state.themes.find(t => t.active);
+                      const activeTheme = state.themes.find((t) => t.active);
                       return (
                         <ThemeCard
                           key={theme.id}
@@ -323,15 +361,20 @@ export default function HomePage() {
                   </div>
                   <div className="mt-6 p-4 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800">
                     <div className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
-                      <span className="text-purple-600 dark:text-purple-400">💡</span>
+                      <span className="text-purple-600 dark:text-purple-400">
+                        💡
+                      </span>
                       <div>
                         <div className="font-semibold text-purple-700 dark:text-purple-300 mb-1">
                           How to earn Awards:
                         </div>
                         <p>
-                          Awards have a 1% chance to drop from each click. Keep clicking to collect them!
+                          Awards have a 1% chance to drop from each click. Keep
+                          clicking to collect them!
                           <br />
-                          <strong>Bonuses are permanent</strong> - once you unlock a theme, its bonus applies forever, even when not active!
+                          <strong>Bonuses are permanent</strong> - once you
+                          unlock a theme, its bonus applies forever, even when
+                          not active!
                         </p>
                       </div>
                     </div>

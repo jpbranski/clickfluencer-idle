@@ -1,18 +1,18 @@
 /**
  * engine.ts - Main Game Engine
- * 
+ *
  * This module orchestrates the entire game loop including:
  * - Tick loop (250-500ms intervals)
  * - Random event scheduling
  * - Offline progress calculation
  * - Pub/sub event system for state updates
- * 
+ *
  * Connected to:
  * - state.ts: Manages game state
  * - actions.ts: Executes game actions
  * - prestige.ts: Calculates offline gains with prestige bonuses
  * - UI components: Subscribe to state changes
- * 
+ *
  * Architecture:
  * - Engine maintains single source of truth (GameState)
  * - All mutations go through actions
@@ -20,9 +20,9 @@
  * - Persistent through IndexedDB (handled externally)
  */
 
-import { GameState, createInitialState, getFollowersPerSecond } from './state';
-import { tick, applyEvent, ActionResult } from './actions';
-import { calculateReputationBonus } from './prestige';
+import { GameState, createInitialState, getFollowersPerSecond } from "./state";
+import { tick, applyEvent, ActionResult } from "./actions";
+import { calculateReputationBonus } from "./prestige";
 
 // ============================================================================
 // CONSTANTS
@@ -54,7 +54,7 @@ export interface RandomEventDefinition {
   duration: number;
   weight: number; // Probability weight
   effect: {
-    type: 'followerMultiplier' | 'clickMultiplier' | 'generatorMultiplier';
+    type: "followerMultiplier" | "clickMultiplier" | "generatorMultiplier";
     multiplier: number;
   };
 }
@@ -65,44 +65,44 @@ export interface RandomEventDefinition {
 
 const RANDOM_EVENTS: RandomEventDefinition[] = [
   {
-    id: 'viral_post',
-    name: '🔥 Viral Post',
-    description: 'Your post went viral! 3x followers for 60 seconds',
+    id: "viral_post",
+    name: "🔥 Viral Post",
+    description: "Your post went viral! 3x followers for 60 seconds",
     duration: 60000,
     weight: 10,
-    effect: { type: 'followerMultiplier', multiplier: 3 },
+    effect: { type: "followerMultiplier", multiplier: 3 },
   },
   {
-    id: 'trending_topic',
-    name: '📈 Trending Topic',
-    description: 'You jumped on a trending topic! 2x production for 2 minutes',
+    id: "trending_topic",
+    name: "📈 Trending Topic",
+    description: "You jumped on a trending topic! 2x production for 2 minutes",
     duration: 120000,
     weight: 15,
-    effect: { type: 'generatorMultiplier', multiplier: 2 },
+    effect: { type: "generatorMultiplier", multiplier: 2 },
   },
   {
-    id: 'celebrity_mention',
-    name: '⭐ Celebrity Mention',
-    description: 'A celebrity mentioned you! 5x click power for 30 seconds',
+    id: "celebrity_mention",
+    name: "⭐ Celebrity Mention",
+    description: "A celebrity mentioned you! 5x click power for 30 seconds",
     duration: 30000,
     weight: 5,
-    effect: { type: 'clickMultiplier', multiplier: 5 },
+    effect: { type: "clickMultiplier", multiplier: 5 },
   },
   {
-    id: 'algorithm_boost',
-    name: '🚀 Algorithm Boost',
-    description: 'The algorithm favors you! 2x all production for 90 seconds',
+    id: "algorithm_boost",
+    name: "🚀 Algorithm Boost",
+    description: "The algorithm favors you! 2x all production for 90 seconds",
     duration: 90000,
     weight: 8,
-    effect: { type: 'followerMultiplier', multiplier: 2 },
+    effect: { type: "followerMultiplier", multiplier: 2 },
   },
   {
-    id: 'sponsored_post',
-    name: '💰 Sponsored Post',
-    description: 'Sponsored content bonus! 4x followers for 45 seconds',
+    id: "sponsored_post",
+    name: "💰 Sponsored Post",
+    description: "Sponsored content bonus! 4x followers for 45 seconds",
     duration: 45000,
     weight: 12,
-    effect: { type: 'followerMultiplier', multiplier: 4 },
+    effect: { type: "followerMultiplier", multiplier: 4 },
   },
 ];
 
@@ -154,7 +154,7 @@ export class GameEngine {
       this.checkForRandomEvent();
     }, EVENT_CHECK_INTERVAL);
 
-    this.emit('engine:started', { timestamp: Date.now() });
+    this.emit("engine:started", { timestamp: Date.now() });
   }
 
   /**
@@ -184,7 +184,7 @@ export class GameEngine {
       lastSaveTime: Date.now(),
     };
 
-    this.emit('engine:stopped', { timestamp: Date.now() });
+    this.emit("engine:stopped", { timestamp: Date.now() });
   }
 
   /**
@@ -195,7 +195,7 @@ export class GameEngine {
       clearInterval(this.tickInterval);
       this.tickInterval = null;
     }
-    this.emit('engine:paused', { timestamp: Date.now() });
+    this.emit("engine:paused", { timestamp: Date.now() });
   }
 
   /**
@@ -203,13 +203,13 @@ export class GameEngine {
    */
   public resume(): void {
     if (!this.isRunning) return;
-    
+
     this.lastTickTime = Date.now();
     this.tickInterval = setInterval(() => {
       this.processTick();
     }, TICK_INTERVAL);
-    
-    this.emit('engine:resumed', { timestamp: Date.now() });
+
+    this.emit("engine:resumed", { timestamp: Date.now() });
   }
 
   // ==========================================================================
@@ -282,7 +282,8 @@ export class GameEngine {
       followers: this.state.followers + followersGained,
       stats: {
         ...this.state.stats,
-        totalFollowersEarned: this.state.stats.totalFollowersEarned + followersGained,
+        totalFollowersEarned:
+          this.state.stats.totalFollowersEarned + followersGained,
         playTime: this.state.stats.playTime + timeProcessed,
         lastTickTime: now,
       },
@@ -298,7 +299,7 @@ export class GameEngine {
 
     // Emit event for UI notification
     if (followersGained > 0) {
-      this.emit('offline:progress', result);
+      this.emit("offline:progress", result);
     }
 
     this.notifyStateChange();
@@ -338,14 +339,17 @@ export class GameEngine {
     });
 
     this.notifyStateChange();
-    this.emit('event:started', event);
+    this.emit("event:started", event);
   }
 
   /**
    * Select a random event based on weighted probability
    */
   private selectRandomEvent(): RandomEventDefinition | null {
-    const totalWeight = RANDOM_EVENTS.reduce((sum, event) => sum + event.weight, 0);
+    const totalWeight = RANDOM_EVENTS.reduce(
+      (sum, event) => sum + event.weight,
+      0,
+    );
     let random = Math.random() * totalWeight;
 
     for (const event of RANDOM_EVENTS) {
@@ -380,16 +384,18 @@ export class GameEngine {
   /**
    * Execute an action and update state
    */
-  public executeAction(action: (state: GameState) => ActionResult): ActionResult {
+  public executeAction(
+    action: (state: GameState) => ActionResult,
+  ): ActionResult {
     const result = action(this.state);
-    
+
     if (result.success) {
       this.state = result.state;
       this.notifyStateChange();
     }
 
     if (result.message) {
-      this.emit('action:executed', {
+      this.emit("action:executed", {
         success: result.success,
         message: result.message,
       });
@@ -408,7 +414,7 @@ export class GameEngine {
    */
   public subscribe(listener: StateChangeListener): () => void {
     this.stateListeners.add(listener);
-    
+
     // Call immediately with current state
     listener(this.state);
 
@@ -425,7 +431,7 @@ export class GameEngine {
     if (!this.eventListeners.has(eventType)) {
       this.eventListeners.set(eventType, new Set());
     }
-    
+
     this.eventListeners.get(eventType)!.add(listener);
 
     return () => {
@@ -443,7 +449,7 @@ export class GameEngine {
     const listeners = this.eventListeners.get(eventType);
     if (!listeners) return;
 
-    listeners.forEach(listener => {
+    listeners.forEach((listener) => {
       try {
         listener(eventType, data);
       } catch (error) {
@@ -456,11 +462,11 @@ export class GameEngine {
    * Notify all state change listeners
    */
   private notifyStateChange(): void {
-    this.stateListeners.forEach(listener => {
+    this.stateListeners.forEach((listener) => {
       try {
         listener(this.state);
       } catch (error) {
-        console.error('Error in state change listener:', error);
+        console.error("Error in state change listener:", error);
       }
     });
   }
@@ -491,7 +497,7 @@ export class GameEngine {
       ...this.state,
       lastSaveTime: Date.now(),
     };
-    this.emit('game:saved', { timestamp: Date.now() });
+    this.emit("game:saved", { timestamp: Date.now() });
   }
 
   /**
@@ -500,7 +506,7 @@ export class GameEngine {
   public reset(): void {
     this.state = createInitialState();
     this.notifyStateChange();
-    this.emit('game:reset', { timestamp: Date.now() });
+    this.emit("game:reset", { timestamp: Date.now() });
   }
 }
 

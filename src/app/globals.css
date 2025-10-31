@@ -25,7 +25,9 @@
 
   body {
     @apply bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -34,7 +36,13 @@
     scroll-behavior: smooth;
   }
 
-  h1, h2, h3, h4, h5, h6, p {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p {
     @apply m-0;
   }
 
@@ -97,21 +105,36 @@
     animation: float 3s ease-in-out infinite;
   }
   @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
   }
 
   .animate-scale-in {
     animation: scale-in 0.2s ease-out;
   }
   @keyframes scale-in {
-    0% { transform: scale(0.9); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
+    0% {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 
   /* Click / hover */
-  .click-effect { @apply active:scale-95 transition-transform duration-100; }
-  .pulse-on-hover { @apply hover:animate-pulse; }
+  .click-effect {
+    @apply active:scale-95 transition-transform duration-100;
+  }
+  .pulse-on-hover {
+    @apply hover:animate-pulse;
+  }
 
   /* Disable text selection */
   .no-select {
@@ -122,14 +145,22 @@
   }
 
   /* Scroll snap helpers */
-  .container-snap { scroll-snap-type: x mandatory; }
-  .snap-item { scroll-snap-align: start; }
+  .container-snap {
+    scroll-snap-type: x mandatory;
+  }
+  .snap-item {
+    scroll-snap-align: start;
+  }
 }
 
 /* -------------------------------------------------------
    Misc animations & toast styles
 ------------------------------------------------------- */
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 .spinner {
   border: 3px solid rgba(0, 0, 0, 0.1);
   border-left-color: currentColor;
@@ -139,14 +170,30 @@
   animation: spin 1s linear infinite;
 }
 
-.toast-enter { animation: toast-enter 0.3s ease-out; }
+.toast-enter {
+  animation: toast-enter 0.3s ease-out;
+}
 @keyframes toast-enter {
-  from { transform: translateX(100%); opacity: 0; }
-  to   { transform: translateX(0); opacity: 1; }
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
-.toast-exit { animation: toast-exit 0.2s ease-in; }
+.toast-exit {
+  animation: toast-exit 0.2s ease-in;
+}
 @keyframes toast-exit {
-  from { transform: translateX(0); opacity: 1; }
-  to   { transform: translateX(100%); opacity: 0; }
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
 }

@@ -1,11 +1,11 @@
 /**
  * clock.ts - Time Utilities
- * 
+ *
  * Provides time-related utilities including:
  * - Current timestamp helpers
  * - Elapsed time calculation
  * - Visibility state tracking (pause when tab hidden)
- * 
+ *
  * Connected to:
  * - engine.ts: Used for tick timing and offline calculation
  * - storage.ts: Used for save timestamps
@@ -17,7 +17,7 @@
 
 /**
  * Get current timestamp in milliseconds
- * 
+ *
  * @returns Current time in ms since epoch
  */
 export function now(): number {
@@ -26,7 +26,7 @@ export function now(): number {
 
 /**
  * Calculate elapsed time between two timestamps
- * 
+ *
  * @param start - Start timestamp (ms)
  * @param end - End timestamp (ms), defaults to now
  * @returns Elapsed time in milliseconds
@@ -37,7 +37,7 @@ export function elapsed(start: number, end: number = now()): number {
 
 /**
  * Convert milliseconds to seconds
- * 
+ *
  * @param ms - Milliseconds
  * @returns Seconds (with decimals)
  */
@@ -47,7 +47,7 @@ export function msToSeconds(ms: number): number {
 
 /**
  * Convert seconds to milliseconds
- * 
+ *
  * @param seconds - Seconds
  * @returns Milliseconds
  */
@@ -57,7 +57,7 @@ export function secondsToMs(seconds: number): number {
 
 /**
  * Get time components from milliseconds
- * 
+ *
  * @param ms - Milliseconds
  * @returns Object with days, hours, minutes, seconds, milliseconds
  */
@@ -73,7 +73,7 @@ export function getTimeComponents(ms: number): {
   const minutes = Math.floor((ms % (60 * 60 * 1000)) / (60 * 1000));
   const seconds = Math.floor((ms % (60 * 1000)) / 1000);
   const milliseconds = ms % 1000;
-  
+
   return { days, hours, minutes, seconds, milliseconds };
 }
 
@@ -81,7 +81,10 @@ export function getTimeComponents(ms: number): {
 // VISIBILITY STATE TRACKING
 // ============================================================================
 
-export type VisibilityChangeCallback = (isVisible: boolean, timeHidden: number) => void;
+export type VisibilityChangeCallback = (
+  isVisible: boolean,
+  timeHidden: number,
+) => void;
 
 /**
  * Visibility state manager
@@ -107,10 +110,10 @@ export class VisibilityTracker {
       this.handleVisibilityChange();
     };
 
-    document.addEventListener('visibilitychange', this.visibilityChangeHandler);
-    
+    document.addEventListener("visibilitychange", this.visibilityChangeHandler);
+
     // Also listen for page unload/beforeunload
-    window.addEventListener('beforeunload', () => {
+    window.addEventListener("beforeunload", () => {
       if (this.isVisible) {
         this.handleVisibilityChange();
       }
@@ -122,7 +125,10 @@ export class VisibilityTracker {
    */
   public stop(): void {
     if (this.visibilityChangeHandler) {
-      document.removeEventListener('visibilitychange', this.visibilityChangeHandler);
+      document.removeEventListener(
+        "visibilitychange",
+        this.visibilityChangeHandler,
+      );
       this.visibilityChangeHandler = null;
     }
   }
@@ -132,7 +138,7 @@ export class VisibilityTracker {
    */
   private handleVisibilityChange(): void {
     const nowVisible = !document.hidden;
-    
+
     if (nowVisible === this.isVisible) return;
 
     if (nowVisible) {
@@ -151,13 +157,13 @@ export class VisibilityTracker {
 
   /**
    * Subscribe to visibility changes
-   * 
+   *
    * @param callback - Function to call on visibility change
    * @returns Unsubscribe function
    */
   public onChange(callback: VisibilityChangeCallback): () => void {
     this.listeners.add(callback);
-    
+
     return () => {
       this.listeners.delete(callback);
     };
@@ -167,11 +173,11 @@ export class VisibilityTracker {
    * Notify all listeners of visibility change
    */
   private notifyListeners(isVisible: boolean, timeHidden: number): void {
-    this.listeners.forEach(listener => {
+    this.listeners.forEach((listener) => {
       try {
         listener(isVisible, timeHidden);
       } catch (error) {
-        console.error('Error in visibility change listener:', error);
+        console.error("Error in visibility change listener:", error);
       }
     });
   }
@@ -215,31 +221,31 @@ export function getVisibilityTracker(): VisibilityTracker {
 /**
  * Sleep for specified milliseconds
  * Useful for delays and testing
- * 
+ *
  * @param ms - Milliseconds to sleep
  */
 export function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**
  * Create a debounced function
- * 
+ *
  * @param fn - Function to debounce
  * @param delay - Delay in milliseconds
  * @returns Debounced function
  */
 export function debounce<T extends (...args: unknown[]) => unknown>(
   fn: T,
-  delay: number
+  delay: number,
 ): (...args: Parameters<T>) => void {
   let timeoutId: NodeJS.Timeout | null = null;
-  
+
   return (...args: Parameters<T>) => {
     if (timeoutId) {
       clearTimeout(timeoutId);
     }
-    
+
     timeoutId = setTimeout(() => {
       fn(...args);
     }, delay);
@@ -248,20 +254,20 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
 
 /**
  * Create a throttled function
- * 
+ *
  * @param fn - Function to throttle
  * @param delay - Delay in milliseconds
  * @returns Throttled function
  */
 export function throttle<T extends (...args: unknown[]) => unknown>(
   fn: T,
-  delay: number
+  delay: number,
 ): (...args: Parameters<T>) => void {
   let lastCall = 0;
-  
+
   return (...args: Parameters<T>) => {
     const nowTime = now();
-    
+
     if (nowTime - lastCall >= delay) {
       lastCall = nowTime;
       fn(...args);

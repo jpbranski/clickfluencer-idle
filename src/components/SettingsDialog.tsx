@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
 /**
  * SettingsDialog.tsx - Game Settings Component
- * 
+ *
  * Features:
  * - Autosave interval setting
  * - Reduced motion preference
@@ -11,7 +11,7 @@
  * - Reset game (with confirmation)
  */
 
-import { useState } from 'react';
+import { useState } from "react";
 
 interface SettingsDialogProps {
   isOpen: boolean;
@@ -49,9 +49,9 @@ export function SettingsDialog({
   };
 
   const handleImport = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
     input.onchange = (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
@@ -62,7 +62,7 @@ export function SettingsDialog({
             onImport(data);
             setImportError(null);
           } catch (error) {
-            setImportError('Invalid save file');
+            setImportError("Invalid save file");
           }
         };
         reader.readAsText(file);
@@ -115,8 +115,18 @@ export function SettingsDialog({
               "
               aria-label="Close settings"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -132,13 +142,15 @@ export function SettingsDialog({
                 label="Auto-Save"
                 description="Automatically save progress every 5 seconds"
                 checked={settings.autoSave}
-                onChange={(checked) => onSettingChange('autoSave', checked)}
+                onChange={(checked) => onSettingChange("autoSave", checked)}
               />
               <SettingToggle
                 label="Offline Progress"
                 description="Earn followers while game is closed (up to 8 hours)"
                 checked={settings.offlineProgressEnabled}
-                onChange={(checked) => onSettingChange('offlineProgressEnabled', checked)}
+                onChange={(checked) =>
+                  onSettingChange("offlineProgressEnabled", checked)
+                }
               />
             </div>
           </section>
@@ -151,19 +163,22 @@ export function SettingsDialog({
                 label="Show Notifications"
                 description="Display toast notifications for events"
                 checked={settings.showNotifications}
-                onChange={(checked) => onSettingChange('showNotifications', checked)}
+                onChange={(checked) =>
+                  onSettingChange("showNotifications", checked)
+                }
               />
               <SettingToggle
                 label="Sound Effects"
                 description="Play audio feedback for actions"
                 checked={settings.soundEnabled}
-                onChange={(checked) => onSettingChange('soundEnabled', checked)}
+                onChange={(checked) => onSettingChange("soundEnabled", checked)}
               />
               <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
                 <div className="flex items-start gap-2 text-xs text-gray-600 dark:text-gray-400">
                   <span className="text-blue-600 dark:text-blue-400">ℹ️</span>
                   <p>
-                    Animations automatically reduce when "Reduce motion" is enabled in your system preferences.
+                    Animations automatically reduce when "Reduce motion" is
+                    enabled in your system preferences.
                   </p>
                 </div>
               </div>
@@ -233,7 +248,8 @@ export function SettingsDialog({
                         ⚠️ Are you sure?
                       </p>
                       <p className="text-xs text-gray-600 dark:text-gray-400">
-                        This will permanently delete all your progress. This action cannot be undone!
+                        This will permanently delete all your progress. This
+                        action cannot be undone!
                       </p>
                     </div>
                     <div className="flex gap-2">
@@ -284,12 +300,19 @@ interface SettingToggleProps {
   onChange: (checked: boolean) => void;
 }
 
-function SettingToggle({ label, description, checked, onChange }: SettingToggleProps) {
+function SettingToggle({
+  label,
+  description,
+  checked,
+  onChange,
+}: SettingToggleProps) {
   return (
     <div className="flex items-start justify-between gap-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
       <div className="flex-1">
         <div className="text-sm font-semibold mb-1">{label}</div>
-        <div className="text-xs text-gray-600 dark:text-gray-400">{description}</div>
+        <div className="text-xs text-gray-600 dark:text-gray-400">
+          {description}
+        </div>
       </div>
       <button
         onClick={() => onChange(!checked)}
@@ -297,7 +320,7 @@ function SettingToggle({ label, description, checked, onChange }: SettingToggleP
           relative inline-flex h-6 w-11 items-center rounded-full
           transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2
           motion-reduce:transition-none
-          ${checked ? 'bg-purple-600' : 'bg-gray-300 dark:bg-gray-600'}
+          ${checked ? "bg-purple-600" : "bg-gray-300 dark:bg-gray-600"}
         `}
         role="switch"
         aria-checked={checked}
@@ -307,7 +330,7 @@ function SettingToggle({ label, description, checked, onChange }: SettingToggleP
           className={`
             inline-block h-4 w-4 transform rounded-full bg-white shadow-lg transition-transform duration-200
             motion-reduce:transition-none
-            ${checked ? 'translate-x-6' : 'translate-x-1'}
+            ${checked ? "translate-x-6" : "translate-x-1"}
           `}
         />
       </button>

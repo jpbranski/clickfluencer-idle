@@ -1,9 +1,9 @@
 /**
  * storage/index.ts - Unified Storage Interface
- * 
+ *
  * Exports a clean, unified interface for game storage operations.
  * Abstracts away driver selection and internal implementation details.
- * 
+ *
  * Usage:
  *   import { saveGame, loadGame, deleteGame } from '@/lib/storage';
  */
@@ -21,7 +21,7 @@ export {
   SAVE_KEY,
   CURRENT_VERSION,
   MAX_BACKUPS,
-} from './storage';
+} from "./storage";
 
 // Re-export types
 export type {
@@ -29,34 +29,31 @@ export type {
   SaveResult,
   LoadResult,
   StorageDriver,
-} from './storage';
+} from "./storage";
 
 // Re-export IndexedDB types (for advanced usage)
-export type {
-  StoredData,
-  BackupData,
-} from './indexedDb';
+export type { StoredData, BackupData } from "./indexedDb";
 
 // Re-export utility functions for advanced usage
 export {
   isIndexedDBAvailable,
   getIndexedDBSize,
   clearIndexedDB,
-} from './indexedDb';
+} from "./indexedDb";
 
 export {
   isLocalStorageAvailable,
   getLocalStorageSize,
   clearLocalStorage,
   getRemainingLocalStorageSpace,
-} from './localStorage';
+} from "./localStorage";
 
 // ============================================================================
 // CONVENIENCE WRAPPERS
 // ============================================================================
 
-import { save, load, deleteSave, exists } from './storage';
-import { GameState } from '../../game/state';
+import { save, load, deleteSave, exists } from "./storage";
+import { GameState } from "../../game/state";
 
 /**
  * Save game state (typed convenience wrapper)
@@ -101,9 +98,9 @@ export function autoSaveGame(state: GameState): void {
   autoSaveTimeout = setTimeout(async () => {
     try {
       await saveGame(state);
-      console.log('Auto-saved game state');
+      console.log("Auto-saved game state");
     } catch (error) {
-      console.error('Auto-save failed:', error);
+      console.error("Auto-save failed:", error);
     }
   }, AUTO_SAVE_DELAY);
 }
@@ -116,6 +113,6 @@ export async function forceSaveGame(state: GameState) {
     clearTimeout(autoSaveTimeout);
     autoSaveTimeout = null;
   }
-  
+
   return saveGame(state);
 }

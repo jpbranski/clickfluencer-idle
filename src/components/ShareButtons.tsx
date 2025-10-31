@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * ShareButtons.tsx - Social Media Share Component
@@ -7,8 +7,8 @@
  * Generates a dynamic image with game stats
  */
 
-import { useCallback, useRef } from 'react';
-import { formatNumber } from '@/game/format';
+import { useCallback, useRef } from "react";
+import { formatNumber } from "@/game/format";
 
 interface ShareButtonsProps {
   creds: number;
@@ -23,44 +23,49 @@ export function ShareButtons({ creds, score }: ShareButtonsProps) {
    */
   const generateShareImage = useCallback(async (): Promise<string> => {
     return new Promise((resolve) => {
-      const canvas = document.createElement('canvas');
+      const canvas = document.createElement("canvas");
       canvas.width = 1200;
       canvas.height = 630; // Optimal for social media (OG image size)
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext("2d");
 
       if (!ctx) {
-        resolve('');
+        resolve("");
         return;
       }
 
       // Create gradient background (purple to pink)
-      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      gradient.addColorStop(0, '#9333ea'); // purple-600
-      gradient.addColorStop(0.5, '#db2777'); // pink-600
-      gradient.addColorStop(1, '#ec4899'); // pink-500
+      const gradient = ctx.createLinearGradient(
+        0,
+        0,
+        canvas.width,
+        canvas.height,
+      );
+      gradient.addColorStop(0, "#9333ea"); // purple-600
+      gradient.addColorStop(0.5, "#db2777"); // pink-600
+      gradient.addColorStop(1, "#ec4899"); // pink-500
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Add semi-transparent overlay for better text readability
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+      ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Title
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 72px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('Clickfluencer Idle', canvas.width / 2, 200);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 72px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("Clickfluencer Idle", canvas.width / 2, 200);
 
       // Stats
-      ctx.font = 'bold 56px sans-serif';
+      ctx.font = "bold 56px sans-serif";
       ctx.fillText(`Creds: ${formatNumber(creds)}`, canvas.width / 2, 350);
 
-      ctx.font = 'bold 48px sans-serif';
+      ctx.font = "bold 48px sans-serif";
       ctx.fillText(`Score: ${formatNumber(score)}`, canvas.width / 2, 450);
 
       // Convert to data URL
-      resolve(canvas.toDataURL('image/png'));
+      resolve(canvas.toDataURL("image/png"));
     });
   }, [creds, score]);
 
@@ -72,7 +77,7 @@ export function ShareButtons({ creds, score }: ShareButtonsProps) {
     const url = window.location.href;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
 
-    window.open(twitterUrl, '_blank', 'width=550,height=420');
+    window.open(twitterUrl, "_blank", "width=550,height=420");
   }, [creds, score]);
 
   /**
@@ -82,7 +87,7 @@ export function ShareButtons({ creds, score }: ShareButtonsProps) {
     const url = window.location.href;
     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
 
-    window.open(facebookUrl, '_blank', 'width=550,height=420');
+    window.open(facebookUrl, "_blank", "width=550,height=420");
   }, []);
 
   /**
@@ -92,7 +97,7 @@ export function ShareButtons({ creds, score }: ShareButtonsProps) {
     const imageData = await generateShareImage();
     if (!imageData) return;
 
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.download = `clickfluencer-${Date.now()}.png`;
     link.href = imageData;
     link.click();
@@ -138,8 +143,18 @@ export function ShareButtons({ creds, score }: ShareButtonsProps) {
           className="flex items-center gap-2 px-4 py-3 rounded-lg font-semibold transition-colors bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
           aria-label="Download share image"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+            />
           </svg>
           Download Image
         </button>
@@ -148,7 +163,8 @@ export function ShareButtons({ creds, score }: ShareButtonsProps) {
       {/* Preview hint */}
       <div className="mt-4 p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800">
         <p className="text-xs text-gray-600 dark:text-gray-400">
-          💡 <strong>Tip:</strong> Download the image to share it with your custom stats on any platform!
+          💡 <strong>Tip:</strong> Download the image to share it with your
+          custom stats on any platform!
         </p>
       </div>
 

@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
 /**
  * OfflineEarningsModal.tsx - Offline Earnings Display
- * 
+ *
  * Shows a modal with earnings accumulated while away
  * Displays time away, followers gained, and any caps applied
  */
 
-import { formatNumber, formatTimeDetailed } from '@/game/format';
+import { formatNumber, formatTimeDetailed } from "@/game/format";
 
 interface OfflineEarningsModalProps {
   isOpen: boolean;
@@ -97,7 +97,11 @@ export function OfflineEarningsModal({
           {wasCapped && (
             <div className="p-4 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800">
               <div className="flex items-start gap-2">
-                <span className="text-yellow-600 dark:text-yellow-400 text-xl" role="img" aria-label="warning">
+                <span
+                  className="text-yellow-600 dark:text-yellow-400 text-xl"
+                  role="img"
+                  aria-label="warning"
+                >
                   ⚠️
                 </span>
                 <div className="flex-1">
@@ -105,7 +109,9 @@ export function OfflineEarningsModal({
                     Progress Capped
                   </div>
                   <div className="text-xs text-gray-600 dark:text-gray-400">
-                    Offline progress is limited to {formatTimeDetailed(timeProcessed)} ({(timeProcessed / (60 * 60 * 1000)).toFixed(0)} hours).
+                    Offline progress is limited to{" "}
+                    {formatTimeDetailed(timeProcessed)} (
+                    {(timeProcessed / (60 * 60 * 1000)).toFixed(0)} hours).
                     Consider checking in more frequently to maximize gains!
                   </div>
                 </div>
@@ -116,7 +122,11 @@ export function OfflineEarningsModal({
           {/* Info Box */}
           <div className="p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800">
             <div className="flex items-start gap-2 text-xs text-gray-600 dark:text-gray-400">
-              <span className="text-purple-600 dark:text-purple-400" role="img" aria-label="info">
+              <span
+                className="text-purple-600 dark:text-purple-400"
+                role="img"
+                aria-label="info"
+              >
                 💡
               </span>
               <p>
