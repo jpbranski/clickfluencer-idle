@@ -29,6 +29,10 @@ export function UpgradeCard({
 }: UpgradeCardProps) {
   const isInfinite = upgrade.currentLevel !== undefined;
   const level = upgrade.currentLevel || 0;
+  const isPurchased =
+    upgrade.purchased ||
+    (upgrade.maxTier && upgrade.tier && upgrade.tier >= upgrade.maxTier);
+
   const getEffectIcon = (type: string): string => {
     switch (type) {
       case "clickMultiplier":
@@ -62,8 +66,8 @@ export function UpgradeCard({
         relative p-4 rounded-lg border-2 transition-all duration-200
         motion-reduce:transition-none
         ${
-          upgrade.purchased
-            ? "bg-card border-border shadow"
+          isPurchased && !isInfinite
+            ? "bg-card border-border shadow opacity-40 grayscale"
             : canAfford
               ? "bg-surface shadow-lg hover:shadow-xl hover:border-[var(--accent)]"
               : "bg-surface border-border shadow"
@@ -138,18 +142,19 @@ export function UpgradeCard({
 
           <button
             onClick={onPurchase}
-            disabled={!canAfford}
+            disabled={!canAfford || (isPurchased && !isInfinite)}
             className={`
               w-full px-4 py-2 rounded-lg font-semibold text-sm
               transition-all duration-150
               focus-visible:outline-none focus-visible:ring-2 ring-accent
               motion-reduce:transition-none
-              ${canAfford ? "active:scale-95" : "cursor-not-allowed"}
-              ${canAfford ? "btn-accent" : "btn-muted"}
+              ${canAfford && !(isPurchased && !isInfinite) ? "active:scale-95" : "cursor-not-allowed"}
+              ${canAfford && !(isPurchased && !isInfinite) ? "btn-accent" : "btn-muted"}
+              ${isPurchased && !isInfinite ? "opacity-60" : ""}
             `}
             aria-label={`Purchase ${upgrade.name} for ${formatNumber(currentCost)} followers`}
           >
-            {isInfinite ? "Upgrade" : upgrade.purchased ? "Purchased" : "Purchase"}
+            {isPurchased && !isInfinite ? "Maxed Out" : isInfinite ? "Upgrade" : "Purchase"}
           </button>
         </div>
       ) : (

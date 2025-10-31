@@ -235,25 +235,32 @@ export function GameProvider({ children }: GameProviderProps) {
     const html = document.documentElement;
     const body = document.body;
 
-    // Clean up old theme classes
-    html.className = html.className
-      .split(" ")
-      .filter((cls) => !cls.startsWith("theme-") && cls !== "dark")
-      .join(" ");
+    // Clear any previous theme-* and dark/light flags
+    for (const el of [html, body]) {
+      el.className = el.className
+        .split(" ")
+        .filter((cls) => !cls.startsWith("theme-") && cls !== "dark")
+        .join(" ");
+      el.removeAttribute("data-theme");
+    }
 
-    // Apply dark mode for all except light
-    if (themeId !== "light") html.classList.add("dark");
-
-    // Add theme-* class
-    html.classList.add(`theme-${themeId}`);
-
-    // ✅ Update CSS variable theme system
+    // Add new theme flags
+    html.dataset.theme = themeId;
     body.dataset.theme = themeId;
 
-    // ✅ Update browser theme color
+    html.classList.add(`theme-${themeId}`);
+    body.classList.add(`theme-${themeId}`);
+
+    // Only light disables dark mode
+    if (themeId !== "light") {
+      html.classList.add("dark");
+      body.classList.add("dark");
+    }
+
+    // Browser UI color
     const themeColors: Record<string, string> = {
       light: "#ffffff",
-      dark: "#0a0a0a",
+      dark: "#0d1117",
       "night-sky": "#1b1f3b",
       "touch-grass": "#95d5b2",
       terminal: "#272822",
@@ -263,11 +270,14 @@ export function GameProvider({ children }: GameProviderProps) {
       gold: "#d4af37",
     };
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute("content", themeColors[themeId] || "#0a0a0a");
+    if (meta) meta.setAttribute("content", themeColors[themeId] || "#0d1117");
 
-    // ✅ Persist for reloads
+    // Persist + force refresh of CSS variables
     localStorage.setItem("active-theme", themeId);
     localStorage.setItem("game_theme", themeId);
+    requestAnimationFrame(() => {
+      document.body.offsetHeight; // force repaint
+    });
   }, []);
 
   // Sync visual theme with game state's active theme

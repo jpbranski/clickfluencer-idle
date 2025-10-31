@@ -311,18 +311,26 @@ export default function HomePage() {
                   )}
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {state.upgrades.map((upgrade) => {
-                      const upgradeCost = getUpgradeCost(upgrade);
-                      return (
-                        <UpgradeCard
-                          key={upgrade.id}
-                          upgrade={upgrade}
-                          currentCost={upgradeCost}
-                          canAfford={canAfford(state.followers, upgradeCost)}
-                          onPurchase={() => handleBuyUpgrade(upgrade.id)}
-                        />
-                      );
-                    })}
+                    {state.upgrades
+                      .map((u) => ({
+                        ...u,
+                        isPurchased:
+                          u.purchased ||
+                          (u.maxTier && u.tier && u.tier >= u.maxTier),
+                      }))
+                      .sort((a, b) => Number(a.isPurchased) - Number(b.isPurchased))
+                      .map((upgrade) => {
+                        const upgradeCost = getUpgradeCost(upgrade);
+                        return (
+                          <UpgradeCard
+                            key={upgrade.id}
+                            upgrade={upgrade}
+                            currentCost={upgradeCost}
+                            canAfford={canAfford(state.followers, upgradeCost)}
+                            onPurchase={() => handleBuyUpgrade(upgrade.id)}
+                          />
+                        );
+                      })}
                   </div>
                   {state.upgrades.every((u) => u.purchased) && (
                     <div className="mt-6 text-center p-8 bg-green-50 dark:bg-green-900/20 rounded-lg">
