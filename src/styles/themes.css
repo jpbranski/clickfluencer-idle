@@ -1,452 +1,183 @@
-/**
- * themes.css - Theme Color Variables
- * 
- * Defines color schemes for different themes.
- * Themes are applied via class on <html> element.
- * Persisted in storage and applied on load.
- * 
- * Usage:
- *   <html class="theme-default"> or
- *   <html class="theme-neon"> or
- *   <html class="theme-cherry"> etc.
- */
+/* =========================================================
+   Clickfluencer Idle - Theme Variables
+   =========================================================
+   Usage:
+   <html data-theme="dark"> ... </html>
+   CSS Variables are globally scoped and designed for Tailwind integration.
+   ========================================================= */
 
-/* ============================================================================
-   BASE THEME (Default Dark)
-   ============================================================================ */
-
-:root,
-.theme-default {
-  /* Primary colors */
-  --color-primary: 262 83% 58%;
-  --color-primary-foreground: 0 0% 100%;
-
-  /* Background colors */
-  --color-background: 0 0% 100%;
-  --color-foreground: 240 10% 3.9%;
-
-  /* Surface colors */
-  --color-card: 0 0% 100%;
-  --color-card-foreground: 240 10% 3.9%;
-
-  --color-popover: 0 0% 100%;
-  --color-popover-foreground: 240 10% 3.9%;
-
-  /* Accent colors */
-  --color-secondary: 240 4.8% 95.9%;
-  --color-secondary-foreground: 240 5.9% 10%;
-
-  --color-muted: 240 4.8% 95.9%;
-  --color-muted-foreground: 240 3.8% 46.1%;
-
-  --color-accent: 240 4.8% 95.9%;
-  --color-accent-foreground: 240 5.9% 10%;
-
-  /* Status colors */
-  --color-destructive: 0 84.2% 60.2%;
-  --color-destructive-foreground: 0 0% 98%;
-
-  --color-success: 142 76% 36%;
-  --color-success-foreground: 0 0% 100%;
-
-  --color-warning: 38 92% 50%;
-  --color-warning-foreground: 0 0% 100%;
-
-  --color-info: 199 89% 48%;
-  --color-info-foreground: 0 0% 100%;
-
-  /* Border and input */
-  --color-border: 240 5.9% 90%;
-  --color-input: 240 5.9% 90%;
-  --color-ring: 262 83% 58%;
-
-  /* Radius */
-  --radius: 0.5rem;
+:root {
+  /* Default (Dark) theme as fallback */
+  --background: #0d1117;
+  --surface: #161b22;
+  --foreground: #e6edf3;
+  --muted: #8b949e;
+  --accent: #5865f2;
+  --accent-foreground: #ffffff;
+  --border: #30363d;
+  --card: #1c2128;
+  --success: #3fb950;
+  --error: #f85149;
+  --warning: #f4a261;
 }
 
-/* Dark mode for default theme */
-.dark.theme-default,
-.dark:root {
-  --color-primary: 263 70% 50%;
-  --color-primary-foreground: 0 0% 100%;
-
-  --color-background: 240 10% 3.9%;
-  --color-foreground: 0 0% 98%;
-
-  --color-card: 240 10% 3.9%;
-  --color-card-foreground: 0 0% 98%;
-
-  --color-popover: 240 10% 3.9%;
-  --color-popover-foreground: 0 0% 98%;
-
-  --color-secondary: 240 3.7% 15.9%;
-  --color-secondary-foreground: 0 0% 98%;
-
-  --color-muted: 240 3.7% 15.9%;
-  --color-muted-foreground: 240 5% 64.9%;
-
-  --color-accent: 240 3.7% 15.9%;
-  --color-accent-foreground: 0 0% 98%;
-
-  --color-destructive: 0 62.8% 30.6%;
-  --color-destructive-foreground: 0 0% 98%;
-
-  --color-success: 142 70% 45%;
-  --color-warning: 38 92% 50%;
-  --color-info: 199 89% 48%;
-
-  --color-border: 240 3.7% 15.9%;
-  --color-input: 240 3.7% 15.9%;
-  --color-ring: 263 70% 50%;
+/* =========================================================
+   DARK (Default)
+   Stormy blue & slate, inspired by Discord / X aesthetic
+   ========================================================= */
+[data-theme='dark'] {
+  --background: #0d1117;
+  --surface: #161b22;
+  --foreground: #e6edf3;
+  --muted: #8b949e;
+  --accent: #5865f2;
+  --accent-foreground: #ffffff;
+  --border: #30363d;
+  --card: #1c2128;
+  --success: #3fb950;
+  --error: #f85149;
+  --warning: #f4a261;
 }
 
-/* ============================================================================
-   LIGHT THEME
-   ============================================================================ */
-
-.theme-light {
-  /* Primary colors */
-  --color-primary: 262 83% 58%;
-  --color-primary-foreground: 0 0% 100%;
-
-  /* Background colors */
-  --color-background: 0 0% 100%;
-  --color-foreground: 240 10% 3.9%;
-
-  /* Surface colors */
-  --color-card: 0 0% 100%;
-  --color-card-foreground: 240 10% 3.9%;
-
-  --color-popover: 0 0% 100%;
-  --color-popover-foreground: 240 10% 3.9%;
-
-  /* Accent colors */
-  --color-secondary: 240 4.8% 95.9%;
-  --color-secondary-foreground: 240 5.9% 10%;
-
-  --color-muted: 240 4.8% 95.9%;
-  --color-muted-foreground: 240 3.8% 46.1%;
-
-  --color-accent: 240 4.8% 95.9%;
-  --color-accent-foreground: 240 5.9% 10%;
-
-  /* Status colors */
-  --color-destructive: 0 84.2% 60.2%;
-  --color-destructive-foreground: 0 0% 98%;
-
-  --color-success: 142 76% 36%;
-  --color-success-foreground: 0 0% 100%;
-
-  --color-warning: 38 92% 50%;
-  --color-warning-foreground: 0 0% 100%;
-
-  --color-info: 199 89% 48%;
-  --color-info-foreground: 0 0% 100%;
-
-  /* Border and input */
-  --color-border: 240 5.9% 90%;
-  --color-input: 240 5.9% 90%;
-  --color-ring: 262 83% 58%;
-
-  /* Radius */
-  --radius: 0.5rem;
+/* =========================================================
+   LIGHT
+   Soft neutral Material-style palette
+   ========================================================= */
+[data-theme='light'] {
+  --background: #fafafa;
+  --surface: #ffffff;
+  --foreground: #1a1a1a;
+  --muted: #5f6368;
+  --accent: #6200ee;
+  --accent-foreground: #ffffff;
+  --border: #e0e0e0;
+  --card: #f5f5f5;
+  --success: #2e7d32;
+  --error: #d32f2f;
+  --warning: #f9a825;
 }
 
-/* ============================================================================
-   NEON THEME
-   ============================================================================ */
-
-.theme-neon {
-  --color-primary: 320 100% 50%;
-  --color-primary-foreground: 0 0% 100%;
-
-  --color-background: 280 100% 5%;
-  --color-foreground: 320 100% 95%;
-
-  --color-card: 280 100% 8%;
-  --color-card-foreground: 320 100% 95%;
-
-  --color-secondary: 280 70% 15%;
-  --color-secondary-foreground: 320 100% 90%;
-
-  --color-accent: 180 100% 50%;
-  --color-accent-foreground: 280 100% 10%;
-
-  --color-border: 320 50% 30%;
-  --color-ring: 320 100% 50%;
+/* =========================================================
+   NIGHT SKY (renamed from Neon Dreams)
+   Deep purples, blues, blacks, silvery white accents
+   ========================================================= */
+[data-theme='night-sky'] {
+  --background: radial-gradient(circle at 25% 20%, #1b1f3b, #090b1a 70%);
+  --surface: #101226;
+  --foreground: #d7d9ff;
+  --muted: #a0a3d2;
+  --accent: #9a6cff;
+  --accent-foreground: #ffffff;
+  --border: #2b2f4a;
+  --card: #16192e;
+  --success: #7de0f3;
+  --error: #f36aff;
+  --warning: #ffd580;
 }
 
-.dark.theme-neon {
-  --color-background: 280 100% 3%;
-  --color-card: 280 100% 6%;
+/* =========================================================
+   TOUCH GRASS (renamed from Nature Vibes)
+   Light theme with natural greens and soft browns
+   ========================================================= */
+[data-theme='touch-grass'] {
+  --background: #f2f9f4;
+  --surface: #ffffff;
+  --foreground: #1d3124;
+  --muted: #4f6f54;
+  --accent: #43a047;
+  --accent-foreground: #ffffff;
+  --border: #cde4d1;
+  --card: #e8f5e9;
+  --success: #2e7d32;
+  --error: #c62828;
+  --warning: #fbc02d;
 }
 
-/* ============================================================================
-   NATURE THEME
-   ============================================================================ */
-
-.theme-nature {
-  --color-primary: 140 60% 45%;
-  --color-primary-foreground: 0 0% 100%;
-
-  --color-background: 80 20% 96%;
-  --color-foreground: 140 30% 15%;
-
-  --color-card: 80 25% 98%;
-  --color-card-foreground: 140 30% 15%;
-
-  --color-secondary: 100 25% 88%;
-  --color-secondary-foreground: 140 30% 20%;
-
-  --color-accent: 180 60% 50%;
-  --color-accent-foreground: 0 0% 100%;
-
-  --color-border: 100 20% 80%;
-  --color-ring: 140 60% 45%;
+/* =========================================================
+   TERMINAL
+   Monokai Dark inspired
+   ========================================================= */
+[data-theme='terminal'] {
+  --background: #272822;
+  --surface: #1e1f1c;
+  --foreground: #f8f8f2;
+  --muted: #75715e;
+  --accent: #a6e22e;
+  --accent-foreground: #1b1d17;
+  --border: #3e3d32;
+  --card: #2d2e28;
+  --success: #a6e22e;
+  --error: #f92672;
+  --warning: #fd971f;
 }
 
-.dark.theme-nature {
-  --color-background: 140 30% 8%;
-  --color-foreground: 80 20% 95%;
-  --color-card: 140 25% 12%;
+/* =========================================================
+   CHERRY BLOSSOM
+   Gentle pinks and whites with blossom undertones
+   ========================================================= */
+[data-theme='cherry-blossom'] {
+  --background: #fff5f8;
+  --surface: #ffffff;
+  --foreground: #3c1a1a;
+  --muted: #a27b7b;
+  --accent: #ff8fab;
+  --accent-foreground: #3c1a1a;
+  --border: #ffd6de;
+  --card: #ffe3ea;
+  --success: #c2185b;
+  --error: #d32f2f;
+  --warning: #f48fb1;
 }
 
-/* ============================================================================
-   CHERRY BLOSSOM THEME
-   ============================================================================ */
-
-.theme-cherry {
-  --color-primary: 350 80% 65%;
-  --color-primary-foreground: 0 0% 100%;
-
-  --color-background: 350 50% 98%;
-  --color-foreground: 350 30% 20%;
-
-  --color-card: 350 40% 96%;
-  --color-card-foreground: 350 30% 20%;
-
-  --color-secondary: 350 30% 90%;
-  --color-secondary-foreground: 350 40% 25%;
-
-  --color-accent: 10 70% 60%;
-  --color-accent-foreground: 0 0% 100%;
-
-  --color-border: 350 25% 85%;
-  --color-ring: 350 80% 65%;
+/* =========================================================
+   NIGHTSHADE
+   Belladonna-inspired dark violet & green undertones
+   ========================================================= */
+[data-theme='nightshade'] {
+  --background: #0c0c0d;
+  --surface: #161017;
+  --foreground: #e5d8f0;
+  --muted: #bda9cc;
+  --accent: #553366;
+  --accent-foreground: #ffffff;
+  --border: #2a1a2f;
+  --card: #150f1c;
+  --success: #7cb342; /* subtle stem green */
+  --error: #a14bb7;
+  --warning: #c5aefc;
 }
 
-.dark.theme-cherry {
-  --color-background: 350 40% 10%;
-  --color-foreground: 350 50% 95%;
-  --color-card: 350 35% 15%;
+/* =========================================================
+   EL BLUE (Extra Life blue palette)
+   ========================================================= */
+[data-theme='el-blue'] {
+  --background: #0a192f;
+  --surface: #112240;
+  --foreground: #e6f1ff;
+  --muted: #8ea9c1;
+  --accent: #00aef0;
+  --accent-foreground: #ffffff;
+  --border: #1e385b;
+  --card: #0d2742;
+  --success: #1ce1ac;
+  --error: #f44336;
+  --warning: #ffb300;
 }
 
-/* ============================================================================
-   MIDNIGHT THEME
-   ============================================================================ */
-
-.theme-midnight {
-  --color-primary: 240 80% 60%;
-  --color-primary-foreground: 0 0% 100%;
-
-  --color-background: 240 60% 5%;
-  --color-foreground: 240 20% 95%;
-
-  --color-card: 240 55% 8%;
-  --color-card-foreground: 240 20% 95%;
-
-  --color-secondary: 240 40% 15%;
-  --color-secondary-foreground: 240 20% 90%;
-
-  --color-accent: 200 80% 55%;
-  --color-accent-foreground: 0 0% 100%;
-
-  --color-border: 240 30% 20%;
-  --color-ring: 240 80% 60%;
-}
-
-.dark.theme-midnight {
-  --color-background: 240 60% 3%;
-  --color-card: 240 55% 6%;
-}
-
-/* ============================================================================
-   TERMINAL THEME (Hacker/Matrix style)
-   ============================================================================ */
-
-.theme-terminal {
-  --color-primary: 120 100% 50%;
-  --color-primary-foreground: 120 100% 5%;
-
-  --color-background: 120 100% 5%;
-  --color-foreground: 120 100% 70%;
-
-  --color-card: 120 100% 8%;
-  --color-card-foreground: 120 100% 70%;
-
-  --color-secondary: 120 50% 15%;
-  --color-secondary-foreground: 120 100% 80%;
-
-  --color-accent: 120 100% 40%;
-  --color-accent-foreground: 120 100% 5%;
-
-  --color-border: 120 50% 25%;
-  --color-ring: 120 100% 50%;
-
-  /* Terminal uses monospace */
-  font-family: "Courier New", monospace;
-}
-
-.dark.theme-terminal {
-  --color-background: 120 100% 3%;
-  --color-card: 120 100% 6%;
-}
-
-/* ============================================================================
-   GOLD THEME (Luxury/Premium)
-   ============================================================================ */
-
-.theme-gold {
-  --color-primary: 45 100% 50%;
-  --color-primary-foreground: 45 80% 10%;
-
-  --color-background: 40 30% 96%;
-  --color-foreground: 40 60% 15%;
-
-  --color-card: 40 40% 98%;
-  --color-card-foreground: 40 60% 15%;
-
-  --color-secondary: 40 25% 88%;
-  --color-secondary-foreground: 40 60% 20%;
-
-  --color-accent: 30 80% 55%;
-  --color-accent-foreground: 0 0% 100%;
-
-  --color-border: 40 20% 80%;
-  --color-ring: 45 100% 50%;
-}
-
-.dark.theme-gold {
-  --color-background: 40 40% 8%;
-  --color-foreground: 40 30% 95%;
-  --color-card: 40 35% 12%;
-}
-
-/* ============================================================================
-   MONOKAI THEME (Code editor inspired)
-   ============================================================================ */
-
-.theme-monokai {
-  --color-primary: 80 100% 70%;
-  --color-primary-foreground: 0 0% 10%;
-
-  --color-background: 60 10% 13%;
-  --color-foreground: 60 10% 90%;
-
-  --color-card: 60 10% 16%;
-  --color-card-foreground: 60 10% 90%;
-
-  --color-secondary: 60 8% 20%;
-  --color-secondary-foreground: 60 10% 85%;
-
-  --color-accent: 320 100% 60%;
-  --color-accent-foreground: 0 0% 100%;
-
-  --color-border: 60 8% 25%;
-  --color-ring: 80 100% 70%;
-
-  /* Additional monokai colors for syntax-like styling */
-  --color-monokai-pink: 320 100% 60%;
-  --color-monokai-green: 80 100% 70%;
-  --color-monokai-orange: 30 100% 60%;
-  --color-monokai-purple: 280 100% 70%;
-  --color-monokai-blue: 180 100% 60%;
-}
-
-.dark.theme-monokai {
-  --color-background: 60 10% 10%;
-  --color-card: 60 10% 13%;
-}
-
-/* ============================================================================
-   THEME TRANSITION
-   ============================================================================ */
-
-/* Smooth transition when switching themes */
-html {
-  transition:
-    background-color 0.3s ease-in-out,
-    color 0.3s ease-in-out;
-}
-
-/* Disable transitions if user prefers reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  html {
-    transition: none;
-  }
-}
-
-/* ============================================================================
-   THEME-SPECIFIC UTILITIES
-   ============================================================================ */
-
-/* Terminal theme cursor blink */
-.theme-terminal .cursor {
-  animation: terminal-blink 1s infinite;
-}
-
-@keyframes terminal-blink {
-  0%,
-  49% {
-    opacity: 1;
-  }
-  50%,
-  100% {
-    opacity: 0;
-  }
-}
-
-/* Neon glow effects */
-.theme-neon .glow {
-  text-shadow:
-    0 0 10px currentColor,
-    0 0 20px currentColor,
-    0 0 30px currentColor;
-}
-
-/* Gold shimmer effect */
-.theme-gold .shimmer {
-  background: linear-gradient(
-    90deg,
-    hsl(45, 100%, 50%) 0%,
-    hsl(45, 100%, 70%) 50%,
-    hsl(45, 100%, 50%) 100%
-  );
-  background-size: 200% 100%;
-  animation: gold-shimmer 3s ease-in-out infinite;
-}
-
-@keyframes gold-shimmer {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-/* Cherry blossom petal animation */
-.theme-cherry .petal {
-  animation: cherry-float 4s ease-in-out infinite;
-}
-
-@keyframes cherry-float {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-10px) rotate(5deg);
-  }
+/* =========================================================
+   GOLD
+   Luxurious warm gold theme (accessibility checked)
+   ========================================================= */
+[data-theme='gold'] {
+  --background: #1b1305;
+  --surface: #261b09;
+  --foreground: #f9f6ef;
+  --muted: #c7b77a;
+  --accent: #d4af37; /* gold tone */
+  --accent-foreground: #1b1305;
+  --border: #bfa76f;
+  --card: #2f220b;
+  --success: #ffd700;
+  --error: #ff4d4d;
+  --warning: #ffcc00;
 }
