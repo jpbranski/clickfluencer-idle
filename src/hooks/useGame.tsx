@@ -124,7 +124,7 @@ export function GameProvider({ children }: GameProviderProps) {
   const [error, setError] = useState<string | null>(null);
   const [offlineProgress, setOfflineProgress] =
     useState<OfflineProgress | null>(null);
-  const [currentTheme, setCurrentTheme] = useState("default");
+  const [currentTheme, setCurrentTheme] = useState("dark");
 
   const engineRef = useRef<GameEngine | null>(null);
   const autoSaveIntervalRef = useRef<NodeJS.Timeout | null>(null);

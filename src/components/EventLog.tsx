@@ -56,7 +56,7 @@ export function EventLog({ entries, maxEntries = 50 }: EventLogProps) {
       case "prestige":
         return "text-orange-600 dark:text-orange-400";
       default:
-        return "text-gray-600 dark:text-gray-400";
+        return "text-muted";
     }
   };
 
@@ -77,9 +77,9 @@ export function EventLog({ entries, maxEntries = 50 }: EventLogProps) {
 
   if (displayEntries.length === 0) {
     return (
-      <div className="p-6 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow">
+      <div className="p-6 rounded-lg bg-surface border border-border shadow">
         <h3 className="text-lg font-bold mb-4">Event Log</h3>
-        <div className="text-center py-8 text-gray-500 dark:text-gray-500">
+        <div className="text-center py-8 text-muted">
           <div className="text-4xl mb-2">📝</div>
           <p className="text-sm">
             No events yet. Keep playing to see your history!
@@ -90,11 +90,11 @@ export function EventLog({ entries, maxEntries = 50 }: EventLogProps) {
   }
 
   return (
-    <div className="p-6 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow">
+    <div className="p-6 rounded-lg bg-surface border border-border shadow">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold">Event Log</h3>
-        <span className="text-xs text-gray-500 dark:text-gray-500">
+        <span className="text-xs text-muted">
           {displayEntries.length}{" "}
           {displayEntries.length === 1 ? "entry" : "entries"}
         </span>
@@ -127,11 +127,11 @@ export function EventLog({ entries, maxEntries = 50 }: EventLogProps) {
                 <span className="text-sm font-semibold line-clamp-1">
                   {entry.name}
                 </span>
-                <span className="flex-shrink-0 text-xs text-gray-500 dark:text-gray-500">
+                <span className="flex-shrink-0 text-xs text-muted">
                   {formatTimestamp(entry.timestamp)}
                 </span>
               </div>
-              <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2">
+              <p className="text-xs text-muted line-clamp-2">
                 {entry.description}
               </p>
             </div>
@@ -145,7 +145,7 @@ export function EventLog({ entries, maxEntries = 50 }: EventLogProps) {
           onClick={() => setIsExpanded(!isExpanded)}
           className="
             w-full mt-3 px-3 py-2 rounded-lg
-            bg-gray-100 dark:bg-gray-900
+            bg-card
             hover:bg-gray-200 dark:hover:bg-gray-800
             text-sm font-semibold
             transition-colors duration-150

@@ -221,10 +221,22 @@ export function buyGeneratorBulk(
 // ============================================================================
 
 /**
+ * Get the current cost of an upgrade (handles scaling for infinite upgrades)
+ */
+export function getUpgradeCost(upgrade: Upgrade): number {
+  if (upgrade.costMultiplier && upgrade.currentLevel !== undefined) {
+    // Infinite upgrade - cost scales exponentially
+    return Math.floor(upgrade.cost * Math.pow(upgrade.costMultiplier, upgrade.currentLevel));
+  }
+  return upgrade.cost;
+}
+
+/**
  * Purchase an upgrade
  * - One-time purchase that provides permanent bonuses
- * - Deducts followers equal to cost
- * - Marks upgrade as purchased
+ * - For infinite upgrades: can be purchased repeatedly with scaling cost
+ * - Deducts followers equal to current cost
+ * - Marks upgrade as purchased (or increments level for infinite)
  */
 export function buyUpgrade(state: GameState, upgradeId: string): ActionResult {
   const upgrade = state.upgrades.find((u) => u.id === upgradeId);
@@ -237,7 +249,11 @@ export function buyUpgrade(state: GameState, upgradeId: string): ActionResult {
     };
   }
 
-  if (upgrade.purchased) {
+  // Check if it's an infinite upgrade
+  const isInfinite = upgrade.maxLevel === undefined || (upgrade.maxLevel && (upgrade.currentLevel || 0) < upgrade.maxLevel);
+
+  // For non-infinite upgrades, check if already purchased
+  if (!isInfinite && upgrade.purchased) {
     return {
       success: false,
       state,
@@ -245,7 +261,9 @@ export function buyUpgrade(state: GameState, upgradeId: string): ActionResult {
     };
   }
 
-  if (!canAfford(state.followers, upgrade.cost)) {
+  const currentCost = getUpgradeCost(upgrade);
+
+  if (!canAfford(state.followers, currentCost)) {
     return {
       success: false,
       state,
@@ -253,13 +271,22 @@ export function buyUpgrade(state: GameState, upgradeId: string): ActionResult {
     };
   }
 
-  const newUpgrades = state.upgrades.map((u) =>
-    u.id === upgradeId ? { ...u, purchased: true } : u,
-  );
+  const newUpgrades = state.upgrades.map((u) => {
+    if (u.id === upgradeId) {
+      if (u.currentLevel !== undefined) {
+        // Infinite upgrade - increment level
+        return { ...u, purchased: true, currentLevel: u.currentLevel + 1 };
+      } else {
+        // Regular upgrade - mark as purchased
+        return { ...u, purchased: true };
+      }
+    }
+    return u;
+  });
 
   const newState: GameState = {
     ...state,
-    followers: state.followers - upgrade.cost,
+    followers: state.followers - currentCost,
     upgrades: newUpgrades,
     stats: {
       ...state.stats,

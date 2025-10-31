@@ -31,6 +31,10 @@ export interface Upgrade {
   cost: number;
   purchased: boolean;
   effect: UpgradeEffect;
+  // For infinite upgrades
+  maxLevel?: number; // undefined = infinite
+  currentLevel?: number; // for tracking purchase count
+  costMultiplier?: number; // for scaling costs (e.g., 1.15 = +15% per level)
 }
 
 export interface UpgradeEffect {
@@ -177,19 +181,52 @@ export const INITIAL_GENERATORS: Generator[] = [
 ];
 
 export const INITIAL_UPGRADES: Upgrade[] = [
+  // 5-tier Better Camera system
   {
-    id: "better_camera",
-    name: "💪 Better Camera",
+    id: "better_camera_1",
+    name: "💪 Better Camera I",
     description: "Double your click power",
     cost: 50,
     purchased: false,
     effect: { type: "clickMultiplier", value: 2 },
   },
   {
+    id: "better_camera_2",
+    name: "💪 Better Camera II",
+    description: "Triple your click power",
+    cost: 500,
+    purchased: false,
+    effect: { type: "clickMultiplier", value: 3 },
+  },
+  {
+    id: "better_camera_3",
+    name: "💪 Better Camera III",
+    description: "4x your click power",
+    cost: 5000,
+    purchased: false,
+    effect: { type: "clickMultiplier", value: 4 },
+  },
+  {
+    id: "better_camera_4",
+    name: "💪 Better Camera IV",
+    description: "5x your click power",
+    cost: 50000,
+    purchased: false,
+    effect: { type: "clickMultiplier", value: 5 },
+  },
+  {
+    id: "better_camera_5",
+    name: "💪 Better Camera V",
+    description: "10x your click power!",
+    cost: 500000,
+    purchased: false,
+    effect: { type: "clickMultiplier", value: 10 },
+  },
+  {
     id: "editing_software",
     name: "✂️ Editing Software",
     description: "Photo Posts produce 2x followers",
-    cost: 2500, // Increased from 500
+    cost: 2500,
     purchased: false,
     effect: {
       type: "generatorMultiplier",
@@ -201,9 +238,21 @@ export const INITIAL_UPGRADES: Upgrade[] = [
     id: "viral_strategy",
     name: "🔥 Viral Strategy",
     description: "All production increased by 50%",
-    cost: 50000, // Increased from 5000
+    cost: 50000,
     purchased: false,
     effect: { type: "globalMultiplier", value: 1.5 },
+  },
+  // Infinite AI Enhancements upgrade
+  {
+    id: "ai_enhancements",
+    name: "🤖 AI Enhancements",
+    description: "+1% to all production (infinite)",
+    cost: 10000,
+    purchased: false,
+    effect: { type: "globalMultiplier", value: 1.01 },
+    maxLevel: undefined, // infinite
+    currentLevel: 0,
+    costMultiplier: 1.15, // cost increases 15% per level
   },
   {
     id: "award_luck_1",
@@ -344,11 +393,17 @@ export function getFollowersPerSecond(state: GameState): number {
     total += generatorOutput;
   });
 
-  // Apply global multipliers
+  // Apply global multipliers (including infinite upgrades)
   state.upgrades
     .filter((u) => u.purchased && u.effect.type === "globalMultiplier")
     .forEach((u) => {
-      total *= u.effect.value;
+      if (u.currentLevel !== undefined && u.currentLevel > 0) {
+        // Infinite upgrade - apply effect once per level
+        total *= Math.pow(u.effect.value, u.currentLevel);
+      } else {
+        // Regular one-time upgrade
+        total *= u.effect.value;
+      }
     });
 
   // Apply reputation bonus (+10% per reputation point)

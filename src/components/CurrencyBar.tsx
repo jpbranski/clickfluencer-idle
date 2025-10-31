@@ -32,7 +32,7 @@ export function CurrencyBar({
         flex flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8
         px-4 py-3 rounded-lg
         bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm
-        border border-gray-200 dark:border-gray-700
+        border border-border
         shadow-lg
       `}
       >
@@ -47,7 +47,7 @@ export function CurrencyBar({
             </span>
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide font-semibold">
+            <div className="text-xs text-muted uppercase tracking-wide font-semibold">
               Creds
             </div>
             <div
@@ -83,7 +83,7 @@ export function CurrencyBar({
             </span>
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide font-semibold">
+            <div className="text-xs text-muted uppercase tracking-wide font-semibold">
               Awards
             </div>
             <div
@@ -92,7 +92,7 @@ export function CurrencyBar({
             >
               {shards.toLocaleString()}
             </div>
-            <div className="text-xs text-gray-500 dark:text-gray-500">
+            <div className="text-xs text-muted">
               {((awardDropRate || 0) * 100).toFixed(1)}% drop rate
             </div>
           </div>
@@ -101,7 +101,7 @@ export function CurrencyBar({
 
       {/* Mobile Compact View Alternative */}
       {compact && (
-        <div className="sm:hidden mt-2 text-center text-xs text-gray-600 dark:text-gray-400">
+        <div className="sm:hidden mt-2 text-center text-xs text-muted">
           <span>Creds: {formatNumber(followers)}</span>
           <span className="mx-2">•</span>
           <span>Awards: {shards}</span>

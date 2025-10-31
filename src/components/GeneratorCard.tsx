@@ -53,17 +53,17 @@ export function GeneratorCard({
     <div
       className={`
         relative p-4 rounded-lg border-2 transition-all duration-200
+        motion-reduce:transition-none
         ${
           generator.unlocked
-            ? "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
-            : "bg-gray-100 dark:bg-gray-900 border-gray-300 dark:border-gray-800 opacity-60"
+            ? "bg-surface border-border"
+            : "bg-card border-border opacity-60"
         }
         ${
           canAfford && generator.unlocked
-            ? "shadow-lg hover:shadow-xl hover:border-purple-300 dark:hover:border-purple-600"
+            ? "shadow-lg hover:shadow-xl hover:border-[var(--accent)]"
             : "shadow"
         }
-        motion-reduce:transition-none
       `}
     >
       {/* Header: Name and Count */}
@@ -77,11 +77,11 @@ export function GeneratorCard({
               {generator.name.substring(2)}
             </h3>
             {generator.unlocked ? (
-              <div className="text-xs text-gray-600 dark:text-gray-400">
+              <div className="text-xs text-muted">
                 Owned: <span className="font-semibold">{generator.count}</span>
               </div>
             ) : (
-              <div className="text-xs text-gray-500 dark:text-gray-500">
+              <div className="text-xs text-muted">
                 Locked
               </div>
             )}
@@ -91,17 +91,17 @@ export function GeneratorCard({
 
       {/* Production Stats */}
       {generator.unlocked && (
-        <div className="mb-3 p-2 rounded bg-gray-50 dark:bg-gray-900/50">
+        <div className="mb-3 p-2 rounded bg-card">
           <div className="flex justify-between text-xs mb-1">
-            <span className="text-gray-600 dark:text-gray-400">Each:</span>
+            <span className="text-muted">Each:</span>
             <span className="font-semibold">
               {formatRate(generator.baseFollowersPerSecond)}
             </span>
           </div>
           {generator.count > 0 && (
             <div className="flex justify-between text-xs">
-              <span className="text-gray-600 dark:text-gray-400">Total:</span>
-              <span className="font-semibold text-green-600 dark:text-green-400">
+              <span className="text-muted">Total:</span>
+              <span className="font-semibold" style={{ color: 'var(--success)' }}>
                 {formatRate(generator.totalProduction)}
               </span>
             </div>
@@ -113,15 +113,12 @@ export function GeneratorCard({
       {generator.unlocked ? (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-600 dark:text-gray-400">
+            <span className="text-xs text-muted">
               Cost:
             </span>
             <span
-              className={`text-sm font-bold number-display ${
-                canAfford
-                  ? "text-green-600 dark:text-green-400"
-                  : "text-red-600 dark:text-red-400"
-              }`}
+              className="text-sm font-bold number-display"
+              style={{ color: canAfford ? 'var(--success)' : 'var(--error)' }}
             >
               {formatNumber(generator.cost)}
             </span>
@@ -130,7 +127,7 @@ export function GeneratorCard({
           {!canAfford &&
             timeUntilAffordable &&
             timeUntilAffordable !== "Can afford now" && (
-              <div className="text-xs text-center text-gray-500 dark:text-gray-500">
+              <div className="text-xs text-center text-muted">
                 {timeUntilAffordable}
               </div>
             )}
@@ -143,13 +140,10 @@ export function GeneratorCard({
               className={`
                 flex-1 px-3 py-2 rounded font-semibold text-sm
                 transition-all duration-150
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400
+                focus-visible:outline-none focus-visible:ring-2 ring-accent
                 motion-reduce:transition-none
-                ${
-                  canAfford
-                    ? "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white active:scale-95"
-                    : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed"
-                }
+                ${canAfford ? "active:scale-95" : "cursor-not-allowed"}
+                ${canAfford ? "btn-accent" : "btn-muted"}
               `}
               aria-label={`Buy one ${generator.name} for ${formatNumber(generator.cost)} followers`}
             >
@@ -163,13 +157,10 @@ export function GeneratorCard({
                 className={`
                   px-3 py-2 rounded font-semibold text-sm
                   transition-all duration-150
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400
+                  focus-visible:outline-none focus-visible:ring-2 ring-accent
                   motion-reduce:transition-none
-                  ${
-                    canAfford
-                      ? "bg-purple-600 hover:bg-purple-700 text-white active:scale-95"
-                      : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed"
-                  }
+                  ${canAfford ? "active:scale-95" : "cursor-not-allowed"}
+                  ${canAfford ? "btn-accent" : "btn-muted"}
                 `}
                 aria-label={`Buy 10 ${generator.name}`}
               >
@@ -180,7 +171,7 @@ export function GeneratorCard({
         </div>
       ) : (
         <div className="text-center py-3">
-          <div className="text-xs text-gray-500 dark:text-gray-500">
+          <div className="text-xs text-muted">
             Reach {formatNumber(generator.baseCost)} Creds to unlock
           </div>
         </div>

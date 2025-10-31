@@ -70,22 +70,22 @@ export default function PostButton() {
         disabled={disabled}
         className={`
           relative w-48 h-48 rounded-full
-          bg-gradient-to-br from-purple-500 to-pink-500
-          hover:from-purple-600 hover:to-pink-600
-          active:from-purple-700 active:to-pink-700
-          disabled:from-gray-400 disabled:to-gray-500
-          disabled:cursor-not-allowed
-          shadow-2xl hover:shadow-purple-500/50
           transition-all duration-150 ease-out
           motion-reduce:transition-none
-          focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-400
+          focus-visible:outline-none focus-visible:ring-4 ring-accent
+          disabled:cursor-not-allowed
+          shadow-2xl hover:shadow-accent
           ${isPressed ? "scale-95" : "scale-100 hover:scale-105"}
           ${disabled ? "opacity-50" : "opacity-100"}
         `}
+        style={{
+          background: disabled ? 'var(--muted)' : 'var(--accent)',
+          color: 'var(--accent-foreground)'
+        }}
         aria-label={`Click to gain ${clickPower.toFixed(0)} followers`}
         aria-disabled={disabled}
       >
-        <div className="flex flex-col items-center justify-center text-white">
+        <div className="flex flex-col items-center justify-center text-accent-foreground">
           <span
             className="text-6xl motion-reduce:animate-none animate-bounce-slow"
             role="img"
@@ -120,8 +120,9 @@ export default function PostButton() {
         {floatingNumbers.map((floating) => (
           <div
             key={floating.id}
-            className="absolute text-2xl font-bold text-green-500 motion-reduce:hidden animate-float-up"
+            className="absolute text-2xl font-bold motion-reduce:hidden animate-float-up"
             style={{
+              color: 'var(--success)',
               left: floating.x,
               top: floating.y,
               textShadow: "0 0 4px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.6)",
@@ -134,7 +135,7 @@ export default function PostButton() {
 
       {/* Click Power Display */}
       <div className="mt-6 text-center">
-        <div className="text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+        <div className="text-sm text-muted uppercase tracking-wide">
           Per Click
         </div>
         <div className="text-3xl font-bold number-display gradient-text">
@@ -143,7 +144,7 @@ export default function PostButton() {
       </div>
 
       {/* Helper Text */}
-      <div className="mt-2 text-xs text-gray-500 dark:text-gray-500 text-center max-w-xs">
+      <div className="mt-2 text-xs text-muted text-center max-w-xs">
         Click to gain followers and grow your influence!
       </div>
     </div>

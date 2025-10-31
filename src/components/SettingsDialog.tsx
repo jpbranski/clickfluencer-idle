@@ -92,14 +92,14 @@ export function SettingsDialog({
       <div
         className="
           relative w-full max-w-lg
-          bg-white dark:bg-gray-800
+          bg-surface
           rounded-xl shadow-2xl
           max-h-[90vh] overflow-y-auto
           motion-reduce:transition-none animate-scale-in
         "
       >
         {/* Header */}
-        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 z-10">
+        <div className="sticky top-0 bg-surface border-b border-border px-6 py-4 z-10">
           <div className="flex items-center justify-between">
             <h2 id="settings-title" className="text-2xl font-bold">
               ⚙️ Settings
@@ -174,7 +174,7 @@ export function SettingsDialog({
                 onChange={(checked) => onSettingChange("soundEnabled", checked)}
               />
               <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-                <div className="flex items-start gap-2 text-xs text-gray-600 dark:text-gray-400">
+                <div className="flex items-start gap-2 text-xs text-muted">
                   <span className="text-blue-600 dark:text-blue-400">ℹ️</span>
                   <p>
                     Animations automatically reduce when "Reduce motion" is
@@ -226,7 +226,7 @@ export function SettingsDialog({
               )}
 
               {/* Reset */}
-              <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="pt-3 border-t border-border">
                 {!showResetConfirm ? (
                   <button
                     onClick={() => setShowResetConfirm(true)}
@@ -247,7 +247,7 @@ export function SettingsDialog({
                       <p className="text-sm font-semibold text-red-600 dark:text-red-400 mb-1">
                         ⚠️ Are you sure?
                       </p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
+                      <p className="text-xs text-muted">
                         This will permanently delete all your progress. This
                         action cannot be undone!
                       </p>
@@ -310,7 +310,7 @@ function SettingToggle({
     <div className="flex items-start justify-between gap-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
       <div className="flex-1">
         <div className="text-sm font-semibold mb-1">{label}</div>
-        <div className="text-xs text-gray-600 dark:text-gray-400">
+        <div className="text-xs text-muted">
           {description}
         </div>
       </div>

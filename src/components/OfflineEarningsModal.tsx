@@ -45,7 +45,7 @@ export function OfflineEarningsModal({
       <div
         className="
           relative w-full max-w-md
-          bg-white dark:bg-gray-800
+          bg-surface
           rounded-2xl shadow-2xl
           border-2 border-purple-400 dark:border-purple-600
           motion-reduce:transition-none animate-scale-in
@@ -59,14 +59,14 @@ export function OfflineEarningsModal({
         </div>
 
         {/* Header */}
-        <div className="pt-12 pb-4 px-6 text-center border-b border-gray-200 dark:border-gray-700">
+        <div className="pt-12 pb-4 px-6 text-center border-b border-border">
           <h2
             id="offline-earnings-title"
             className="text-2xl font-bold mb-2 gradient-text"
           >
             Welcome Back!
           </h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-muted">
             Your influence grew while you were away
           </p>
         </div>
@@ -75,7 +75,7 @@ export function OfflineEarningsModal({
         <div className="p-6 space-y-4">
           {/* Time Away */}
           <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-            <div className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1">
+            <div className="text-xs text-muted uppercase tracking-wide mb-1">
               Time Away
             </div>
             <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
@@ -85,7 +85,7 @@ export function OfflineEarningsModal({
 
           {/* Followers Gained */}
           <div className="p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-            <div className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1">
+            <div className="text-xs text-muted uppercase tracking-wide mb-1">
               Followers Gained
             </div>
             <div className="text-2xl font-bold text-green-600 dark:text-green-400 number-display">
@@ -108,7 +108,7 @@ export function OfflineEarningsModal({
                   <div className="text-sm font-semibold text-yellow-700 dark:text-yellow-400 mb-1">
                     Progress Capped
                   </div>
-                  <div className="text-xs text-gray-600 dark:text-gray-400">
+                  <div className="text-xs text-muted">
                     Offline progress is limited to{" "}
                     {formatTimeDetailed(timeProcessed)} (
                     {(timeProcessed / (60 * 60 * 1000)).toFixed(0)} hours).
@@ -121,7 +121,7 @@ export function OfflineEarningsModal({
 
           {/* Info Box */}
           <div className="p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800">
-            <div className="flex items-start gap-2 text-xs text-gray-600 dark:text-gray-400">
+            <div className="flex items-start gap-2 text-xs text-muted">
               <span
                 className="text-purple-600 dark:text-purple-400"
                 role="img"

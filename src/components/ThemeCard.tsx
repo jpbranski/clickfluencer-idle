@@ -48,10 +48,10 @@ export function ThemeCard({
 
       {/* --- Theme preview --- */}
       <div
-        className={`
-          h-24 w-full rounded-lg mb-3 border border-border
-          ${theme.preview || 'bg-gradient-to-br from-[var(--accent)]/50 to-[var(--card)]'}
-        `}
+        className="h-24 w-full rounded-lg mb-3 border border-border"
+        style={{
+          background: theme.preview || 'linear-gradient(to bottom right, var(--accent), var(--card))'
+        }}
       />
 
       {/* --- Title + description --- */}

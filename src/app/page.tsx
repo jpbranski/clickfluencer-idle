@@ -13,7 +13,7 @@ import { OfflineEarningsModal } from "@/components/OfflineEarningsModal";
 import { ShareButtons } from "@/components/ShareButtons";
 import { formatNumber } from "@/game/format";
 import { getGeneratorCost, canAfford, canAffordShards } from "@/game/state";
-import { getAwardDropRate } from "@/game/actions";
+import { getAwardDropRate, getUpgradeCost } from "@/game/actions";
 import { themes } from '@/data/themes';
 
 export default function HomePage() {
@@ -311,14 +311,18 @@ export default function HomePage() {
                   )}
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {state.upgrades.map((upgrade) => (
-                      <UpgradeCard
-                        key={upgrade.id}
-                        upgrade={upgrade}
-                        canAfford={canAfford(state.followers, upgrade.cost)}
-                        onPurchase={() => handleBuyUpgrade(upgrade.id)}
-                      />
-                    ))}
+                    {state.upgrades.map((upgrade) => {
+                      const upgradeCost = getUpgradeCost(upgrade);
+                      return (
+                        <UpgradeCard
+                          key={upgrade.id}
+                          upgrade={upgrade}
+                          currentCost={upgradeCost}
+                          canAfford={canAfford(state.followers, upgradeCost)}
+                          onPurchase={() => handleBuyUpgrade(upgrade.id)}
+                        />
+                      );
+                    })}
                   </div>
                   {state.upgrades.every((u) => u.purchased) && (
                     <div className="mt-6 text-center p-8 bg-green-50 dark:bg-green-900/20 rounded-lg">
