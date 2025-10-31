@@ -1,6 +1,7 @@
 'use client';
 
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 export const metadata: Metadata = {
@@ -38,6 +39,16 @@ export const metadata: Metadata = {
 export default function AcknowledgementsPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 text-gray-800 dark:text-gray-200">
+      {/* Navigation */}
+      <nav className="pt-6 px-6 pb-2 text-center">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-purple-600 dark:text-purple-400 font-medium hover:underline transition-colors"
+        >
+          ← Return Home
+        </Link>
+      </nav>
+
       {/* Hero Section */}
       <section className="relative py-20 text-center overflow-hidden">
         <motion.div

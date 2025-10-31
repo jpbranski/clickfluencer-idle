@@ -1,8 +1,19 @@
 "use client";
 
+import Link from "next/link";
+
 export default function TermsOfServicePage() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 px-6">
+      <nav className="max-w-3xl mx-auto mb-6 text-center">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-purple-600 dark:text-purple-400 font-medium hover:underline transition-colors"
+        >
+          ← Return Home
+        </Link>
+      </nav>
+
       <div className="max-w-3xl mx-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl p-8 md:p-12">
         <header className="mb-10 text-center">
           <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 mb-2">
