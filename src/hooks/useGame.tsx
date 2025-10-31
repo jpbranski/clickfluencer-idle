@@ -11,6 +11,7 @@
  * - Auto-save management
  * - Theme switching with persistence
  * - Offline progress detection
+ * - Theme merge and active theme persistence
  */
 
 "use client";
@@ -52,7 +53,26 @@ import {
   importSave,
 } from "@/lib/storage";
 import { GAMEPLAY } from "@/app-config";
+import { themes as baseThemes } from "@/data/themes";
+import type { Theme } from "@/types/theme";
 
+// ============================================================================
+// UTILITIES
+// ============================================================================
+
+// Merge saved theme data with base theme definitions.
+// Ensures new themes appear even if not in the player's save file.
+function mergeThemes<T extends { id: string }>(savedThemes?: T[]): T[] {
+  const savedMap = new Map(savedThemes?.map((t) => [t.id, t]) || []);
+
+  return baseThemes.map((base) => {
+    const saved = savedMap.get(base.id);
+    return {
+      ...base,
+      ...saved,
+    } as unknown as T;
+  });
+}
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -133,6 +153,13 @@ export function GameProvider({ children }: GameProviderProps) {
           initialState = createInitialState();
         }
 
+        // ✅ Merge theme data (adds new themes automatically)
+        if (initialState?.themes) {
+          initialState.themes = mergeThemes(initialState.themes);
+        } else {
+          initialState.themes = mergeThemes();
+        }
+
         if (!mounted) return;
 
         // ✅ Create engine only once
@@ -181,7 +208,7 @@ export function GameProvider({ children }: GameProviderProps) {
       } catch (err) {
         if (mounted) {
           setError(
-            err instanceof Error ? err.message : "Failed to initialize game",
+            err instanceof Error ? err.message : "Failed to initialize game"
           );
           setIsLoading(false);
         }
@@ -197,12 +224,16 @@ export function GameProvider({ children }: GameProviderProps) {
   }, []);
 
   // ============================================================================
-  // THEME MANAGEMENT
+  // THEME MANAGEMENT (with persistence + visual sync)
   // ============================================================================
 
   useEffect(() => {
-    // Apply saved theme or default to 'default' (dark theme)
-    const savedTheme = localStorage.getItem("game_theme") || "default";
+    // Load saved visual theme (defaults to 'dark')
+    const savedTheme =
+      localStorage.getItem("active-theme") ||
+      localStorage.getItem("game_theme") ||
+      "dark";
+
     setCurrentTheme(savedTheme);
     applyTheme(savedTheme);
   }, []);
@@ -220,30 +251,31 @@ export function GameProvider({ children }: GameProviderProps) {
       .join(" ");
 
     // Apply dark mode for all except light
-    if (themeId !== "light") {
-      html.classList.add("dark");
-    }
+    if (themeId !== "light") html.classList.add("dark");
 
     // Add theme-* class
     html.classList.add(`theme-${themeId}`);
 
-    // 🔹 NEW: update data attribute for CSS theme system
+    // ✅ Update CSS variable theme system
     body.dataset.theme = themeId;
 
-    // 🔹 NEW: update meta theme-color for browser UI
+    // ✅ Update browser theme color
     const themeColors: Record<string, string> = {
       light: "#ffffff",
-      default: "#0a0a0a",
-      neon: "#ff00ff",
-      nature: "#059669",
-      terminal: "#001900",
-      cherry: "#db2777",
-      gold: "#facc15",
+      dark: "#0a0a0a",
+      "night-sky": "#1b1f3b",
+      "touch-grass": "#95d5b2",
+      terminal: "#272822",
+      "cherry-blossom": "#ffd6de",
+      nightshade: "#311b3a",
+      "el-blue": "#0a192f",
+      gold: "#d4af37",
     };
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute("content", themeColors[themeId] || "#0a0a0a");
 
-    // Persist theme
+    // ✅ Persist for reloads
+    localStorage.setItem("active-theme", themeId);
     localStorage.setItem("game_theme", themeId);
   }, []);
 
@@ -252,7 +284,7 @@ export function GameProvider({ children }: GameProviderProps) {
       setCurrentTheme(themeId);
       applyTheme(themeId);
     },
-    [applyTheme],
+    [applyTheme]
   );
 
   // ============================================================================
@@ -270,7 +302,6 @@ export function GameProvider({ children }: GameProviderProps) {
 
   const handleClick = useCallback(() => {
     if (!engineRef.current || !state) return;
-    console.log("Click registered!");
     engineRef.current.executeAction((currentState) => clickPost(currentState));
   }, [state]);
 
@@ -286,27 +317,27 @@ export function GameProvider({ children }: GameProviderProps) {
         return result;
       });
     },
-    [state],
+    [state]
   );
 
   const handleBuyUpgrade = useCallback(
     (upgradeId: string) => {
       if (!engineRef.current || !state) return;
       engineRef.current.executeAction((currentState) =>
-        buyUpgrade(currentState, upgradeId),
+        buyUpgrade(currentState, upgradeId)
       );
     },
-    [state],
+    [state]
   );
 
   const handlePurchaseTheme = useCallback(
     (themeId: string) => {
       if (!engineRef.current || !state) return;
       engineRef.current.executeAction((currentState) =>
-        purchaseTheme(currentState, themeId),
+        purchaseTheme(currentState, themeId)
       );
     },
-    [state],
+    [state]
   );
 
   const handleActivateTheme = useCallback(
@@ -314,11 +345,11 @@ export function GameProvider({ children }: GameProviderProps) {
       if (!engineRef.current || !state) return;
       engineRef.current.executeAction((currentState) => {
         const result = activateTheme(currentState, themeId);
-        if (result.success) setTheme(themeId);
+        if (result.success) setTheme(themeId); // ✅ apply visual theme too
         return result;
       });
     },
-    [state, setTheme],
+    [state, setTheme]
   );
 
   const handlePrestige = useCallback(() => {
@@ -334,11 +365,11 @@ export function GameProvider({ children }: GameProviderProps) {
         state: updateSetting(
           currentState,
           key as keyof GameState["settings"],
-          value,
+          value
         ),
       }));
     },
-    [state],
+    [state]
   );
 
   const handleExportSave = useCallback(async () => {

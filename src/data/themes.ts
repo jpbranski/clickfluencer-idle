@@ -1,0 +1,77 @@
+// src/data/themes.ts
+import { Theme } from '@/types/theme';
+
+export const themes: Theme[] = [
+  {
+    id: 'dark',
+    displayName: 'Dark',
+    description: 'Default stormy slate theme.',
+    cost: 0,
+    unlocked: true,
+    preview: 'from-[#1b2330] to-[#2b3350]',
+  },
+  {
+    id: 'light',
+    displayName: 'Light',
+    description: 'Bright material-inspired palette.',
+    cost: 25,
+    unlocked: false,
+    preview: 'from-[#ffffff] to-[#eaeef5]',
+  },
+  {
+    id: 'night-sky',
+    displayName: 'Night Sky',
+    description: 'Cool purples and silvers under starlight.',
+    cost: 50,
+    unlocked: false,
+    preview: 'from-[#1b1f3b] via-[#2a2450] to-[#0b0d1e]',
+  },
+  {
+    id: 'touch-grass',
+    displayName: 'Touch Grass',
+    description: 'A peaceful palette of greens and sunlight.',
+    cost: 75,
+    unlocked: false,
+    preview: 'from-[#d8f3dc] via-[#b7e4c7] to-[#95d5b2]',
+  },
+  {
+    id: 'terminal',
+    displayName: 'Terminal',
+    description: 'Monokai dark for true hackers.',
+    cost: 100,
+    unlocked: false,
+    preview: 'from-[#2a2b24] via-[#272822] to-[#1e1f1c]',
+  },
+  {
+    id: 'cherry-blossom',
+    displayName: 'Cherry Blossom',
+    description: 'Soft pinks drifting through spring air.',
+    cost: 125,
+    unlocked: false,
+    preview: 'from-[#fff1f5] via-[#ffd9e5] to-[#ffc1d6]',
+  },
+  {
+    id: 'nightshade',
+    displayName: 'Nightshade',
+    description: 'Belladonna tones of violet and green.',
+    cost: 150,
+    unlocked: false,
+    preview: 'from-[#211326] via-[#311b3a] to-[#0c0c0d]',
+  },
+  {
+    id: 'el-blue',
+    displayName: 'EL Blue',
+    description: 'Inspired by Extra Life\'s heroic blue.',
+    cost: 175,
+    unlocked: false,
+    preview: 'from-[#0a192f] via-[#112240] to-[#0d2742]',
+  },
+  {
+    id: 'gold',
+    displayName: 'Gold',
+    description: 'Luxury that shines bright and bold.',
+    cost: 250,
+    unlocked: false,
+    preview: 'from-[#3a2a10] via-[#6f5215] to-[#d4af37]',
+  },
+];

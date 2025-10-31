@@ -14,6 +14,7 @@ import { ShareButtons } from "@/components/ShareButtons";
 import { formatNumber } from "@/game/format";
 import { getGeneratorCost, canAfford, canAffordShards } from "@/game/state";
 import { getAwardDropRate } from "@/game/actions";
+import { themes } from '@/data/themes';
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
@@ -349,7 +350,10 @@ export default function HomePage() {
                       return (
                         <ThemeCard
                           key={theme.id}
-                          theme={theme}
+                            theme={{
+                              ...theme,
+                              displayName: theme.name,
+                            }}
                           canAfford={canAffordShards(state.shards, theme.cost)}
                           isActive={theme.id === activeTheme?.id}
                           onPurchase={() => handlePurchaseTheme(theme.id)}
