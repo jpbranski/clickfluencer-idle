@@ -38,15 +38,14 @@ export const metadata: Metadata = {
 
 export default function AcknowledgementsPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 text-gray-800 dark:text-gray-200">
+    <main className="min-h-screen bg-background text-foreground transition-colors">
       {/* Navigation */}
-      <nav className="pt-6 px-6 pb-2 text-center">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-purple-600 dark:text-purple-400 font-medium hover:underline transition-colors"
-        >
-          ← Return Home
-        </Link>
+      <nav className="border-b border-border mb-8 px-4 py-3 flex justify-center gap-6 text-sm flex-wrap">
+        <Link href="/" className="text-accent hover:underline">Home</Link>
+        <Link href="/about" className="hover:underline">About</Link>
+        <Link href="/acknowledgements" className="hover:underline">Acknowledgements</Link>
+        <Link href="/privacy-policy" className="hover:underline">Privacy Policy</Link>
+        <Link href="/terms-of-service" className="hover:underline">Terms of Service</Link>
       </nav>
 
       {/* Hero Section */}
@@ -60,7 +59,7 @@ export default function AcknowledgementsPage() {
           <h1 className="text-4xl sm:text-6xl font-bold mb-4 bg-gradient-to-r from-purple-600 via-pink-500 to-blue-500 bg-clip-text text-transparent">
             Acknowledgements
           </h1>
-          <p className="max-w-2xl mx-auto text-lg text-gray-600 dark:text-gray-400">
+          <p className="max-w-2xl mx-auto text-lg text-muted">
             No project is ever truly built alone. Behind every click, commit, and
             caffeine-fueled all-nighter are the people—and occasional pets—who
             shape, test, and encourage it into being.
@@ -71,7 +70,7 @@ export default function AcknowledgementsPage() {
       {/* Thanks Section */}
       <section className="px-6 py-16">
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <div className="bg-gray-50 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 p-6 rounded-2xl shadow-md text-left">
+          <div className="bg-surface border border-border p-6 rounded-2xl shadow-md text-left">
             <p className="text-lg mb-4">
               <strong>My good friends Jakob and Midnight</strong>—for always
               being ready to test out my many creations. Whether it's a new game
@@ -85,7 +84,7 @@ export default function AcknowledgementsPage() {
             </p>
           </div>
 
-          <div className="bg-gray-50 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 p-6 rounded-2xl shadow-md text-left">
+          <div className="bg-surface border border-border p-6 rounded-2xl shadow-md text-left">
             <p className="text-lg mb-4">
               <strong>Another good friend Stephen</strong>—for his uncanny
               ability to find new and unexpected ways to break everything I
@@ -98,7 +97,7 @@ export default function AcknowledgementsPage() {
             </p>
           </div>
 
-          <div className="bg-gray-50 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 p-6 rounded-2xl shadow-md text-left">
+          <div className="bg-surface border border-border p-6 rounded-2xl shadow-md text-left">
             <p className="text-lg mb-4">
               <strong>My wife</strong>—for her patience, her creativity, and her
               relentless encouragement to keep pushing forward. She reminds me
@@ -112,7 +111,7 @@ export default function AcknowledgementsPage() {
             </p>
           </div>
 
-          <div className="bg-gray-50 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 p-6 rounded-2xl shadow-md text-left">
+          <div className="bg-surface border border-border p-6 rounded-2xl shadow-md text-left">
             <p className="text-lg mb-4">
               <strong>My cats</strong>—for their tireless contributions to the
               creative process. They've added keystrokes, closed editors,
@@ -127,7 +126,7 @@ export default function AcknowledgementsPage() {
           </div>
 
           {/* Wrap-up Paragraph */}
-          <p className="max-w-2xl mx-auto text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p className="max-w-2xl mx-auto text-muted leading-relaxed">
             Projects like <em>Clickfluencer Idle</em> don't exist in isolation.
             They grow from community, encouragement, and the shared spark of
             people who care—whether that means offering a late-night idea,
@@ -140,7 +139,7 @@ export default function AcknowledgementsPage() {
             stop renaming my variables while I'm not looking.
           </p>
 
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-8">
+          <p className="text-sm text-muted mt-8">
             (Total number of bugs introduced by humans: 37. By cats: still
             counting.)
           </p>

@@ -104,11 +104,11 @@ export function ShareButtons({ creds, score }: ShareButtonsProps) {
   }, [generateShareImage]);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-      <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+    <div className="bg-card rounded-lg shadow-sm border border-border p-6 transition-colors">
+      <h2 className="text-xl font-bold mb-4 text-foreground">
         Share Your Progress
       </h2>
-      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+      <p className="text-sm text-muted mb-4">
         Show off your achievements to your friends!
       </p>
 
@@ -116,7 +116,7 @@ export function ShareButtons({ creds, score }: ShareButtonsProps) {
         {/* X (Twitter) Button */}
         <button
           onClick={handleShareX}
-          className="flex items-center gap-2 px-4 py-3 rounded-lg font-semibold transition-colors bg-black hover:bg-gray-800 text-white"
+          className="btn-muted flex items-center gap-2"
           aria-label="Share on X"
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -140,7 +140,7 @@ export function ShareButtons({ creds, score }: ShareButtonsProps) {
         {/* Download Image Button */}
         <button
           onClick={handleDownloadImage}
-          className="flex items-center gap-2 px-4 py-3 rounded-lg font-semibold transition-colors bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
+          className="btn-accent flex items-center gap-2"
           aria-label="Download share image"
         >
           <svg
@@ -161,8 +161,8 @@ export function ShareButtons({ creds, score }: ShareButtonsProps) {
       </div>
 
       {/* Preview hint */}
-      <div className="mt-4 p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800">
-        <p className="text-xs text-gray-600 dark:text-gray-400">
+      <div className="mt-4 p-3 rounded-lg bg-accent/10 border border-accent/20">
+        <p className="text-xs text-accent">
           💡 <strong>Tip:</strong> Download the image to share it with your
           custom stats on any platform!
         </p>

@@ -31,9 +31,10 @@ export function CurrencyBar({
         className={`
         flex flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8
         px-4 py-3 rounded-lg
-        bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm
+        bg-surface backdrop-blur-sm
         border border-border
         shadow-lg
+        transition-colors
       `}
       >
         {/* Followers (Main Currency) */}
@@ -59,7 +60,7 @@ export function CurrencyBar({
                 : formatNumber(followers, 2)}
             </div>
             {followersPerSecond > 0 && (
-              <div className="text-xs text-green-600 dark:text-green-400">
+              <div className="text-xs text-success">
                 +{formatNumber(followersPerSecond, 1)}/s
               </div>
             )}
@@ -68,7 +69,7 @@ export function CurrencyBar({
 
         {/* Vertical Divider */}
         <div
-          className="hidden sm:block w-px h-12 bg-gray-300 dark:bg-gray-600"
+          className="hidden sm:block w-px h-12 bg-border"
           aria-hidden="true"
         />
 
@@ -87,7 +88,7 @@ export function CurrencyBar({
               Awards
             </div>
             <div
-              className="text-lg font-bold number-display truncate text-purple-600 dark:text-purple-400"
+              className="text-lg font-bold number-display truncate text-accent"
               aria-label={`${shards} awards`}
             >
               {shards.toLocaleString()}

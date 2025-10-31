@@ -48,13 +48,13 @@ export function EventLog({ entries, maxEntries = 50 }: EventLogProps) {
   const getEntryColor = (type: string): string => {
     switch (type) {
       case "event":
-        return "text-purple-600 dark:text-purple-400";
+        return "text-accent";
       case "achievement":
-        return "text-yellow-600 dark:text-yellow-400";
+        return "text-warning";
       case "milestone":
-        return "text-blue-600 dark:text-blue-400";
+        return "text-success";
       case "prestige":
-        return "text-orange-600 dark:text-orange-400";
+        return "text-accent";
       default:
         return "text-muted";
     }
@@ -107,8 +107,8 @@ export function EventLog({ entries, maxEntries = 50 }: EventLogProps) {
             key={`${entry.id}-${index}`}
             className="
               flex items-start gap-3 p-3 rounded-lg
-              bg-gray-50 dark:bg-gray-900/50
-              hover:bg-gray-100 dark:hover:bg-gray-900
+              bg-surface
+              hover:bg-card
               transition-colors duration-150
               motion-reduce:transition-none
             "
@@ -143,15 +143,7 @@ export function EventLog({ entries, maxEntries = 50 }: EventLogProps) {
       {displayEntries.length > 5 && (
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="
-            w-full mt-3 px-3 py-2 rounded-lg
-            bg-card
-            hover:bg-gray-200 dark:hover:bg-gray-800
-            text-sm font-semibold
-            transition-colors duration-150
-            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400
-            motion-reduce:transition-none
-          "
+          className="btn-muted w-full mt-3"
           aria-expanded={isExpanded}
         >
           {isExpanded
@@ -168,10 +160,10 @@ export function EventLog({ entries, maxEntries = 50 }: EventLogProps) {
           }}
           className="
             w-full mt-2 px-3 py-1 rounded
-            text-xs text-red-600 dark:text-red-400
-            hover:bg-red-50 dark:hover:bg-red-900/20
+            text-xs text-error
+            hover:bg-error/10
             transition-colors duration-150
-            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error
             motion-reduce:transition-none
           "
         >

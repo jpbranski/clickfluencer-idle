@@ -108,9 +108,9 @@ export function SettingsDialog({
               onClick={onClose}
               className="
                 p-2 rounded-lg
-                hover:bg-gray-100 dark:hover:bg-gray-700
+                hover:bg-muted
                 transition-colors duration-150
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent
                 motion-reduce:transition-none
               "
               aria-label="Close settings"
@@ -173,9 +173,9 @@ export function SettingsDialog({
                 checked={settings.soundEnabled}
                 onChange={(checked) => onSettingChange("soundEnabled", checked)}
               />
-              <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+              <div className="p-3 rounded-lg bg-accent/10 border border-accent/20">
                 <div className="flex items-start gap-2 text-xs text-muted">
-                  <span className="text-blue-600 dark:text-blue-400">ℹ️</span>
+                  <span className="text-accent">ℹ️</span>
                   <p>
                     Animations automatically reduce when "Reduce motion" is
                     enabled in your system preferences.
@@ -192,14 +192,7 @@ export function SettingsDialog({
               {/* Export */}
               <button
                 onClick={onExport}
-                className="
-                  w-full px-4 py-3 rounded-lg
-                  bg-blue-500 hover:bg-blue-600 text-white
-                  font-semibold text-sm
-                  transition-colors duration-150 active:scale-95
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400
-                  motion-reduce:transition-none
-                "
+                className="btn-accent w-full"
               >
                 📤 Export Save Data
               </button>
@@ -207,20 +200,13 @@ export function SettingsDialog({
               {/* Import */}
               <button
                 onClick={handleImport}
-                className="
-                  w-full px-4 py-3 rounded-lg
-                  bg-green-500 hover:bg-green-600 text-white
-                  font-semibold text-sm
-                  transition-colors duration-150 active:scale-95
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400
-                  motion-reduce:transition-none
-                "
+                className="btn-accent w-full"
               >
                 📥 Import Save Data
               </button>
 
               {importError && (
-                <div className="text-xs text-red-600 dark:text-red-400 text-center">
+                <div className="text-xs text-error text-center">
                   {importError}
                 </div>
               )}
@@ -232,10 +218,10 @@ export function SettingsDialog({
                     onClick={() => setShowResetConfirm(true)}
                     className="
                       w-full px-4 py-3 rounded-lg
-                      bg-red-500 hover:bg-red-600 text-white
+                      bg-error hover:bg-error/90 text-foreground
                       font-semibold text-sm
                       transition-colors duration-150 active:scale-95
-                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400
+                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error
                       motion-reduce:transition-none
                     "
                   >
@@ -243,8 +229,8 @@ export function SettingsDialog({
                   </button>
                 ) : (
                   <div className="space-y-2">
-                    <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-                      <p className="text-sm font-semibold text-red-600 dark:text-red-400 mb-1">
+                    <div className="p-3 rounded-lg bg-error/10 border border-error/20">
+                      <p className="text-sm font-semibold text-error mb-1">
                         ⚠️ Are you sure?
                       </p>
                       <p className="text-xs text-muted">
@@ -255,15 +241,7 @@ export function SettingsDialog({
                     <div className="flex gap-2">
                       <button
                         onClick={() => setShowResetConfirm(false)}
-                        className="
-                          flex-1 px-4 py-2 rounded-lg
-                          bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600
-                          text-gray-800 dark:text-gray-200
-                          font-semibold text-sm
-                          transition-colors duration-150
-                          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400
-                          motion-reduce:transition-none
-                        "
+                        className="btn-muted flex-1"
                       >
                         Cancel
                       </button>
@@ -271,10 +249,10 @@ export function SettingsDialog({
                         onClick={handleReset}
                         className="
                           flex-1 px-4 py-2 rounded-lg
-                          bg-red-600 hover:bg-red-700 text-white
+                          bg-error hover:bg-error/90 text-foreground
                           font-semibold text-sm
                           transition-colors duration-150
-                          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400
+                          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error
                           motion-reduce:transition-none
                         "
                       >
@@ -307,7 +285,7 @@ function SettingToggle({
   onChange,
 }: SettingToggleProps) {
   return (
-    <div className="flex items-start justify-between gap-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+    <div className="flex items-start justify-between gap-4 p-3 rounded-lg hover:bg-surface transition-colors">
       <div className="flex-1">
         <div className="text-sm font-semibold mb-1">{label}</div>
         <div className="text-xs text-muted">
@@ -318,9 +296,9 @@ function SettingToggle({
         onClick={() => onChange(!checked)}
         className={`
           relative inline-flex h-6 w-11 items-center rounded-full
-          transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2
+          transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2
           motion-reduce:transition-none
-          ${checked ? "bg-purple-600" : "bg-gray-300 dark:bg-gray-600"}
+          ${checked ? "bg-accent" : "bg-muted"}
         `}
         role="switch"
         aria-checked={checked}
@@ -328,9 +306,9 @@ function SettingToggle({
       >
         <span
           className={`
-            inline-block h-4 w-4 transform rounded-full bg-white shadow-lg transition-transform duration-200
+            inline-block h-4 w-4 transform rounded-full shadow-lg transition-transform duration-200
             motion-reduce:transition-none
-            ${checked ? "translate-x-6" : "translate-x-1"}
+            ${checked ? "translate-x-6 bg-background" : "translate-x-1 bg-foreground"}
           `}
         />
       </button>

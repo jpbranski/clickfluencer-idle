@@ -86,15 +86,16 @@ export function EventToasts({ events }: EventToastsProps) {
             key={event.id}
             className="
               toast-enter
-              bg-white dark:bg-gray-800
-              rounded-lg shadow-2xl border-2 border-purple-400 dark:border-purple-600
+              bg-surface border-2 border-accent
+              rounded-lg shadow-2xl
               overflow-hidden
               motion-reduce:transition-none
               animate-scale-in
+              transition-colors
             "
           >
             {/* Progress Bar */}
-            <div className="relative h-1 bg-gray-200 dark:bg-gray-700">
+            <div className="relative h-1 bg-muted">
               <div
                 className={`absolute inset-y-0 left-0 bg-gradient-to-r ${getEventColor(
                   event.effect.type,
@@ -122,18 +123,18 @@ export function EventToasts({ events }: EventToastsProps) {
 
                 {/* Details */}
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-bold mb-1">{event.name}</h4>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                  <h4 className="text-sm font-bold mb-1 text-foreground">{event.name}</h4>
+                  <p className="text-xs text-muted mb-2">
                     {event.description}
                   </p>
 
                   {/* Timer */}
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-500 dark:text-gray-500">
+                    <span className="text-xs text-muted">
                       Time remaining:
                     </span>
                     <span
-                      className="text-xs font-mono font-bold text-purple-600 dark:text-purple-400"
+                      className="text-xs font-mono font-bold text-accent"
                       aria-label={`${Math.floor(timeRemaining / 1000)} seconds remaining`}
                     >
                       {formatCountdown(timeRemaining)}
@@ -141,7 +142,7 @@ export function EventToasts({ events }: EventToastsProps) {
                   </div>
 
                   {/* Effect */}
-                  <div className="mt-2 px-2 py-1 rounded bg-purple-50 dark:bg-purple-900/20 text-xs text-center font-semibold text-purple-700 dark:text-purple-300">
+                  <div className="mt-2 px-2 py-1 rounded bg-accent/10 text-xs text-center font-semibold text-accent border border-accent/20">
                     ×{event.effect.multiplier.toFixed(1)} Multiplier
                   </div>
                 </div>
