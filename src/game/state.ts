@@ -25,8 +25,6 @@ export interface Generator {
 }
 
 export interface Upgrade {
-  maxTier: any;
-  tier: any;
   id: string;
   name: string;
   description: string;
@@ -37,6 +35,9 @@ export interface Upgrade {
   maxLevel?: number; // undefined = infinite
   currentLevel?: number; // for tracking purchase count
   costMultiplier?: number; // for scaling costs (e.g., 1.15 = +15% per level)
+  // For tiered upgrades
+  tier?: number; // current tier (0-based)
+  maxTier?: number; // maximum tier cap
 }
 
 export interface UpgradeEffect {
@@ -184,46 +185,17 @@ export const INITIAL_GENERATORS: Generator[] = [
 ];
 
 export const INITIAL_UPGRADES: Upgrade[] = [
-  // 5-tier Better Camera system (additive bonuses)
+  // Multi-tier Better Camera system (additive bonuses)
   {
-    id: "better_camera_1",
-    name: "📸 Better Camera I",
-    description: "Adds +1 to base click power",
-    cost: 500,
+    id: "better_camera",
+    name: "📸 Better Camera",
+    description: "Adds to base click power per tier (5 tiers: +1, +2, +3, +5, +8)",
+    cost: 500, // base cost
     purchased: false,
-    effect: { type: "clickAdditive", value: 1 },
-  },
-  {
-    id: "better_camera_2",
-    name: "📸 Better Camera II",
-    description: "Adds +2 to base click power",
-    cost: 1500,
-    purchased: false,
-    effect: { type: "clickAdditive", value: 2 },
-  },
-  {
-    id: "better_camera_3",
-    name: "📸 Better Camera III",
-    description: "Adds +3 to base click power",
-    cost: 4500,
-    purchased: false,
-    effect: { type: "clickAdditive", value: 3 },
-  },
-  {
-    id: "better_camera_4",
-    name: "📸 Better Camera IV",
-    description: "Adds +5 to base click power",
-    cost: 13500,
-    purchased: false,
-    effect: { type: "clickAdditive", value: 5 },
-  },
-  {
-    id: "better_camera_5",
-    name: "📸 Better Camera V",
-    description: "Adds +8 to base click power",
-    cost: 40500,
-    purchased: false,
-    effect: { type: "clickAdditive", value: 8 },
+    effect: { type: "clickAdditive", value: 1 }, // tier 1 value
+    tier: 0, // current tier (0 = not purchased yet)
+    maxTier: 5, // 5 tiers total
+    costMultiplier: 3, // cost triples each tier (500, 1500, 4500, 13500, 40500)
   },
   {
     id: "editing_software",
@@ -348,9 +320,20 @@ export function getGeneratorCost(generator: Generator): number {
 export function getClickPower(state: GameState): number {
   let basePower = 1;
 
-  // Apply additive click upgrades (Better Camera)
+  // Apply Better Camera tiered upgrade
+  const betterCamera = state.upgrades.find((u) => u.id === "better_camera");
+  if (betterCamera && betterCamera.tier) {
+    // Tier bonus mapping: 1→+1, 2→+2, 3→+3, 4→+5, 5→+8
+    const tierBonuses = [0, 1, 2, 3, 5, 8];
+    const tier = betterCamera.tier;
+    if (tier > 0 && tier <= 5) {
+      basePower += tierBonuses[tier];
+    }
+  }
+
+  // Apply other additive click upgrades (if any)
   state.upgrades
-    .filter((u) => u.purchased && u.effect.type === "clickAdditive")
+    .filter((u) => u.purchased && u.effect.type === "clickAdditive" && u.id !== "better_camera")
     .forEach((u) => {
       basePower += u.effect.value;
     });

@@ -29,9 +29,14 @@ export function UpgradeCard({
 }: UpgradeCardProps) {
   const isInfinite = upgrade.currentLevel !== undefined;
   const level = upgrade.currentLevel || 0;
+
+  const isTiered = upgrade.tier !== undefined && upgrade.maxTier !== undefined;
+  const tier = upgrade.tier || 0;
+  const maxTier = upgrade.maxTier || 0;
+
   const isPurchased =
     upgrade.purchased ||
-    (upgrade.maxTier && upgrade.tier && upgrade.tier >= upgrade.maxTier);
+    (isTiered && tier >= maxTier);
 
   const getEffectIcon = (type: string): string => {
     switch (type) {
@@ -75,7 +80,7 @@ export function UpgradeCard({
       `}
     >
       {/* Purchased Badge */}
-      {upgrade.purchased && !isInfinite && (
+      {isPurchased && !isInfinite && !isTiered && (
         <div className="absolute top-2 right-2">
           <span
             className="badge-accent"
@@ -103,6 +108,11 @@ export function UpgradeCard({
                 Lv.{level}
               </span>
             )}
+            {isTiered && (
+              <span className="ml-2 text-xs font-normal" style={{ color: 'var(--accent)' }}>
+                Tier {tier}/{maxTier}
+              </span>
+            )}
           </h3>
           <p className="text-xs text-muted line-clamp-2">
             {upgrade.description}
@@ -126,7 +136,7 @@ export function UpgradeCard({
       </div>
 
       {/* Cost and Purchase */}
-      {!upgrade.purchased || isInfinite ? (
+      {!isPurchased || isInfinite || (isTiered && tier < maxTier) ? (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs text-muted">
@@ -142,19 +152,19 @@ export function UpgradeCard({
 
           <button
             onClick={onPurchase}
-            disabled={!canAfford || (isPurchased && !isInfinite)}
+            disabled={!canAfford || isPurchased}
             className={`
               w-full px-4 py-2 rounded-lg font-semibold text-sm
               transition-all duration-150
               focus-visible:outline-none focus-visible:ring-2 ring-accent
               motion-reduce:transition-none
-              ${canAfford && !(isPurchased && !isInfinite) ? "active:scale-95" : "cursor-not-allowed"}
-              ${canAfford && !(isPurchased && !isInfinite) ? "btn-accent" : "btn-muted"}
-              ${isPurchased && !isInfinite ? "opacity-60" : ""}
+              ${canAfford && !isPurchased ? "active:scale-95" : "cursor-not-allowed"}
+              ${canAfford && !isPurchased ? "btn-accent" : "btn-muted"}
+              ${isPurchased ? "opacity-60" : ""}
             `}
             aria-label={`Purchase ${upgrade.name} for ${formatNumber(currentCost)} followers`}
           >
-            {isPurchased && !isInfinite ? "Maxed Out" : isInfinite ? "Upgrade" : "Purchase"}
+            {isPurchased ? "Maxed Out" : (isInfinite || isTiered) ? "Upgrade" : "Purchase"}
           </button>
         </div>
       ) : (

@@ -49,10 +49,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
           const theme = stored || (systemDark ? 'dark' : 'light');
 
-          // Apply theme class & data attribute before hydration
+          // Apply theme class & data attribute to both html and body
           document.documentElement.dataset.theme = theme;
           document.documentElement.classList.add('theme-' + theme);
           if (theme !== 'light') document.documentElement.classList.add('dark');
+
+          // Also apply to body when it's available
+          if (document.body) {
+            document.body.dataset.theme = theme;
+            document.body.classList.add('theme-' + theme);
+            if (theme !== 'light') document.body.classList.add('dark');
+          }
 
           // Update browser UI theme color
           const colors = {

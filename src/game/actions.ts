@@ -221,13 +221,22 @@ export function buyGeneratorBulk(
 // ============================================================================
 
 /**
- * Get the current cost of an upgrade (handles scaling for infinite upgrades)
+ * Get the current cost of an upgrade (handles scaling for infinite and tiered upgrades)
  */
 export function getUpgradeCost(upgrade: Upgrade): number {
+  // Handle tiered upgrades (e.g., better_camera)
+  if (upgrade.tier !== undefined && upgrade.costMultiplier !== undefined) {
+    const currentTier = upgrade.tier || 0;
+    return Math.floor(upgrade.cost * Math.pow(upgrade.costMultiplier, currentTier));
+  }
+
+  // Handle infinite upgrades (e.g., ai_enhancements)
   if (upgrade.costMultiplier && upgrade.currentLevel !== undefined) {
     // Infinite upgrade - cost scales exponentially
     return Math.floor(upgrade.cost * Math.pow(upgrade.costMultiplier, upgrade.currentLevel));
   }
+
+  // Regular one-time upgrades
   return upgrade.cost;
 }
 
@@ -235,8 +244,9 @@ export function getUpgradeCost(upgrade: Upgrade): number {
  * Purchase an upgrade
  * - One-time purchase that provides permanent bonuses
  * - For infinite upgrades: can be purchased repeatedly with scaling cost
+ * - For tiered upgrades: can be purchased up to maxTier times
  * - Deducts followers equal to current cost
- * - Marks upgrade as purchased (or increments level for infinite)
+ * - Marks upgrade as purchased (or increments level/tier for progressive)
  */
 export function buyUpgrade(state: GameState, upgradeId: string): ActionResult {
   const upgrade = state.upgrades.find((u) => u.id === upgradeId);
@@ -249,11 +259,24 @@ export function buyUpgrade(state: GameState, upgradeId: string): ActionResult {
     };
   }
 
+  // Check if it's a tiered upgrade
+  const isTiered = upgrade.tier !== undefined && upgrade.maxTier !== undefined;
+  const currentTier = upgrade.tier || 0;
+
+  // Check if tiered upgrade is maxed out
+  if (isTiered && upgrade.maxTier && currentTier >= upgrade.maxTier) {
+    return {
+      success: false,
+      state,
+      message: "Already maxed out",
+    };
+  }
+
   // Check if it's an infinite upgrade
   const isInfinite = upgrade.maxLevel === undefined || (upgrade.maxLevel && (upgrade.currentLevel || 0) < upgrade.maxLevel);
 
-  // For non-infinite upgrades, check if already purchased
-  if (!isInfinite && upgrade.purchased) {
+  // For non-infinite, non-tiered upgrades, check if already purchased
+  if (!isInfinite && !isTiered && upgrade.purchased) {
     return {
       success: false,
       state,
@@ -273,11 +296,21 @@ export function buyUpgrade(state: GameState, upgradeId: string): ActionResult {
 
   const newUpgrades = state.upgrades.map((u) => {
     if (u.id === upgradeId) {
-      if (u.currentLevel !== undefined) {
-        // Infinite upgrade - increment level
+      // Handle tiered upgrades
+      if (u.tier !== undefined && u.maxTier !== undefined) {
+        const nextTier = (u.tier || 0) + 1;
+        return {
+          ...u,
+          tier: nextTier,
+          purchased: nextTier >= u.maxTier, // mark as purchased when maxed
+        };
+      }
+      // Handle infinite upgrades
+      else if (u.currentLevel !== undefined) {
         return { ...u, purchased: true, currentLevel: u.currentLevel + 1 };
-      } else {
-        // Regular upgrade - mark as purchased
+      }
+      // Handle regular one-time upgrades
+      else {
         return { ...u, purchased: true };
       }
     }
