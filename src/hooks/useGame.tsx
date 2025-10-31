@@ -54,7 +54,6 @@ import {
 } from "@/lib/storage";
 import { GAMEPLAY } from "@/app-config";
 import { themes as baseThemes } from "@/data/themes";
-import type { Theme } from "@/types/theme";
 
 // ============================================================================
 // UTILITIES

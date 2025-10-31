@@ -92,9 +92,6 @@ export interface GameState {
   // Upgrades (permanent improvements)
   upgrades: Upgrade[];
 
-  // Themes (cosmetic + bonus)
-  themes: Theme[];
-
   // Active Events
   activeEvents: RandomEvent[];
 
@@ -238,65 +235,6 @@ export const INITIAL_UPGRADES: Upgrade[] = [
   },
 ];
 
-export const INITIAL_THEMES: Theme[] = [
-  {
-    id: "light",
-    name: "☀️ Light",
-    cost: 0,
-    unlocked: true,
-    active: false,
-    bonusMultiplier: 1.0,
-  },
-  {
-    id: "default",
-    name: "🌙 Dark",
-    cost: 0,
-    unlocked: true,
-    active: true,
-    bonusMultiplier: 1.0,
-  },
-  {
-    id: "neon",
-    name: "🌃 Neon Dreams",
-    cost: 10,
-    unlocked: false,
-    active: false,
-    bonusMultiplier: 1.05,
-  },
-  {
-    id: "nature",
-    name: "🌿 Nature Vibes",
-    cost: 25,
-    unlocked: false,
-    active: false,
-    bonusMultiplier: 1.1,
-  },
-  {
-    id: "terminal",
-    name: "💻 Terminal",
-    cost: 50,
-    unlocked: false,
-    active: false,
-    bonusMultiplier: 1.15,
-  },
-  {
-    id: "cherry",
-    name: "🌸 Cherry Blossom",
-    cost: 100,
-    unlocked: false,
-    active: false,
-    bonusMultiplier: 1.2,
-  },
-  {
-    id: "gold",
-    name: "✨ Gold",
-    cost: 1000,
-    unlocked: false,
-    active: false,
-    bonusMultiplier: 1.5,
-  },
-];
-
 export function createInitialState(): GameState {
   const now = Date.now();
   return {
@@ -305,7 +243,6 @@ export function createInitialState(): GameState {
     reputation: 0,
     generators: INITIAL_GENERATORS.map((g) => ({ ...g })),
     upgrades: INITIAL_UPGRADES.map((u) => ({ ...u })),
-    themes: INITIAL_THEMES.map((t) => ({ ...t })),
     activeEvents: [],
     stats: {
       totalClicks: 0,
@@ -364,23 +301,6 @@ export function getClickPower(state: GameState): number {
 }
 
 /**
- * Calculate cumulative theme bonus from all unlocked themes
- * Bonus applies permanently when themes are unlocked
- */
-export function getThemeBonus(state: GameState): number {
-  let totalBonus = 1;
-
-  state.themes
-    .filter((t) => t.unlocked)
-    .forEach((t) => {
-      // Multiply bonuses (e.g., 1.05 * 1.10 = 1.155)
-      totalBonus *= t.bonusMultiplier;
-    });
-
-  return totalBonus;
-}
-
-/**
  * Calculate total followers per second from all generators
  * Factors in: base generator output + upgrades + events + reputation + themes
  */
@@ -417,9 +337,6 @@ export function getFollowersPerSecond(state: GameState): number {
 
   // Apply reputation bonus (+10% per reputation point)
   total *= 1 + state.reputation * 0.1;
-
-  // Apply cumulative theme bonuses (all unlocked themes)
-  total *= getThemeBonus(state);
 
   // Apply active event multipliers
   state.activeEvents.forEach((event) => {
