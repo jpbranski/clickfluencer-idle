@@ -47,7 +47,7 @@ export function OfflineEarningsModal({
           relative w-full max-w-md
           bg-surface
           rounded-2xl shadow-2xl
-          border-2 border-purple-400 dark:border-purple-600
+          border-2 border-accent
           motion-reduce:transition-none animate-scale-in
         "
       >
@@ -74,38 +74,38 @@ export function OfflineEarningsModal({
         {/* Content */}
         <div className="p-6 space-y-4">
           {/* Time Away */}
-          <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+          <div className="p-4 rounded-lg bg-accent/10 border border-accent/20">
             <div className="text-xs text-muted uppercase tracking-wide mb-1">
               Time Away
             </div>
-            <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
+            <div className="text-lg font-bold text-accent">
               {formatTimeDetailed(timeAway)}
             </div>
           </div>
 
           {/* Followers Gained */}
-          <div className="p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+          <div className="p-4 rounded-lg bg-success/10 border border-success/20">
             <div className="text-xs text-muted uppercase tracking-wide mb-1">
               Followers Gained
             </div>
-            <div className="text-2xl font-bold text-green-600 dark:text-green-400 number-display">
+            <div className="text-2xl font-bold text-success number-display">
               +{formatNumber(followersGained)}
             </div>
           </div>
 
           {/* Time Processed (if capped) */}
           {wasCapped && (
-            <div className="p-4 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800">
+            <div className="p-4 rounded-lg bg-warning/10 border border-warning/20">
               <div className="flex items-start gap-2">
                 <span
-                  className="text-yellow-600 dark:text-yellow-400 text-xl"
+                  className="text-warning text-xl"
                   role="img"
                   aria-label="warning"
                 >
                   ⚠️
                 </span>
                 <div className="flex-1">
-                  <div className="text-sm font-semibold text-yellow-700 dark:text-yellow-400 mb-1">
+                  <div className="text-sm font-semibold text-warning mb-1">
                     Progress Capped
                   </div>
                   <div className="text-xs text-muted">
@@ -120,10 +120,10 @@ export function OfflineEarningsModal({
           )}
 
           {/* Info Box */}
-          <div className="p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800">
+          <div className="p-3 rounded-lg bg-accent/10 border border-accent/20">
             <div className="flex items-start gap-2 text-xs text-muted">
               <span
-                className="text-purple-600 dark:text-purple-400"
+                className="text-accent"
                 role="img"
                 aria-label="info"
               >
@@ -141,16 +141,7 @@ export function OfflineEarningsModal({
         <div className="px-6 pb-6">
           <button
             onClick={onClose}
-            className="
-              w-full px-6 py-3 rounded-lg
-              bg-gradient-to-r from-purple-500 to-pink-500
-              hover:from-purple-600 hover:to-pink-600
-              text-white font-semibold
-              shadow-lg hover:shadow-xl
-              transition-all duration-150 active:scale-95
-              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2
-              motion-reduce:transition-none
-            "
+            className="btn-accent w-full"
             aria-label="Close offline earnings dialog"
           >
             Continue Playing

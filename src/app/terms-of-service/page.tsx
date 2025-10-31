@@ -4,28 +4,27 @@ import Link from "next/link";
 
 export default function TermsOfServicePage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 px-6">
-      <nav className="max-w-3xl mx-auto mb-6 text-center">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-purple-600 dark:text-purple-400 font-medium hover:underline transition-colors"
-        >
-          ← Return Home
-        </Link>
+    <main className="min-h-screen bg-background text-foreground py-12 px-6 transition-colors">
+      <nav className="max-w-3xl mx-auto mb-6 border-b border-border pb-3 flex justify-center gap-6 text-sm flex-wrap">
+        <Link href="/" className="text-accent hover:underline">Home</Link>
+        <Link href="/about" className="hover:underline">About</Link>
+        <Link href="/acknowledgements" className="hover:underline">Acknowledgements</Link>
+        <Link href="/privacy-policy" className="hover:underline">Privacy Policy</Link>
+        <Link href="/terms-of-service" className="hover:underline">Terms of Service</Link>
       </nav>
 
-      <div className="max-w-3xl mx-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl p-8 md:p-12">
+      <div className="max-w-3xl mx-auto bg-card backdrop-blur-sm border border-border rounded-2xl shadow-xl p-8 md:p-12">
         <header className="mb-10 text-center">
           <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 mb-2">
             📜 Terms of Service
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-sm">
+          <p className="text-muted text-sm">
             for <strong>Clickfluencer Idle</strong> · Effective Date: October
             31, 2025
           </p>
         </header>
 
-        <section className="space-y-8 text-gray-800 dark:text-gray-100 leading-relaxed">
+        <section className="space-y-8 text-foreground leading-relaxed">
           {/* Intro */}
           <p>
             These Terms of Service (“Terms”) constitute a legally binding
@@ -185,7 +184,7 @@ export default function TermsOfServicePage() {
                     Email:{" "}
                     <a
                       href="mailto:dev@jpbranski.com"
-                      className="text-purple-600 dark:text-purple-400 underline"
+                      className="text-accent underline"
                     >
                       dev@jpbranski.com
                     </a>
@@ -195,7 +194,7 @@ export default function TermsOfServicePage() {
             </ul>
           </div>
 
-          <footer className="pt-8 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 text-center">
+          <footer className="pt-8 border-t border-border text-sm text-muted text-center">
             © {new Date().getFullYear()} Jonathan Branski · All Rights Reserved
           </footer>
         </section>

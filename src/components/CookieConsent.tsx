@@ -128,7 +128,7 @@ export function CookieConsent() {
       />
 
       {/* Banner */}
-      <div className="relative w-full max-w-4xl bg-white dark:bg-gray-800 rounded-lg shadow-2xl border-2 border-gray-200 dark:border-gray-700 pointer-events-auto animate-scale-in">
+      <div className="relative w-full max-w-4xl bg-card rounded-lg shadow-2xl border-2 border-border pointer-events-auto animate-scale-in transition-colors">
         <div className="p-6">
           {/* Header */}
           <div className="flex items-start gap-3 mb-4">
@@ -136,13 +136,13 @@ export function CookieConsent() {
             <div className="flex-1">
               <h2
                 id="cookie-consent-title"
-                className="text-xl font-bold text-gray-900 dark:text-white mb-2"
+                className="text-xl font-bold text-foreground mb-2"
               >
                 We Value Your Privacy
               </h2>
               <p
                 id="cookie-consent-description"
-                className="text-sm text-gray-600 dark:text-gray-400"
+                className="text-sm text-muted"
               >
                 We use cookies to enhance your browsing experience, serve
                 personalized ads or content, and analyze our traffic. By
@@ -153,7 +153,7 @@ export function CookieConsent() {
 
           {/* Details Panel */}
           {showDetails && (
-            <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg space-y-3">
+            <div className="mb-4 p-4 bg-surface rounded-lg space-y-3">
               {/* Necessary Cookies */}
               <div className="flex items-start gap-3">
                 <input
@@ -161,19 +161,19 @@ export function CookieConsent() {
                   id="cookie-necessary"
                   checked={true}
                   disabled
-                  className="mt-1 w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 opacity-50 cursor-not-allowed"
+                  className="mt-1 w-4 h-4 rounded border-border text-accent focus:ring-accent opacity-50 cursor-not-allowed"
                   aria-describedby="cookie-necessary-desc"
                 />
                 <div className="flex-1">
                   <label
                     htmlFor="cookie-necessary"
-                    className="font-semibold text-sm text-gray-900 dark:text-white"
+                    className="font-semibold text-sm text-foreground"
                   >
                     Necessary Cookies (Always Active)
                   </label>
                   <p
                     id="cookie-necessary-desc"
-                    className="text-xs text-gray-600 dark:text-gray-400 mt-1"
+                    className="text-xs text-muted mt-1"
                   >
                     These cookies are essential for the website to function and
                     cannot be disabled. They store your game progress and
@@ -194,19 +194,19 @@ export function CookieConsent() {
                       analytics: e.target.checked,
                     })
                   }
-                  className="mt-1 w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 cursor-pointer"
+                  className="mt-1 w-4 h-4 rounded border-border text-accent focus:ring-accent cursor-pointer"
                   aria-describedby="cookie-analytics-desc"
                 />
                 <div className="flex-1">
                   <label
                     htmlFor="cookie-analytics"
-                    className="font-semibold text-sm text-gray-900 dark:text-white cursor-pointer"
+                    className="font-semibold text-sm text-foreground cursor-pointer"
                   >
                     Analytics Cookies
                   </label>
                   <p
                     id="cookie-analytics-desc"
-                    className="text-xs text-gray-600 dark:text-gray-400 mt-1"
+                    className="text-xs text-muted mt-1"
                   >
                     These cookies help us understand how visitors interact with
                     our website by collecting and reporting information
@@ -227,19 +227,19 @@ export function CookieConsent() {
                       advertising: e.target.checked,
                     })
                   }
-                  className="mt-1 w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 cursor-pointer"
+                  className="mt-1 w-4 h-4 rounded border-border text-accent focus:ring-accent cursor-pointer"
                   aria-describedby="cookie-advertising-desc"
                 />
                 <div className="flex-1">
                   <label
                     htmlFor="cookie-advertising"
-                    className="font-semibold text-sm text-gray-900 dark:text-white cursor-pointer"
+                    className="font-semibold text-sm text-foreground cursor-pointer"
                   >
                     Advertising Cookies
                   </label>
                   <p
                     id="cookie-advertising-desc"
-                    className="text-xs text-gray-600 dark:text-gray-400 mt-1"
+                    className="text-xs text-muted mt-1"
                   >
                     These cookies are used to make advertising messages more
                     relevant to you and your interests (Google Ads).
@@ -255,21 +255,21 @@ export function CookieConsent() {
               <>
                 <button
                   onClick={acceptAll}
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-lg transition-all duration-150 active:scale-95"
+                  className="btn-accent flex-1"
                   aria-label="Accept all cookies"
                 >
                   Accept All
                 </button>
                 <button
                   onClick={rejectAll}
-                  className="flex-1 px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold rounded-lg transition-all duration-150 active:scale-95"
+                  className="btn-muted flex-1"
                   aria-label="Reject all optional cookies"
                 >
                   Reject All
                 </button>
                 <button
                   onClick={() => setShowDetails(true)}
-                  className="flex-1 px-6 py-3 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-750 text-gray-900 dark:text-white font-semibold rounded-lg border-2 border-gray-300 dark:border-gray-600 transition-all duration-150 active:scale-95"
+                  className="btn-muted flex-1 border-2"
                   aria-label="Customize cookie preferences"
                 >
                   Customize
@@ -279,14 +279,14 @@ export function CookieConsent() {
               <>
                 <button
                   onClick={saveCustom}
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-lg transition-all duration-150 active:scale-95"
+                  className="btn-accent flex-1"
                   aria-label="Save custom cookie preferences"
                 >
                   Save Preferences
                 </button>
                 <button
                   onClick={() => setShowDetails(false)}
-                  className="flex-1 px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold rounded-lg transition-all duration-150 active:scale-95"
+                  className="btn-muted flex-1"
                   aria-label="Go back to main options"
                 >
                   Back
@@ -297,12 +297,12 @@ export function CookieConsent() {
 
           {/* Privacy Policy Link */}
           <div className="mt-4 text-center">
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-muted">
               By using our site, you acknowledge that you have read and
               understand our{" "}
               <a
                 href="/privacy-policy"
-                className="text-purple-600 dark:text-purple-400 hover:underline"
+                className="text-accent hover:underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -311,7 +311,7 @@ export function CookieConsent() {
               and{" "}
               <a
                 href="/cookie-policy"
-                className="text-purple-600 dark:text-purple-400 hover:underline"
+                className="text-accent hover:underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
