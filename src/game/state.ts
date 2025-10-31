@@ -25,6 +25,8 @@ export interface Generator {
 }
 
 export interface Upgrade {
+  maxTier: any;
+  tier: any;
   id: string;
   name: string;
   description: string;
