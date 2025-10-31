@@ -36,36 +36,44 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning className={inter.variable}>
       <head>
-        {/* ✅ Inline theme setup to prevent hydration mismatch */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              (function() {
-                try {
-                  const theme = localStorage.getItem('active-theme') || localStorage.getItem('game_theme') || 'dark';
-                  document.documentElement.dataset.theme = theme;
-                  document.documentElement.classList.add('theme-' + theme);
-                  if (theme !== 'light') document.documentElement.classList.add('dark');
-                  const meta = document.querySelector('meta[name="theme-color"]');
-                  if (meta) {
-                    const colors = {
-                      light: '#ffffff',
-                      dark: '#0a0a0a',
-                      'night-sky': '#1b1f3b',
-                      'touch-grass': '#95d5b2',
-                      terminal: '#272822',
-                      'cherry-blossom': '#ffd6de',
-                      nightshade: '#311b3a',
-                      'el-blue': '#0a192f',
-                      gold: '#d4af37',
-                    };
-                    meta.setAttribute('content', colors[theme] || '#0a0a0a');
-                  }
-                } catch (e) {}
-              })();
-            `,
+      (function() {
+        try {
+          // Determine theme priority:
+          // 1. Saved player theme
+          // 2. System preference
+          // 3. Default 'dark'
+          const stored = localStorage.getItem('active-theme') || localStorage.getItem('game_theme');
+          const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const theme = stored || (systemDark ? 'dark' : 'light');
+
+          // Apply theme class & data attribute before hydration
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.classList.add('theme-' + theme);
+          if (theme !== 'light') document.documentElement.classList.add('dark');
+
+          // Update browser UI theme color
+          const colors = {
+            light: '#ffffff',
+            dark: '#0a0a0a',
+            'night-sky': '#1b1f3b',
+            'touch-grass': '#95d5b2',
+            terminal: '#272822',
+            'cherry-blossom': '#ffd6de',
+            nightshade: '#311b3a',
+            'el-blue': '#0a192f',
+            gold: '#d4af37'
+          };
+          const meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute('content', colors[theme] || '#0a0a0a');
+        } catch(e) {}
+      })();
+    `,
           }}
         />
+
 
         {/* ✅ Google Analytics */}
         {GA_ID && (
