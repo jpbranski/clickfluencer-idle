@@ -13,7 +13,7 @@
 // ============================================================================
 // TYPE DEFINITIONS
 // ============================================================================
-
+import { themes as baseThemes } from "@/data/themes";
 export interface Generator {
   id: string;
   name: string;
@@ -80,6 +80,7 @@ export interface Statistics {
   runStartTime: number;
 }
 
+
 export interface GameState {
   // Core Resources
   followers: number;
@@ -97,6 +98,9 @@ export interface GameState {
 
   // Statistics
   stats: Statistics;
+
+  // Themes
+  themes: Theme[];
 
   // Settings
   settings: {
@@ -263,6 +267,11 @@ export function createInitialState(): GameState {
     },
     version: "0.1.0",
     lastSaveTime: now,
+    themes: baseThemes.map((t) => ({
+      ...t,
+      unlocked: t.id === "dark" || t.id === "light", // whatever defaults you want
+      active: t.id === "dark", // default active
+   })),
   };
 }
 

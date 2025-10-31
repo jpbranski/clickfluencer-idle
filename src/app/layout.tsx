@@ -39,7 +39,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable} data-theme="dark" >
+    <html lang="en" className={inter.variable} >
       <head>
         {/* ✅ Google Analytics */}
         {GA_ID && (
