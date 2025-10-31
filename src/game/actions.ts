@@ -328,10 +328,12 @@ export function purchaseTheme(state: GameState, themeId: string): ActionResult {
 }
 
 /**
- * Activate a theme (visual only, bonus is always active when unlocked)
+ * Activate a theme
  * - Deactivates current theme
  * - Activates selected theme
  * - Theme must be unlocked
+ * - Bonus is always active for all unlocked themes (bonuses stack)
+ * - Visual theme is applied via useGame hook
  */
 export function activateTheme(state: GameState, themeId: string): ActionResult {
   const theme = state.themes.find((t) => t.id === themeId);

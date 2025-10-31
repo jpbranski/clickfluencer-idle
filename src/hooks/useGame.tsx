@@ -226,17 +226,6 @@ export function GameProvider({ children }: GameProviderProps) {
   // THEME MANAGEMENT (with persistence + visual sync)
   // ============================================================================
 
-  useEffect(() => {
-    // Load saved visual theme (defaults to 'dark')
-    const savedTheme =
-      localStorage.getItem("active-theme") ||
-      localStorage.getItem("game_theme") ||
-      "dark";
-
-    setCurrentTheme(savedTheme);
-    applyTheme(savedTheme);
-  }, []);
-
   const applyTheme = useCallback((themeId: string) => {
     if (typeof document === "undefined") return;
 
@@ -277,6 +266,28 @@ export function GameProvider({ children }: GameProviderProps) {
     localStorage.setItem("active-theme", themeId);
     localStorage.setItem("game_theme", themeId);
   }, []);
+
+  // Sync visual theme with game state's active theme
+  useEffect(() => {
+    if (!state?.themes) return;
+
+    // Find the active theme in game state
+    const activeTheme = state.themes.find((t) => t.active);
+
+    if (activeTheme) {
+      // Sync visual theme with game state's active theme
+      setCurrentTheme(activeTheme.id);
+      applyTheme(activeTheme.id);
+    } else {
+      // Fallback: load from localStorage or default to 'dark'
+      const savedTheme =
+        localStorage.getItem("active-theme") ||
+        localStorage.getItem("game_theme") ||
+        "dark";
+      setCurrentTheme(savedTheme);
+      applyTheme(savedTheme);
+    }
+  }, [state?.themes, applyTheme]);
 
   const setTheme = useCallback(
     (themeId: string) => {

@@ -50,7 +50,7 @@ export interface Theme {
   cost: number; // Cost in Awards
   unlocked: boolean;
   active: boolean;
-  bonusMultiplier: number;
+  bonusMultiplier: number; // required for gameplay bonuses
 }
 
 export interface RandomEvent {
@@ -291,7 +291,7 @@ export function getGeneratorCost(generator: Generator): number {
 
 /**
  * Calculate click power (followers per click)
- * Factors in: base click (1) + click upgrades + reputation bonus
+ * Factors in: base click (1) + click upgrades + reputation bonus + theme bonuses
  */
 export function getClickPower(state: GameState): number {
   let power = 1;
@@ -305,6 +305,13 @@ export function getClickPower(state: GameState): number {
 
   // Apply reputation bonus (+10% per reputation point)
   power *= 1 + state.reputation * 0.1;
+
+  // Apply theme bonuses (unlocked themes provide permanent bonuses)
+  state.themes
+    .filter((theme) => theme.unlocked)
+    .forEach((theme) => {
+      power *= theme.bonusMultiplier;
+    });
 
   return power;
 }
@@ -346,6 +353,13 @@ export function getFollowersPerSecond(state: GameState): number {
 
   // Apply reputation bonus (+10% per reputation point)
   total *= 1 + state.reputation * 0.1;
+
+  // Apply theme bonuses (unlocked themes provide permanent bonuses)
+  state.themes
+    .filter((theme) => theme.unlocked)
+    .forEach((theme) => {
+      total *= theme.bonusMultiplier;
+    });
 
   // Apply active event multipliers
   state.activeEvents.forEach((event) => {
