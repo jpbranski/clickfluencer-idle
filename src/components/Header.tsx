@@ -8,46 +8,155 @@ import { motion, AnimatePresence } from 'framer-motion';
 export function Header() {
   const { data: session } = useSession();
   const [showLogin, setShowLogin] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+
+  const mainLinks = [
+    { label: 'Home', href: '/' },
+    { label: 'News', href: '/news' },
+    { label: 'Guide', href: '/guide' },
+    { label: 'Accessibility', href: '/accessibility' },
+    { label: 'Contact', href: '/contact' },
+  ];
+
+  const secondaryLinks = [
+    { label: 'About', href: '/about' },
+    { label: 'Acknowledgements', href: '/acknowledgements' },
+    { label: 'Privacy', href: '/privacy-policy' },
+    { label: 'Terms', href: '/terms-of-service' },
+  ];
 
   return (
     <header className="w-full bg-surface border-b border-border text-foreground transition-colors">
-      <div className="container mx-auto flex items-center justify-between px-4 py-3">
-        {/* === Left: Title / Logo === */}
-        <Link href="/" className="font-bold text-lg text-accent hover:underline">
-          Clickfluencer Idle
-        </Link>
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex items-center justify-between">
+          {/* === Left: Title / Logo === */}
+          <Link href="/" className="font-bold text-lg text-accent hover:underline shrink-0">
+            Clickfluencer Idle
+          </Link>
 
-        {/* === Center: Secondary Menu === */}
-        <nav className="hidden md:flex gap-4 text-sm text-muted">
-          <Link href="/about" className="hover:text-accent">About</Link>
-          <Link href="/acknowledgements" className="hover:text-accent">Acknowledgements</Link>
-          <Link href="/privacy-policy" className="hover:text-accent">Privacy</Link>
-          <Link href="/terms-of-service" className="hover:text-accent">Terms</Link>
-        </nav>
+          {/* === Desktop Navigation === */}
+          <nav className="hidden lg:flex gap-6 text-sm text-muted mx-6">
+            {mainLinks.map(link => (
+              <Link key={link.href} href={link.href} className="hover:text-accent whitespace-nowrap">
+                {link.label}
+              </Link>
+            ))}
+          </nav>
 
-        {/* === Right: Auth === */}
-        {session ? (
-          <div className="flex items-center gap-2">
-            <img
-              src={session.user?.image ?? '/default-avatar.png'}
-              alt={session.user?.name ?? 'User avatar'}
-              className="w-6 h-6 rounded-full"
-            />
+          {/* === Right: Auth + Mobile Menu Button === */}
+          <div className="flex items-center gap-3">
+            {session ? (
+              <div className="hidden sm:flex items-center gap-2">
+                <img
+                  src={session.user?.image ?? '/default-avatar.png'}
+                  alt={session.user?.name ?? 'User avatar'}
+                  className="w-6 h-6 rounded-full"
+                />
+                <span className="text-xs text-muted hidden md:inline">{session.user?.name}</span>
+                <button
+                  onClick={() => signOut()}
+                  className="btn-muted text-xs"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowLogin(true)}
+                className="btn-accent text-xs hidden sm:inline-block"
+              >
+                Login
+              </button>
+            )}
+
+            {/* === Mobile Menu Button === */}
             <button
-              onClick={() => signOut()}
-              className="btn-muted text-xs"
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+              className="lg:hidden p-2 text-foreground hover:text-accent transition-colors"
+              aria-label="Toggle menu"
             >
-              Logout
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {showMobileMenu ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
             </button>
           </div>
-        ) : (
-          <button
-            onClick={() => setShowLogin(true)}
-            className="btn-accent text-xs"
-          >
-            Login
-          </button>
-        )}
+        </div>
+
+        {/* === Mobile Menu === */}
+        <AnimatePresence>
+          {showMobileMenu && (
+            <motion.nav
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="lg:hidden overflow-hidden"
+            >
+              <div className="pt-4 pb-2 space-y-2">
+                <div className="space-y-2">
+                  {mainLinks.map(link => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="block px-3 py-2 text-sm hover:bg-background rounded transition-colors"
+                      onClick={() => setShowMobileMenu(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+                <div className="border-t border-border pt-2 mt-2 space-y-2">
+                  {secondaryLinks.map(link => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="block px-3 py-2 text-xs text-muted hover:bg-background rounded transition-colors"
+                      onClick={() => setShowMobileMenu(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+                <div className="border-t border-border pt-2 mt-2">
+                  {session ? (
+                    <div className="px-3 py-2">
+                      <div className="flex items-center gap-2 mb-2">
+                        <img
+                          src={session.user?.image ?? '/default-avatar.png'}
+                          alt={session.user?.name ?? 'User avatar'}
+                          className="w-6 h-6 rounded-full"
+                        />
+                        <span className="text-xs text-muted">{session.user?.name}</span>
+                      </div>
+                      <button
+                        onClick={() => {
+                          signOut();
+                          setShowMobileMenu(false);
+                        }}
+                        className="btn-muted text-xs w-full"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setShowLogin(true);
+                        setShowMobileMenu(false);
+                      }}
+                      className="btn-accent text-xs mx-3 w-[calc(100%-1.5rem)]"
+                    >
+                      Login
+                    </button>
+                  )}
+                </div>
+              </div>
+            </motion.nav>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* === Login Modal === */}

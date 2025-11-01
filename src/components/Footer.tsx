@@ -7,6 +7,10 @@ export function Footer() {
 
   const links = [
     { label: 'Home', href: '/' },
+    { label: 'News', href: '/news' },
+    { label: 'Guide', href: '/guide' },
+    { label: 'Accessibility', href: '/accessibility' },
+    { label: 'Contact', href: '/contact' },
     { label: 'About', href: '/about' },
     { label: 'Acknowledgements', href: '/acknowledgements' },
     { label: 'Privacy Policy', href: '/privacy-policy' },
@@ -117,7 +121,7 @@ export function Footer() {
               className="inline-block w-2 h-2 rounded-full bg-accent animate-pulse-slow"
               aria-label="status indicator"
             />
-            <span>Version 0.1.0</span>
+            <span>Version 0.2.0</span>
           </div>
         </div>
       </div>

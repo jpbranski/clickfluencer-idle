@@ -51,6 +51,7 @@ import {
   autoSaveGame,
   exportSave,
   importSave,
+  pushSaveToServer,
 } from "@/lib/storage";
 import { GAMEPLAY } from "@/app-config";
 import { themes as baseThemes } from "@/data/themes";
@@ -128,6 +129,7 @@ export function GameProvider({ children }: GameProviderProps) {
 
   const engineRef = useRef<GameEngine | null>(null);
   const autoSaveIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const remoteSyncIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // ============================================================================
   // INITIALIZATION
@@ -205,6 +207,8 @@ export function GameProvider({ children }: GameProviderProps) {
           engine.stop();
           if (autoSaveIntervalRef.current)
             clearInterval(autoSaveIntervalRef.current);
+          if (remoteSyncIntervalRef.current)
+            clearInterval(remoteSyncIntervalRef.current);
           saveGame(engine.getState());
         };
       } catch (err) {
@@ -222,6 +226,30 @@ export function GameProvider({ children }: GameProviderProps) {
     return () => {
       mounted = false;
       if (cleanup) cleanup();
+    };
+  }, []);
+
+  // ============================================================================
+  // REMOTE SYNC (5 minutes + beforeunload)
+  // ============================================================================
+
+  useEffect(() => {
+    // Remote sync every 5 minutes
+    remoteSyncIntervalRef.current = setInterval(async () => {
+      await pushSaveToServer();
+    }, 5 * 60 * 1000);
+
+    // Save on window unload
+    const handleUnload = () => {
+      pushSaveToServer();
+    };
+    window.addEventListener("beforeunload", handleUnload);
+
+    return () => {
+      if (remoteSyncIntervalRef.current) {
+        clearInterval(remoteSyncIntervalRef.current);
+      }
+      window.removeEventListener("beforeunload", handleUnload);
     };
   }, []);
 
@@ -349,6 +377,8 @@ export function GameProvider({ children }: GameProviderProps) {
       engineRef.current.executeAction((currentState) =>
         buyUpgrade(currentState, upgradeId)
       );
+      // Trigger immediate cloud save
+      pushSaveToServer();
     },
     [state]
   );
@@ -378,6 +408,8 @@ export function GameProvider({ children }: GameProviderProps) {
   const handlePrestige = useCallback(() => {
     if (!engineRef.current || !state) return;
     engineRef.current.executeAction((currentState) => prestige(currentState));
+    // Trigger immediate cloud save
+    pushSaveToServer();
   }, [state]);
 
   const handleUpdateSetting = useCallback(

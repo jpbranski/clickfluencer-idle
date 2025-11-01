@@ -1,0 +1,29 @@
+[
+  {
+    "version": "0.2.0",
+    "date": "2025-11-01",
+    "changes": [
+      "Added cloud saving with NextAuth integration",
+      "New authentication providers: Google, Discord, and Steam",
+      "Automatic save synchronization every 5 minutes",
+      "Immediate cloud saves on prestige and upgrades",
+      "New pages: News, Guide, Accessibility, and Contact",
+      "Enhanced navigation with responsive mobile menu",
+      "Theme persistence improvements across all pages",
+      "User profile display in header when logged in"
+    ]
+  },
+  {
+    "version": "0.1.0",
+    "date": "2025-10-20",
+    "changes": [
+      "Initial release of Clickfluencer Idle",
+      "Core idle game mechanics with clicking and generators",
+      "Prestige system with reputation currency",
+      "Multiple unlockable themes",
+      "Local save functionality with auto-save",
+      "Offline progress calculation",
+      "Responsive design for mobile and desktop"
+    ]
+  }
+]

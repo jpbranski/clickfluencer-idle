@@ -65,3 +65,68 @@ export async function importSave(json: string) {
     return { success: false as const, error: String(e) };
   }
 }
+
+export function loadGameSync(): GameState | null {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw) as GameState;
+  } catch (e) {
+    console.warn("[loadGameSync] failed", e);
+    return null;
+  }
+}
+
+export async function pushSaveToServer() {
+  try {
+    const data = loadGameSync();
+    if (!data) {
+      console.log("[pushSaveToServer] No local save to sync");
+      return { success: false };
+    }
+
+    const response = await fetch("/api/save", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.warn("[pushSaveToServer] Failed:", error);
+      return { success: false, error };
+    }
+
+    const result = await response.json();
+    console.log("[pushSaveToServer] Success:", result);
+    return { success: true, ...result };
+  } catch (err) {
+    console.warn("[pushSaveToServer] Error:", err);
+    return { success: false, error: String(err) };
+  }
+}
+
+export async function loadFromServer() {
+  try {
+    const response = await fetch("/api/load");
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.warn("[loadFromServer] Failed:", error);
+      return { success: false, error };
+    }
+
+    const result = await response.json();
+    if (result.success && result.saveData) {
+      console.log("[loadFromServer] Success:", result);
+      // Optionally save to localStorage
+      localStorage.setItem(SAVE_KEY, JSON.stringify(result.saveData));
+      return { success: true, data: result.saveData };
+    }
+
+    return { success: false };
+  } catch (err) {
+    console.warn("[loadFromServer] Error:", err);
+    return { success: false, error: String(err) };
+  }
+}
