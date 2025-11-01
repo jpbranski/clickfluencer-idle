@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://clickfluenceridle.com
+
+# Sitemaps
+Sitemap: https://clickfluenceridle.com/sitemap.xml
