@@ -2,9 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import "@/styles/themes.css";
-import { Footer } from "@/components/Footer";
-import { GameProvider } from "@/hooks/useGame";
-import { CookieConsent } from "@/components/CookieConsent";
+import ClientProviders from "./ClientLayout";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,52 +34,36 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning className={inter.variable}>
       <head>
+        {/* Theme Loader */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-      (function() {
-        try {
-          // Determine theme priority:
-          // 1. Saved player theme
-          // 2. System preference
-          // 3. Default 'dark'
-          const stored = localStorage.getItem('active-theme') || localStorage.getItem('game_theme');
-          const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          const theme = stored || (systemDark ? 'dark' : 'light');
-
-          // Apply theme class & data attribute to both html and body
-          document.documentElement.dataset.theme = theme;
-          document.documentElement.classList.add('theme-' + theme);
-          if (theme !== 'light') document.documentElement.classList.add('dark');
-
-          // Also apply to body when it's available
-          if (document.body) {
-            document.body.dataset.theme = theme;
-            document.body.classList.add('theme-' + theme);
-            if (theme !== 'light') document.body.classList.add('dark');
-          }
-
-          // Update browser UI theme color
-          const colors = {
-            light: '#ffffff',
-            dark: '#0a0a0a',
-            'night-sky': '#1b1f3b',
-            'touch-grass': '#95d5b2',
-            terminal: '#272822',
-            'cherry-blossom': '#ffd6de',
-            nightshade: '#311b3a',
-            'el-blue': '#0a192f',
-            gold: '#d4af37'
-          };
-          const meta = document.querySelector('meta[name="theme-color"]');
-          if (meta) meta.setAttribute('content', colors[theme] || '#0a0a0a');
-        } catch(e) {}
-      })();
-    `,
+              (function() {
+                try {
+                  const stored = localStorage.getItem('active-theme') || localStorage.getItem('game_theme');
+                  const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  const theme = stored || (systemDark ? 'dark' : 'light');
+                  document.documentElement.dataset.theme = theme;
+                  document.documentElement.classList.add('theme-' + theme);
+                  if (theme !== 'light') document.documentElement.classList.add('dark');
+                  const colors = {
+                    light: '#ffffff',
+                    dark: '#0a0a0a',
+                    'night-sky': '#1b1f3b',
+                    'touch-grass': '#95d5b2',
+                    terminal: '#272822',
+                    'cherry-blossom': '#ffd6de',
+                    nightshade: '#311b3a',
+                    'el-blue': '#0a192f',
+                    gold: '#d4af37'
+                  };
+                  const meta = document.querySelector('meta[name="theme-color"]');
+                  if (meta) meta.setAttribute('content', colors[theme] || '#0a0a0a');
+                } catch(e) {}
+              })();
+            `,
           }}
         />
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4062019424835259"
-          crossOrigin="anonymous"></script>
 
         {/* ✅ Google Analytics */}
         {GA_ID && (
@@ -102,11 +84,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
 
       <body className="antialiased bg-background text-foreground min-h-screen flex flex-col">
-        <GameProvider>
-          <div className="flex-1">{children}</div>
-          <Footer />
-          <CookieConsent />
-        </GameProvider>
+        <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
   );

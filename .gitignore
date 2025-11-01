@@ -50,3 +50,4 @@ public/worker-*.js.map
 *.swp
 *.swo
 *~
+.vercel

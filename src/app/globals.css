@@ -244,7 +244,7 @@
 
   .btn-muted {
     @apply btn hover:opacity-90;
-    background-color: var(--border);
+    background-color: var(--background);
     color: var(--muted);
   }
 
