@@ -1,91 +1,89 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useState } from 'react';
-import { useSession, signIn, signOut } from 'next-auth/react';
-import { motion, AnimatePresence } from 'framer-motion';
+import Link from "next/link";
+import { useState } from "react";
 
 export function Header() {
-  const { data: session } = useSession();
-  const [showLogin, setShowLogin] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const navItems = [
+    { name: "Home", href: "/" },
+    { name: "About", href: "/about" },
+    { name: "Acknowledgements", href: "/acknowledgements" },
+    { name: "Guide", href: "/guide" },
+    { name: "News", href: "/news" },
+    { name: "Contact", href: "/contact" },
+  ];
 
   return (
-    <header className="w-full bg-surface border-b border-border text-foreground transition-colors">
+    <header className="w-full bg-surface text-foreground border-b border-border shadow-sm fixed top-0 left-0 z-50 transition-colors">
       <div className="container mx-auto flex items-center justify-between px-4 py-3">
-        {/* === Left: Title / Logo === */}
-        <Link href="/" className="font-bold text-lg text-accent hover:underline">
+        <Link href="/" className="text-xl font-bold text-accent hover:opacity-80 transition-opacity">
           Clickfluencer Idle
         </Link>
 
-        {/* === Center: Secondary Menu === */}
-        <nav className="hidden md:flex gap-4 text-sm text-muted">
-          <Link href="/about" className="hover:text-accent">About</Link>
-          <Link href="/acknowledgements" className="hover:text-accent">Acknowledgements</Link>
-          <Link href="/privacy-policy" className="hover:text-accent">Privacy</Link>
-          <Link href="/terms-of-service" className="hover:text-accent">Terms</Link>
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex space-x-6">
+          {navItems.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className="hover:text-accent transition-colors"
+            >
+              {item.name}
+            </Link>
+          ))}
         </nav>
 
-        {/* === Right: Auth === */}
-        {session ? (
-          <div className="flex items-center gap-2">
-            <img
-              src={session.user?.image ?? '/default-avatar.png'}
-              alt={session.user?.name ?? 'User avatar'}
-              className="w-6 h-6 rounded-full"
-            />
-            <button
-              onClick={() => signOut()}
-              className="btn-muted text-xs"
-            >
-              Logout
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => setShowLogin(true)}
-            className="btn-accent text-xs"
-          >
-            Login
-          </button>
-        )}
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="md:hidden text-foreground hover:text-accent transition-colors"
+          aria-label="Toggle navigation menu"
+        >
+          {menuOpen ? (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          ) : (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          )}
+        </button>
       </div>
 
-      {/* === Login Modal === */}
-      <AnimatePresence>
-        {showLogin && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-background/70 backdrop-blur-sm z-50 flex items-center justify-center"
-            onClick={() => setShowLogin(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
-              className="bg-surface border border-border rounded-lg p-6 max-w-sm w-full mx-4 shadow-xl text-center"
-              onClick={(e) => e.stopPropagation()}
+      {/* Mobile Slide-Out Menu */}
+      <div
+        className={`fixed top-0 right-0 h-full w-64 bg-surface border-l border-border shadow-2xl transform transition-transform duration-300 ${
+          menuOpen ? "translate-x-0" : "translate-x-full"
+        } md:hidden z-40`}
+      >
+        <div className="flex flex-col p-6 space-y-4 pt-16">
+          {navItems.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              onClick={() => setMenuOpen(false)}
+              className="text-lg hover:text-accent transition-colors"
             >
-              <h2 className="text-xl font-semibold mb-4 text-accent">Sign In</h2>
-              <p className="text-muted mb-6">Choose a provider to sync your saves:</p>
+              {item.name}
+            </Link>
+          ))}
+        </div>
+      </div>
 
-              <div className="flex flex-col gap-3">
-                <button onClick={() => signIn('google')} className="btn-accent">Sign in with Google</button>
-                <button onClick={() => signIn('discord')} className="btn-accent">Sign in with Discord</button>
-                <button onClick={() => signIn('steam')} className="btn-accent">Sign in with Steam</button>
-              </div>
-
-              <button
-                onClick={() => setShowLogin(false)}
-                className="btn-muted mt-6 w-full"
-              >
-                Cancel
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Mobile Menu Overlay */}
+      {menuOpen && (
+        <div
+          className="fixed inset-0 bg-background/70 backdrop-blur-sm z-30 md:hidden"
+          onClick={() => setMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
     </header>
   );
 }
