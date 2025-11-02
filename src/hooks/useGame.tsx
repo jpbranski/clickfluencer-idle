@@ -72,6 +72,21 @@ function mergeThemes<T extends { id: string }>(savedThemes?: T[]): T[] {
     } as unknown as T;
   });
 }
+
+// Merge saved upgrade data with base upgrade definitions.
+// Ensures new upgrades appear even if not in the player's save file.
+function mergeUpgrades<T extends { id: string }>(savedUpgrades?: T[]): T[] {
+  const { INITIAL_UPGRADES } = require("@/game/state");
+  const savedMap = new Map(savedUpgrades?.map((u) => [u.id, u]) || []);
+
+  return INITIAL_UPGRADES.map((base: T) => {
+    const saved = savedMap.get(base.id);
+    return {
+      ...base,
+      ...saved,
+    } as T;
+  });
+}
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -160,6 +175,13 @@ export function GameProvider({ children }: GameProviderProps) {
           initialState.themes = mergeThemes(initialState.themes);
         } else {
           initialState.themes = mergeThemes();
+        }
+
+        // ✅ Merge upgrade data (adds new upgrades automatically)
+        if (initialState?.upgrades) {
+          initialState.upgrades = mergeUpgrades(initialState.upgrades);
+        } else {
+          initialState.upgrades = mergeUpgrades();
         }
 
         if (!mounted) return;

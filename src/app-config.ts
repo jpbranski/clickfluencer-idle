@@ -36,7 +36,7 @@ export const FEATURES = {
 export const APP_INFO = {
   name: "Clickfluencer Idle",
   shortName: "Clickfluencer",
-  version: "0.1.0",
+  version: "v0.2.0 Early Access",
   description:
     "Build your social media empire from a single click to becoming the ultimate digital influencer",
   author: "Clickfluencer Team",

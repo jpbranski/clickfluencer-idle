@@ -8,6 +8,7 @@
  * - Countdown timer
  * - Visual indicator of event type
  * - Auto-remove when expired
+ * - Close button to dismiss (event stays active)
  */
 
 import { useState, useEffect } from "react";
@@ -20,6 +21,7 @@ interface EventToastsProps {
 
 export function EventToasts({ events }: EventToastsProps) {
   const [currentTime, setCurrentTime] = useState(Date.now());
+  const [dismissedEventIds, setDismissedEventIds] = useState<Set<string>>(new Set());
 
   // Update timer every second
   useEffect(() => {
@@ -29,6 +31,29 @@ export function EventToasts({ events }: EventToastsProps) {
 
     return () => clearInterval(interval);
   }, []);
+
+  // Clean up dismissed events that are no longer active
+  useEffect(() => {
+    const activeEventIds = new Set(events.map((e) => e.id));
+    setDismissedEventIds((prev) => {
+      const updated = new Set(prev);
+      let changed = false;
+      for (const id of prev) {
+        if (!activeEventIds.has(id)) {
+          updated.delete(id);
+          changed = true;
+        }
+      }
+      return changed ? updated : prev;
+    });
+  }, [events]);
+
+  const handleDismissEvent = (eventId: string) => {
+    setDismissedEventIds((prev) => new Set(prev).add(eventId));
+  };
+
+  // Filter out dismissed events
+  const visibleEvents = events.filter((event) => !dismissedEventIds.has(event.id));
 
   const getEventIcon = (type: string): string => {
     switch (type) {
@@ -56,7 +81,7 @@ export function EventToasts({ events }: EventToastsProps) {
     }
   };
 
-  if (events.length === 0) {
+  if (visibleEvents.length === 0) {
     return null;
   }
 
@@ -67,7 +92,7 @@ export function EventToasts({ events }: EventToastsProps) {
       aria-label="Active events"
       aria-live="polite"
     >
-      {events.map((event) => {
+      {visibleEvents.map((event) => {
         const timeRemaining = event.endTime
           ? Math.max(0, event.endTime - currentTime)
           : 0;
@@ -123,7 +148,30 @@ export function EventToasts({ events }: EventToastsProps) {
 
                 {/* Details */}
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-bold mb-1 text-foreground">{event.name}</h4>
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <h4 className="text-sm font-bold text-foreground">{event.name}</h4>
+                    {/* Close Button */}
+                    <button
+                      onClick={() => handleDismissEvent(event.id)}
+                      className="flex-shrink-0 w-5 h-5 rounded hover:bg-surface/50 flex items-center justify-center transition-colors"
+                      aria-label="Dismiss event notification"
+                      title="Dismiss (event keeps running)"
+                    >
+                      <svg
+                        className="w-4 h-4 text-muted hover:text-foreground"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                   <p className="text-xs text-muted mb-2">
                     {event.description}
                   </p>
