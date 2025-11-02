@@ -11,6 +11,7 @@ import { SettingsDialog } from "@/components/SettingsDialog";
 import { EventToasts } from "@/components/EventToasts";
 import { OfflineEarningsModal } from "@/components/OfflineEarningsModal";
 import { ShareButtons } from "@/components/ShareButtons";
+import { BottomNav } from "@/components/layout/BottomNav";
 import { formatNumber } from "@/game/format";
 import { getGeneratorCost, canAfford, canAffordShards } from "@/game/state";
 import { getAwardDropRate, getUpgradeCost } from "@/game/actions";
@@ -59,7 +60,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background mt-12 mb-16 pb-20 sm:pb-0">
       {/* Event Toasts */}
       <EventToasts events={state.activeEvents} />
 
@@ -262,38 +263,60 @@ export default function HomePage() {
                     Purchase permanent improvements to boost your production
                   </p>
 
-                  {/* Prestige Section */}
-                  {canPrestige && (
-                    <div className="mb-6 p-6 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg">
-                      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <div className="text-center sm:text-left">
-                          <div className="text-2xl font-bold flex items-center justify-center sm:justify-start gap-2 mb-2">
-                            ⭐ Prestige Available!
-                          </div>
-                          <div className="text-sm opacity-90">
-                            Reset your progress to gain{" "}
-                            <span className="font-bold">
-                              {reputationGain} Reputation
-                            </span>
-                          </div>
-                          <div className="text-xs opacity-75 mt-1">
-                            New bonus: ×
-                            {(
-                              (1 + (state.reputation + reputationGain) * 0.1) *
-                              100
-                            ).toFixed(0)}
-                            % production
-                          </div>
+                  {/* Prestige Section - Always Visible */}
+                  <div
+                    className={`mb-6 p-6 rounded-lg shadow-lg ${
+                      canPrestige
+                        ? "bg-gradient-to-r from-yellow-400 to-orange-500 text-white"
+                        : "bg-surface-200 text-gray-600 border border-border"
+                    }`}
+                  >
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                      <div className="text-center sm:text-left">
+                        <div className="text-2xl font-bold flex items-center justify-center sm:justify-start gap-2 mb-2">
+                          ⭐ {canPrestige ? "Prestige Available!" : "Prestige Locked"}
                         </div>
-                        <button
-                          onClick={handlePrestige}
-                          className="px-6 py-3 bg-white text-orange-600 rounded-lg font-bold hover:bg-gray-100 transition-colors shadow-md"
-                        >
-                          Prestige Now
-                        </button>
+                        {canPrestige ? (
+                          <>
+                            <div className="text-sm opacity-90">
+                              Reset your progress to gain{" "}
+                              <span className="font-bold">
+                                {reputationGain} Reputation
+                              </span>
+                            </div>
+                            <div className="text-xs opacity-75 mt-1">
+                              New bonus: ×
+                              {(
+                                (1 + (state.reputation + reputationGain) * 0.1) *
+                                100
+                              ).toFixed(0)}
+                              % production
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="text-sm opacity-80">
+                              Requires {formatNumber(1e9)} Creds
+                            </div>
+                            <div className="text-xs opacity-60 mt-1">
+                              Prestige resets all progress except Themes, Infinite upgrades, and Achievements
+                            </div>
+                          </>
+                        )}
                       </div>
+                      <button
+                        onClick={canPrestige ? handlePrestige : undefined}
+                        disabled={!canPrestige}
+                        className={`px-6 py-3 rounded-lg font-bold transition-colors shadow-md ${
+                          canPrestige
+                            ? "bg-white text-orange-600 hover:bg-gray-100 cursor-pointer"
+                            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        }`}
+                      >
+                        {canPrestige ? "Prestige Now" : "Locked"}
+                      </button>
                     </div>
-                  )}
+                  </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {state.upgrades
@@ -348,7 +371,7 @@ export default function HomePage() {
                     Unlock cosmetic themes with awards. Bonuses apply{" "}
                     <strong>permanently</strong> once unlocked!
                   </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                     {state.themes.map((theme) => {
                       const activeTheme = state.themes.find((t) => t.active);
                       return (
@@ -401,6 +424,9 @@ export default function HomePage() {
           />
         </div>
       </div>
+
+      {/* Mobile Bottom Navigation - Fixed at bottom */}
+      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </main>
   );
 }
