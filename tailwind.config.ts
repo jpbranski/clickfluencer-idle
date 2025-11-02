@@ -17,6 +17,18 @@ const config: Config = {
         // If you want token shortcuts later, add: border, muted, accent, etc.
         // BUT use utilities for backgrounds so gradients work.
       },
+      fontFamily: {
+        mono: [
+          'ui-monospace',
+          'SFMono-Regular',
+          'Menlo',
+          'Monaco',
+          'Consolas',
+          'Liberation Mono',
+          'Courier New',
+          'monospace',
+        ],
+      },
       boxShadow: {
         accent: '0 0 12px var(--accent)',
       },

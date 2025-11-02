@@ -104,12 +104,12 @@ export function UpgradeCard({
           <h3 className="text-base font-bold mb-1 truncate">
             {upgrade.name.substring(2)}
             {isInfinite && level > 0 && (
-              <span className="ml-2 text-xs font-normal" style={{ color: 'var(--accent)' }}>
+              <span className="ml-2 text-xs font-normal font-mono" style={{ color: 'var(--accent)' }}>
                 Lv.{level}
               </span>
             )}
             {isTiered && (
-              <span className="ml-2 text-xs font-normal" style={{ color: 'var(--accent)' }}>
+              <span className="ml-2 text-xs font-normal font-mono" style={{ color: 'var(--accent)' }}>
                 Tier {tier}/{maxTier}
               </span>
             )}
@@ -126,7 +126,7 @@ export function UpgradeCard({
           <span className="text-xs text-muted">
             Effect:
           </span>
-          <span className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>
+          <span className="text-sm font-semibold font-mono" style={{ color: 'var(--accent)' }}>
             <span className="mr-1" role="img" aria-label="effect">
               {getEffectIcon(upgrade.effect.type)}
             </span>
@@ -143,7 +143,7 @@ export function UpgradeCard({
               Cost:
             </span>
             <span
-              className="text-sm font-bold number-display"
+              className="text-sm font-bold font-mono number-display"
               style={{ color: canAfford ? 'var(--success)' : 'var(--error)' }}
             >
               {formatNumber(currentCost)}
