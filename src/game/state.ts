@@ -14,6 +14,10 @@
 // TYPE DEFINITIONS
 // ============================================================================
 import { themes as baseThemes } from "@/data/themes";
+import {
+  NOTORIETY_BASE_PER_SEC,
+  NOTORIETY_UPKEEP_PER_SEC,
+} from "./balance";
 export interface Generator {
   id: string;
   name: string;
@@ -90,12 +94,30 @@ export interface Statistics {
   runStartTime: number;
 }
 
+export interface Notoriety {
+  amount: number;
+  basePerSec: number; // default 0.0007
+  upkeepRate: number; // default 0.02 (creds/sec per notoriety)
+  unlocked: boolean; // unlocked at early milestone
+}
+
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  unlocked: boolean;
+  icon: string; // emoji or icon identifier
+}
+
 
 export interface GameState {
   // Core Resources
   followers: number;
   shards: number; // Awards (premium currency from random drops)
   reputation: number; // Prestige currency
+
+  // Notoriety (third currency - v1.0.0)
+  notoriety: Notoriety;
 
   // Generators (content creation systems)
   generators: Generator[];
@@ -111,6 +133,9 @@ export interface GameState {
 
   // Themes
   themes: Theme[];
+
+  // Achievements (cosmetic, per-slot - v1.0.0)
+  achievements: Achievement[];
 
   // Settings
   settings: {
@@ -281,12 +306,91 @@ export const INITIAL_UPGRADES: Upgrade[] = [
   },
 ];
 
+export const INITIAL_ACHIEVEMENTS: Achievement[] = [
+  {
+    id: "first_click",
+    name: "First Click",
+    description: "Click your first post",
+    unlocked: false,
+    icon: "👆",
+  },
+  {
+    id: "hundred_followers",
+    name: "Rising Star",
+    description: "Reach 100 followers",
+    unlocked: false,
+    icon: "⭐",
+  },
+  {
+    id: "first_generator",
+    name: "Content Creator",
+    description: "Purchase your first generator",
+    unlocked: false,
+    icon: "📸",
+  },
+  {
+    id: "first_upgrade",
+    name: "Self Improvement",
+    description: "Purchase your first upgrade",
+    unlocked: false,
+    icon: "🔧",
+  },
+  {
+    id: "million_followers",
+    name: "Influencer Status",
+    description: "Reach 1 million followers",
+    unlocked: false,
+    icon: "💫",
+  },
+  {
+    id: "first_prestige",
+    name: "Fresh Start",
+    description: "Perform your first prestige",
+    unlocked: false,
+    icon: "🔄",
+  },
+  {
+    id: "collector",
+    name: "Award Collector",
+    description: "Collect 100 Awards",
+    unlocked: false,
+    icon: "💎",
+  },
+  {
+    id: "theme_master",
+    name: "Fashion Icon",
+    description: "Unlock all themes",
+    unlocked: false,
+    icon: "🎨",
+  },
+  {
+    id: "notorious",
+    name: "Notorious",
+    description: "Reach 100 Notoriety",
+    unlocked: false,
+    icon: "😎",
+  },
+  {
+    id: "prestige_veteran",
+    name: "Prestige Veteran",
+    description: "Reach prestige level 10",
+    unlocked: false,
+    icon: "🏆",
+  },
+];
+
 export function createInitialState(): GameState {
   const now = Date.now();
   return {
     followers: 0,
     shards: 0,
     reputation: 0,
+    notoriety: {
+      amount: 0,
+      basePerSec: NOTORIETY_BASE_PER_SEC,
+      upkeepRate: NOTORIETY_UPKEEP_PER_SEC,
+      unlocked: true, // Unlocked from start for v1.0.0
+    },
     generators: INITIAL_GENERATORS.map((g) => ({ ...g })),
     upgrades: INITIAL_UPGRADES.map((u) => ({ ...u })),
     activeEvents: [],
@@ -307,13 +411,14 @@ export function createInitialState(): GameState {
       soundEnabled: true,
       offlineProgressEnabled: true,
     },
-    version: "v0.2.0 Early Access",
+    version: "v1.0.0",
     lastSaveTime: now,
     themes: baseThemes.map((t) => ({
       ...t,
       unlocked: t.id === "dark" || t.id === "light", // whatever defaults you want
       active: t.id === "dark", // default active
    })),
+    achievements: INITIAL_ACHIEVEMENTS.map((a) => ({ ...a })),
   };
 }
 
@@ -533,4 +638,59 @@ export function getCredCacheRate(state: GameState): number {
   const rateByTier = [0, 1/1000, 1/900, 1/800, 1/700, 1/600, 1/500];
   const tier = credCache.tier;
   return rateByTier[tier] || 0;
+}
+
+/**
+ * Calculate notoriety gain per second
+ * Returns 0 if upkeep would drain creds below 0
+ */
+export function getNotorietyPerSecond(state: GameState): number {
+  if (!state.notoriety.unlocked) return 0;
+
+  // Calculate upkeep drain
+  const upkeepDrain = state.notoriety.amount * state.notoriety.upkeepRate;
+
+  // If we can't afford upkeep, pause notoriety gain
+  if (state.followers < upkeepDrain) {
+    return 0;
+  }
+
+  return state.notoriety.basePerSec;
+}
+
+/**
+ * Calculate cumulative cost for buying multiple generators
+ * Uses geometric series formula: baseCost * (multiplier^count) * (1 - multiplier^quantity) / (1 - multiplier)
+ */
+export function getBulkGeneratorCost(generator: Generator, quantity: number): number {
+  const { baseCost, costMultiplier, count } = generator;
+
+  if (quantity <= 0) return 0;
+  if (quantity === 1) return getGeneratorCost(generator);
+
+  // Geometric series sum: a * (1 - r^n) / (1 - r) where a = baseCost * multiplier^count
+  const firstCost = baseCost * Math.pow(costMultiplier, count);
+  const sum = firstCost * (1 - Math.pow(costMultiplier, quantity)) / (1 - costMultiplier);
+
+  return Math.floor(sum);
+}
+
+/**
+ * Check if player can afford a bulk purchase
+ */
+export function canAffordBulk(
+  costFn: (n: number) => number,
+  owned: number,
+  qty: number,
+  creds: number
+): boolean {
+  if (qty <= 0) return false;
+
+  // For generators, calculate cumulative cost
+  let totalCost = 0;
+  for (let i = 0; i < qty; i++) {
+    totalCost += costFn(owned + i);
+  }
+
+  return creds >= totalCost;
 }
