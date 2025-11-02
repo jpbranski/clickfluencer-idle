@@ -1,14 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import "./globals.css";
 import "@/styles/themes.css";
 import ClientProviders from "./ClientLayout";
 
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-inter",
-});
+// Using system font stack instead of Google Fonts for build compatibility
+// const inter = Inter({
+//   subsets: ["latin"],
+//   display: "swap",
+//   variable: "--font-inter",
+// });
 
 export const metadata: Metadata = {
   title: "Clickfluencer Idle - Build Your Social Media Empire",
@@ -32,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const GA_ID = process.env.NEXT_PUBLIC_GTAG_ID;
 
   return (
-    <html lang="en" suppressHydrationWarning className={inter.variable}>
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* Theme Loader */}
         <script

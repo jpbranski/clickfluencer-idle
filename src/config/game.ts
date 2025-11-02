@@ -83,8 +83,9 @@ export const BALANCE = {
   EVENT_DURATION_MAX: 120000, // 2 minutes
 
   // Offline
-  OFFLINE_CAP_HOURS: 8,
-  OFFLINE_CAP_MS: 8 * 60 * 60 * 1000,
+  OFFLINE_CAP_HOURS: 72,
+  OFFLINE_CAP_MS: 72 * 60 * 60 * 1000,
+  OFFLINE_BASE_EFFICIENCY: 0.5, // 50% base efficiency for offline gains
 };
 
 // ============================================================================

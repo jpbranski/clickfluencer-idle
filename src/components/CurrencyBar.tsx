@@ -15,6 +15,7 @@ interface CurrencyBarProps {
   shards: number;
   followersPerSecond: number;
   awardDropRate?: number;
+  reputation: number;
   compact?: boolean;
 }
 
@@ -23,6 +24,7 @@ export function CurrencyBar({
   shards,
   followersPerSecond,
   awardDropRate,
+  reputation,
   compact = false,
 }: CurrencyBarProps) {
   return (
@@ -37,6 +39,38 @@ export function CurrencyBar({
         transition-colors
       `}
       >
+        {/* Prestige Level */}
+        {reputation > 0 && (
+          <>
+            <div className="flex items-center gap-2 min-w-[100px]">
+              <div
+                className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-600 flex items-center justify-center"
+                aria-hidden="true"
+              >
+                <span className="text-2xl" role="img" aria-label="prestige">
+                  ⭐
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs text-muted uppercase tracking-wide font-semibold">
+                  Prestige
+                </div>
+                <div
+                  className="text-lg font-bold number-display truncate text-accent"
+                  aria-label={`Prestige level ${reputation}`}
+                >
+                  {reputation}
+                </div>
+              </div>
+            </div>
+            {/* Vertical Divider */}
+            <div
+              className="hidden sm:block w-px h-12 bg-border"
+              aria-hidden="true"
+            />
+          </>
+        )}
+
         {/* Followers (Main Currency) */}
         <div className="flex items-center gap-2 min-w-[140px]">
           <div
@@ -103,6 +137,12 @@ export function CurrencyBar({
       {/* Mobile Compact View Alternative */}
       {compact && (
         <div className="sm:hidden mt-2 text-center text-xs text-muted">
+          {reputation > 0 && (
+            <>
+              <span>Prestige: {reputation}</span>
+              <span className="mx-2">•</span>
+            </>
+          )}
           <span>Creds: {formatNumber(followers)}</span>
           <span className="mx-2">•</span>
           <span>Awards: {shards}</span>

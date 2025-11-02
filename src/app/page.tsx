@@ -126,12 +126,13 @@ export default function HomePage() {
             </button>
           </div>
 
-          {/* Currency Bar - removed reputation */}
+          {/* Currency Bar */}
           <CurrencyBar
             followers={state.followers}
             shards={state.shards}
             awardDropRate={state ? getAwardDropRate(state) : 0.003}
             followersPerSecond={followersPerSecond}
+            reputation={state.reputation}
           />
         </header>
 
@@ -169,22 +170,16 @@ export default function HomePage() {
                     {formatNumber(state.stats.totalFollowersEarned)}
                   </div>
                 </div>
-                <div className="p-3 rounded-lg bg-surface">
-                  <div className="text-xs text-muted mb-1">
-                    Prestiges
-                  </div>
-                  <div className="text-lg font-bold text-accent">
-                    {state.stats.prestigeCount}
-                  </div>
-                </div>
               </div>
             </div>
 
-            {/* Share Buttons */}
-            <ShareButtons
-              creds={state.followers}
-              score={state.stats.totalFollowersEarned}
-            />
+            {/* Share Buttons - Hidden on mobile, shown on large screens */}
+            <div className="hidden lg:block">
+              <ShareButtons
+                creds={state.followers}
+                score={state.stats.totalFollowersEarned}
+              />
+            </div>
           </div>
 
           {/* Middle & Right Columns - Tabbed Content */}
@@ -389,6 +384,14 @@ export default function HomePage() {
               )}
             </div>
           </div>
+        </div>
+
+        {/* Share Buttons - Shown on mobile at bottom, hidden on large screens */}
+        <div className="lg:hidden mt-6">
+          <ShareButtons
+            creds={state.followers}
+            score={state.stats.totalFollowersEarned}
+          />
         </div>
       </div>
     </main>
