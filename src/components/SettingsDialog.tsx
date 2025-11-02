@@ -185,6 +185,31 @@ export function SettingsDialog({
             </div>
           </section>
 
+          {/* Support */}
+          <section>
+            <h3 className="text-lg font-bold mb-4">Support the Developer</h3>
+            <div className="space-y-3">
+              <a
+                href="https://buymeacoffee.com/jpbranski"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  block w-full px-4 py-3 rounded-lg text-center
+                  bg-[#FFDD00] hover:bg-[#FFDD00]/90 text-[#000000]
+                  font-semibold text-sm
+                  transition-colors duration-150 active:scale-95
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFDD00]
+                  motion-reduce:transition-none
+                "
+              >
+                ☕ Buy Me a Coffee
+              </a>
+              <div className="text-xs text-center text-muted">
+                Enjoying the game? Consider supporting development!
+              </div>
+            </div>
+          </section>
+
           {/* Data Management */}
           <section>
             <h3 className="text-lg font-bold mb-4">Data Management</h3>
