@@ -50,7 +50,7 @@ export function Footer() {
               className="inline-block w-2 h-2 rounded-full bg-accent animate-pulse"
               aria-label="status indicator"
             />
-            <span>v0.1.0 Early Access</span>
+            <span>v0.1.1 Early Access</span>
           </div>
         </div>
       </div>

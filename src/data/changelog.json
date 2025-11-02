@@ -15,5 +15,24 @@
       "Fully responsive design for desktop and mobile",
       "No login required - purely browser-based gameplay"
     ]
+  },
+  {
+    "version": "0.1.1",
+    "date": "2025-11-02",
+    "title": "UI & Gameplay Upgrades",
+    "changes": [
+      "Added Prestige display to the currency bar at all levels, showing at the start of the bar in both desktop and mobile views",
+      "Added dismiss (X) button to event toasts — can be closed visually without interrupting the running event",
+      "Upgrades now merge automatically (like theme merges) so new upgrades appear without requiring data resets",
+      "Adjusted upgrade costs for better progression balance",
+      "Lucky Charm cost scaling changed from ×10 to ×15 per tier for smoother pacing",
+      "Overnight Success cost scaling increased to ×5, starting at 25,000 creds",
+      "Cred Cache scaling increased to ×5 per tier, up to 31,250,000 for tier 6",
+      "Infinite upgrades (AI Enhancements, Better Filters) now appear at the top of the shop list",
+      "Removed Light theme’s bonus multiplier and updated its description to reflect neutral balance",
+      "Quick Stats simplified — now only shows Total Clicks and Score; Prestige level moved to currency bar",
+      "Version updated to v0.2.0 Early Access for live branch claude/ui-upgrades-and-fixes-011CUiaKNaUaZCiPk3amDLrU",
+      "Build verified successfully with no errors or data resets"
+    ]
   }
 ]
