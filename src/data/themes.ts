@@ -17,12 +17,12 @@ export const themes: Theme[] = [
     id: 'light',
     name: 'Light',
     displayName: 'Light',
-    description: 'Bright material-inspired palette. +5% follower generation.',
+    description: 'Bright material-inspired palette.',
     cost: 0,
     unlocked: false,
     preview: 'linear-gradient(to bottom right, #ffffff, #eaeef5)',
     active: false,
-    bonusMultiplier: 1.05, // +5% follower generation
+    bonusMultiplier: 1.0, // No bonus
   },
   {
     id: 'night-sky',

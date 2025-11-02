@@ -307,7 +307,7 @@ export function createInitialState(): GameState {
       soundEnabled: true,
       offlineProgressEnabled: true,
     },
-    version: "0.1.0",
+    version: "v0.2.0 Early Access",
     lastSaveTime: now,
     themes: baseThemes.map((t) => ({
       ...t,

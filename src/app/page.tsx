@@ -302,8 +302,15 @@ export default function HomePage() {
                         isPurchased:
                           u.purchased ||
                           (u.maxTier && u.tier && u.tier >= u.maxTier),
+                        isInfinite: u.maxLevel === undefined && u.currentLevel !== undefined,
                       }))
-                      .sort((a, b) => Number(a.isPurchased) - Number(b.isPurchased))
+                      .sort((a, b) => {
+                        // First sort: infinite upgrades come first
+                        if (a.isInfinite && !b.isInfinite) return -1;
+                        if (!a.isInfinite && b.isInfinite) return 1;
+                        // Second sort: unpurchased before purchased
+                        return Number(a.isPurchased) - Number(b.isPurchased);
+                      })
                       .map((upgrade) => {
                         const upgradeCost = getUpgradeCost(upgrade);
                         return (
