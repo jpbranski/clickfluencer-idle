@@ -47,7 +47,9 @@ export interface UpgradeEffect {
     | "generatorMultiplier"
     | "globalMultiplier"
     | "special"
-    | "awardDropRate";
+    | "awardDropRate"
+    | "offlineEfficiency"
+    | "credCacheRate";
   value: number;
   targetGeneratorId?: string;
 }
@@ -189,13 +191,13 @@ export const INITIAL_UPGRADES: Upgrade[] = [
   {
     id: "better_camera",
     name: "📸 Better Camera",
-    description: "Adds to base click power per tier (5 tiers: +1, +2, +3, +5, +8)",
+    description: "Adds to base click power per tier (7 tiers: +1, +2, +3, +5, +8, +15, +25)",
     cost: 500, // base cost
     purchased: false,
     effect: { type: "clickAdditive", value: 1 }, // tier 1 value
     tier: 0, // current tier (0 = not purchased yet)
-    maxTier: 5, // 5 tiers total
-    costMultiplier: 3, // cost triples each tier (500, 1500, 4500, 13500, 40500)
+    maxTier: 7, // 7 tiers total (expanded from 5)
+    costMultiplier: 3, // cost triples each tier
   },
   {
     id: "editing_software",
@@ -229,37 +231,53 @@ export const INITIAL_UPGRADES: Upgrade[] = [
     currentLevel: 0,
     costMultiplier: 1.35, // cost increases 35% per level
   },
+  // Lucky Charm - Tiered upgrade for award drop rate
   {
-    id: "award_luck_1",
-    name: "💎 Lucky Charm I",
-    description: "Award drop rate: 0.3% → 0.6%",
-    cost: 1000,
+    id: "lucky_charm",
+    name: "💎 Lucky Charm",
+    description: "Increases award drop rate per tier (4 tiers: +0.3% each)",
+    cost: 1000, // base cost
     purchased: false,
-    effect: { type: "awardDropRate", value: 0.003 },
+    effect: { type: "awardDropRate", value: 0.003 }, // tier 1 value (+0.3%)
+    tier: 0, // current tier (0 = not purchased yet)
+    maxTier: 4, // 4 tiers total
+    costMultiplier: 10, // cost ×10 each tier (1000, 10000, 100000, 1000000)
   },
+  // Overnight Success - Tiered upgrade for offline gain efficiency
   {
-    id: "award_luck_2",
-    name: "💎 Lucky Charm II",
-    description: "Award drop rate: 0.6% → 0.9%",
-    cost: 10000,
+    id: "overnight_success",
+    name: "🌙 Overnight Success",
+    description: "Increases offline gain rate (4 tiers: 50%, 60%, 75%, 100%)",
+    cost: 5000, // base cost
     purchased: false,
-    effect: { type: "awardDropRate", value: 0.003 },
+    effect: { type: "offlineEfficiency", value: 0.5 }, // tier 1 value (50%)
+    tier: 0, // current tier (0 = not purchased yet)
+    maxTier: 4, // 4 tiers total
+    costMultiplier: 5, // cost ×5 each tier (5000, 25000, 125000, 625000)
   },
+  // Cred Cache - Tiered upgrade for bonus click drops
   {
-    id: "award_luck_3",
-    name: "💎 Lucky Charm III",
-    description: "Award drop rate: 0.9% → 1.2%",
+    id: "cred_cache",
+    name: "💰 Cred Cache",
+    description: "Increases chance for bonus creds on click (6 tiers)",
+    cost: 10000, // base cost
+    purchased: false,
+    effect: { type: "credCacheRate", value: 0.001 }, // tier 1: 1/1000 chance
+    tier: 0, // current tier (0 = not purchased yet)
+    maxTier: 6, // 6 tiers total (1/1000 → 1/900 → 1/800 → 1/700 → 1/600 → 1/500)
+    costMultiplier: 3, // cost ×3 each tier
+  },
+  // Better Filters - Infinite upgrade for click power
+  {
+    id: "better_filters",
+    name: "📸 Better Filters",
+    description: "+1% to base click power per level (infinite)",
     cost: 100000,
     purchased: false,
-    effect: { type: "awardDropRate", value: 0.003 },
-  },
-  {
-    id: "award_luck_4",
-    name: "💎 Lucky Charm IV",
-    description: "Award drop rate: 1.2% → 1.5%",
-    cost: 1000000,
-    purchased: false,
-    effect: { type: "awardDropRate", value: 0.003 },
+    effect: { type: "clickMultiplier", value: 1.01 },
+    maxLevel: undefined, // infinite
+    currentLevel: 0,
+    costMultiplier: 1.25, // cost increases 25% per level
   },
 ];
 
@@ -323,10 +341,10 @@ export function getClickPower(state: GameState): number {
   // Apply Better Camera tiered upgrade
   const betterCamera = state.upgrades.find((u) => u.id === "better_camera");
   if (betterCamera && betterCamera.tier) {
-    // Tier bonus mapping: 1→+1, 2→+2, 3→+3, 4→+5, 5→+8
-    const tierBonuses = [0, 1, 2, 3, 5, 8];
+    // Tier bonus mapping: 1→+1, 2→+2, 3→+3, 4→+5, 5→+8, 6→+15, 7→+25
+    const tierBonuses = [0, 1, 2, 3, 5, 8, 15, 25];
     const tier = betterCamera.tier;
-    if (tier > 0 && tier <= 5) {
+    if (tier > 0 && tier <= 7) {
       basePower += tierBonuses[tier];
     }
   }
@@ -344,7 +362,14 @@ export function getClickPower(state: GameState): number {
   state.upgrades
     .filter((u) => u.purchased && u.effect.type === "clickMultiplier")
     .forEach((u) => {
-      power *= u.effect.value;
+      // Handle infinite upgrades like Better Filters
+      if (u.currentLevel !== undefined && u.currentLevel > 0) {
+        // Apply effect raised to the power of level (e.g., 1.01^5 for level 5)
+        power *= Math.pow(u.effect.value, u.currentLevel);
+      } else {
+        // Regular one-time multiplier
+        power *= u.effect.value;
+      }
     });
 
   // Apply AI Enhancements (global multiplier that applies to click power)
@@ -476,4 +501,36 @@ export function canAfford(followers: number, cost: number): boolean {
  */
 export function canAffordShards(shards: number, cost: number): boolean {
   return shards >= cost;
+}
+
+/**
+ * Calculate offline efficiency based on Overnight Success upgrade
+ * Base: 50%, Tier 1: 50%, Tier 2: 60%, Tier 3: 75%, Tier 4: 100%
+ */
+export function getOfflineEfficiency(state: GameState): number {
+  const overnightSuccess = state.upgrades.find((u) => u.id === "overnight_success");
+  if (!overnightSuccess || !overnightSuccess.tier || overnightSuccess.tier === 0) {
+    return 0.5; // 50% base efficiency
+  }
+
+  // Tier-based efficiency: 50%, 60%, 75%, 100%
+  const efficiencyByTier = [0.5, 0.5, 0.6, 0.75, 1.0];
+  const tier = overnightSuccess.tier;
+  return efficiencyByTier[tier] || 0.5;
+}
+
+/**
+ * Calculate Cred Cache drop rate based on upgrade tier
+ * Base: 0 (no drops), Tier 1-6: 1/1000 → 1/900 → 1/800 → 1/700 → 1/600 → 1/500
+ */
+export function getCredCacheRate(state: GameState): number {
+  const credCache = state.upgrades.find((u) => u.id === "cred_cache");
+  if (!credCache || !credCache.tier || credCache.tier === 0) {
+    return 0; // No Cred Cache drops without upgrade
+  }
+
+  // Tier-based drop rates: 1/1000, 1/900, 1/800, 1/700, 1/600, 1/500
+  const rateByTier = [0, 1/1000, 1/900, 1/800, 1/700, 1/600, 1/500];
+  const tier = credCache.tier;
+  return rateByTier[tier] || 0;
 }

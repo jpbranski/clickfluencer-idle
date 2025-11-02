@@ -49,7 +49,7 @@ export function CurrencyBar({
           </div>
           <div className="flex-1 min-w-0">
             <div className="text-xs text-muted uppercase tracking-wide font-semibold">
-              Creds
+              Prestige Creds
             </div>
             <div
               className="text-lg font-bold number-display truncate"
@@ -103,7 +103,7 @@ export function CurrencyBar({
       {/* Mobile Compact View Alternative */}
       {compact && (
         <div className="sm:hidden mt-2 text-center text-xs text-muted">
-          <span>Creds: {formatNumber(followers)}</span>
+          <span>Prestige Creds: {formatNumber(followers)}</span>
           <span className="mx-2">•</span>
           <span>Awards: {shards}</span>
         </div>

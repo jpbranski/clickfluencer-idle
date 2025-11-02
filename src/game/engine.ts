@@ -20,7 +20,7 @@
  * - Persistent through IndexedDB (handled externally)
  */
 
-import { GameState, createInitialState, getFollowersPerSecond } from "./state";
+import { GameState, createInitialState, getFollowersPerSecond, getOfflineEfficiency } from "./state";
 import { tick, applyEvent, ActionResult } from "./actions";
 import { calculateReputationBonus } from "./prestige";
 
@@ -29,7 +29,7 @@ import { calculateReputationBonus } from "./prestige";
 // ============================================================================
 
 export const TICK_INTERVAL = 250; // milliseconds (4 ticks per second)
-export const OFFLINE_PROGRESS_CAP = 8 * 60 * 60 * 1000; // 8 hours in milliseconds
+export const OFFLINE_PROGRESS_CAP = 72 * 60 * 60 * 1000; // 72 hours in milliseconds
 export const EVENT_CHECK_INTERVAL = 30000; // Check for events every 30 seconds
 export const EVENT_CHANCE = 0.05; // 5% chance per check
 
@@ -249,7 +249,8 @@ export class GameEngine {
 
   /**
    * Calculate and apply offline progress
-   * - Caps at 8 hours
+   * - Caps at 72 hours
+   * - Applies 50% base efficiency (increased by Overnight Success upgrade)
    * - Applies reputation bonus to production
    * - Shows notification with results
    */
@@ -267,14 +268,15 @@ export class GameEngine {
       };
     }
 
-    // Cap offline time to 8 hours
+    // Cap offline time to 72 hours
     const timeProcessed = Math.min(timeAway, OFFLINE_PROGRESS_CAP);
     const wasCapped = timeAway > OFFLINE_PROGRESS_CAP;
 
     // Calculate production (with reputation bonus applied through getFollowersPerSecond)
     const followersPerSecond = getFollowersPerSecond(this.state);
+    const offlineEfficiency = getOfflineEfficiency(this.state);
     const secondsElapsed = timeProcessed / 1000;
-    const followersGained = followersPerSecond * secondsElapsed;
+    const followersGained = followersPerSecond * secondsElapsed * offlineEfficiency;
 
     // Apply offline gains
     this.state = {

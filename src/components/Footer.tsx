@@ -19,8 +19,8 @@ export function Footer() {
   ];
 
   return (
-    <footer className="w-full mt-auto bg-surface border-t border-border text-foreground transition-colors">
-      <div className="container mx-auto px-4 py-6">
+    <footer className="w-full mt-12 bg-surface border-t border-border text-foreground transition-colors">
+      <div className="container mx-auto px-4 py-8">
         {/* Navigation Links */}
         <nav className="flex flex-wrap justify-center gap-3 text-sm" aria-label="Footer navigation">
           {links.map((link, index) => (

@@ -32,6 +32,7 @@ import {
   canAfford,
   canAffordShards,
   getClickEventMultiplier,
+  getCredCacheRate,
 } from "./state";
 import { executePrestige, resetForPrestige } from "./prestige";
 
@@ -48,14 +49,22 @@ export const BASE_TICK_RATE = 250; // milliseconds between ticks
 
 /**
  * Calculate current award drop rate based on purchased upgrades
- * Base: 0.3%, each Lucky Charm upgrade adds +0.3%
- * Max with all 4 upgrades: 1.5%
+ * Base: 0.3%, each Lucky Charm tier adds +0.3%
+ * Max with all 4 tiers: 1.5%
  */
 export function getAwardDropRate(state: GameState): number {
   let dropRate = SHARD_DROP_CHANCE;
 
+  // Handle Lucky Charm tiered upgrade
+  const luckyCharm = state.upgrades.find((u) => u.id === "lucky_charm");
+  if (luckyCharm && luckyCharm.tier && luckyCharm.tier > 0) {
+    // Add 0.3% per tier
+    dropRate += luckyCharm.effect.value * luckyCharm.tier;
+  }
+
+  // Also handle old award drop rate upgrades for backwards compatibility
   state.upgrades
-    .filter((u) => u.purchased && u.effect.type === "awardDropRate")
+    .filter((u) => u.purchased && u.effect.type === "awardDropRate" && u.id !== "lucky_charm")
     .forEach((u) => {
       dropRate += u.effect.value;
     });
@@ -76,6 +85,8 @@ export interface ActionResult {
 export interface ClickResult extends ActionResult {
   followersGained: number;
   shardDropped: boolean;
+  credCacheTriggered: boolean;
+  credCacheAmount: number;
 }
 
 // ============================================================================
@@ -86,6 +97,7 @@ export interface ClickResult extends ActionResult {
  * Execute a manual click
  * - Grants followers based on click power
  * - 0.3%-1.5% chance to drop an award
+ * - Small chance to trigger Cred Cache (1-5% of current creds)
  * - Updates statistics
  */
 export function clickPost(state: GameState): ClickResult {
@@ -96,14 +108,25 @@ export function clickPost(state: GameState): ClickResult {
   // Check for award drop (Variable chance based on upgrades)
   const shardDropped = Math.random() < getAwardDropRate(state);
 
+  // Check for Cred Cache drop
+  const credCacheRate = getCredCacheRate(state);
+  const credCacheTriggered = credCacheRate > 0 && Math.random() < credCacheRate;
+  let credCacheAmount = 0;
+
+  if (credCacheTriggered) {
+    // Award 1-5% of current total creds
+    const percentage = 0.01 + Math.random() * 0.04; // Random between 1% and 5%
+    credCacheAmount = Math.floor(state.followers * percentage);
+  }
+
   const newState: GameState = {
     ...state,
-    followers: state.followers + followersGained,
+    followers: state.followers + followersGained + credCacheAmount,
     shards: state.shards + (shardDropped ? 1 : 0),
     stats: {
       ...state.stats,
       totalClicks: state.stats.totalClicks + 1,
-      totalFollowersEarned: state.stats.totalFollowersEarned + followersGained,
+      totalFollowersEarned: state.stats.totalFollowersEarned + followersGained + credCacheAmount,
       shardsEarned: state.stats.shardsEarned + (shardDropped ? 1 : 0),
     },
   };
@@ -113,6 +136,8 @@ export function clickPost(state: GameState): ClickResult {
     state: newState,
     followersGained,
     shardDropped,
+    credCacheTriggered,
+    credCacheAmount,
   };
 }
 

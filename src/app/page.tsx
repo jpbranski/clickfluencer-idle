@@ -180,11 +180,13 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Share Buttons */}
-            <ShareButtons
-              creds={state.followers}
-              score={state.stats.totalFollowersEarned}
-            />
+            {/* Share Buttons - Hidden on mobile, shown on large screens */}
+            <div className="hidden lg:block">
+              <ShareButtons
+                creds={state.followers}
+                score={state.stats.totalFollowersEarned}
+              />
+            </div>
           </div>
 
           {/* Middle & Right Columns - Tabbed Content */}
@@ -389,6 +391,14 @@ export default function HomePage() {
               )}
             </div>
           </div>
+        </div>
+
+        {/* Share Buttons - Shown on mobile at bottom, hidden on large screens */}
+        <div className="lg:hidden mt-6">
+          <ShareButtons
+            creds={state.followers}
+            score={state.stats.totalFollowersEarned}
+          />
         </div>
       </div>
     </main>
