@@ -189,7 +189,7 @@ export default function HomePage() {
   );
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background mt-12 mb-16 pb-20 sm:pb-0">
       {/* Event Toasts */}
       <EventToasts events={state.activeEvents} />
 

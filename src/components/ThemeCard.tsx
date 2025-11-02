@@ -33,31 +33,31 @@ export function ThemeCard({
     <div
       className={`
         relative flex flex-col items-start justify-between
-        w-full sm:w-60 rounded-xl border-2 p-4 transition-all duration-200
-        bg-card text-foreground
+        w-full max-w-[160px] rounded-lg border-2 p-3 transition-all duration-200
+        bg-card text-foreground overflow-hidden
         ${isActive ? 'border-[var(--accent)] shadow-accent ring-1 ring-accent' : 'border-border'}
       `}
     >
       {/* --- Status badges --- */}
       {isActive && (
-        <span className="badge-accent absolute top-3 right-3">Active</span>
+        <span className="badge-accent absolute top-1 right-1 text-xs">Active</span>
       )}
       {!isActive && owned && (
-        <span className="badge-muted absolute top-3 right-3">Owned</span>
+        <span className="badge-muted absolute top-1 right-1 text-xs">Owned</span>
       )}
 
       {/* --- Theme preview --- */}
       <div
-        className="h-24 w-full rounded-lg mb-3 border border-border"
+        className="h-16 w-full rounded-md mb-2 border border-border"
         style={{
           background: theme.preview || 'linear-gradient(to bottom right, var(--accent), var(--card))'
         }}
       />
 
       {/* --- Title + description --- */}
-      <h3 className="text-lg font-semibold mb-1">{theme.displayName}</h3>
+      <h3 className="text-sm font-semibold mb-1">{theme.displayName}</h3>
       {theme.description && (
-        <p className="text-sm text-muted leading-snug mb-3">
+        <p className="text-xs text-muted leading-snug mb-2">
           {theme.description}
         </p>
       )}
@@ -67,19 +67,19 @@ export function ThemeCard({
         <button
           onClick={handleActivate}
           disabled={isActive}
-          className={`w-full ${isActive ? 'btn-muted cursor-default' : 'btn-accent'}`}
+          className={`w-full text-xs py-1.5 px-2 ${isActive ? 'btn-muted cursor-default' : 'btn-accent'}`}
         >
-          {isActive ? 'Currently Active' : 'Activate'}
+          {isActive ? 'Active' : 'Activate'}
         </button>
       ) : (
         <button
           onClick={handlePurchase}
           disabled={!affordable}
-          className={`w-full ${affordable ? 'btn-accent' : 'btn-muted cursor-not-allowed'}`}
+          className={`w-full text-xs py-1.5 px-2 ${affordable ? 'btn-accent' : 'btn-muted cursor-not-allowed'}`}
         >
           {affordable
-            ? `Unlock (${theme.cost} 💎)`
-            : `Need ${theme.cost - currentShards} more 💎`}
+            ? `${theme.cost} 💎`
+            : `${theme.cost} 💎`}
         </button>
       )}
     </div>
