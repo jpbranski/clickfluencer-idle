@@ -16,7 +16,7 @@ import {
   formatRate,
   formatTimeUntilAffordable,
 } from "@/game/format";
-import { Generator } from "@/game/state";
+import { Generator, getBulkGeneratorCost } from "@/game/state";
 
 interface GeneratorCardProps {
   generator: Generator & {
@@ -36,8 +36,13 @@ export function GeneratorCard({
   followersPerSecond,
   currentFollowers,
 }: GeneratorCardProps) {
+  // Calculate bulk cost for ×10 purchase
+  const bulkCost = getBulkGeneratorCost(generator, 10);
+  const canAffordBulk = currentFollowers >= bulkCost;
+
   const handleBuy = (count: number) => {
     if (!canAfford && count === 1) return;
+    if (!canAffordBulk && count === 10) return;
     onBuy(count);
   };
 
@@ -153,16 +158,17 @@ export function GeneratorCard({
             {generator.count > 0 && (
               <button
                 onClick={() => handleBuy(10)}
-                disabled={!canAfford}
+                disabled={!canAffordBulk}
                 className={`
                   px-3 py-2 rounded font-semibold text-sm
                   transition-all duration-150
                   focus-visible:outline-none focus-visible:ring-2 ring-accent
                   motion-reduce:transition-none
-                  ${canAfford ? "active:scale-95" : "cursor-not-allowed"}
-                  ${canAfford ? "btn-accent" : "btn-muted"}
+                  ${canAffordBulk ? "active:scale-95" : "cursor-not-allowed"}
+                  ${canAffordBulk ? "btn-accent" : "btn-muted"}
                 `}
                 aria-label={`Buy 10 ${generator.name}`}
+                title={!canAffordBulk ? `Need ${formatNumber(bulkCost)} Creds for ×10` : `Buy 10 for ${formatNumber(bulkCost)} Creds`}
               >
                 ×10
               </button>
