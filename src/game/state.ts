@@ -241,19 +241,19 @@ export const INITIAL_UPGRADES: Upgrade[] = [
     effect: { type: "awardDropRate", value: 0.003 }, // tier 1 value (+0.3%)
     tier: 0, // current tier (0 = not purchased yet)
     maxTier: 4, // 4 tiers total
-    costMultiplier: 10, // cost ×10 each tier (1000, 10000, 100000, 1000000)
+    costMultiplier: 15, // cost ×15 each tier (1000, 15000, 225000, 3375000)
   },
   // Overnight Success - Tiered upgrade for offline gain efficiency
   {
     id: "overnight_success",
     name: "🌙 Overnight Success",
     description: "Increases offline gain rate (4 tiers: 50%, 60%, 75%, 100%)",
-    cost: 5000, // base cost
+    cost: 25000, // base cost
     purchased: false,
     effect: { type: "offlineEfficiency", value: 0.5 }, // tier 1 value (50%)
     tier: 0, // current tier (0 = not purchased yet)
     maxTier: 4, // 4 tiers total
-    costMultiplier: 5, // cost ×5 each tier (5000, 25000, 125000, 625000)
+    costMultiplier: 5, // cost ×5 each tier (25000, 125000, 625000, 3125000)
   },
   // Cred Cache - Tiered upgrade for bonus click drops
   {
@@ -265,7 +265,7 @@ export const INITIAL_UPGRADES: Upgrade[] = [
     effect: { type: "credCacheRate", value: 0.001 }, // tier 1: 1/1000 chance
     tier: 0, // current tier (0 = not purchased yet)
     maxTier: 6, // 6 tiers total (1/1000 → 1/900 → 1/800 → 1/700 → 1/600 → 1/500)
-    costMultiplier: 3, // cost ×3 each tier
+    costMultiplier: 5, // cost ×5 each tier (10000, 50000, 250000, 1250000, 6250000, 31250000)
   },
   // Better Filters - Infinite upgrade for click power
   {

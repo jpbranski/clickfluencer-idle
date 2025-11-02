@@ -126,12 +126,13 @@ export default function HomePage() {
             </button>
           </div>
 
-          {/* Currency Bar - removed reputation */}
+          {/* Currency Bar */}
           <CurrencyBar
             followers={state.followers}
             shards={state.shards}
             awardDropRate={state ? getAwardDropRate(state) : 0.003}
             followersPerSecond={followersPerSecond}
+            reputation={state.reputation}
           />
         </header>
 
@@ -167,14 +168,6 @@ export default function HomePage() {
                   </div>
                   <div className="text-lg font-bold number-display text-foreground">
                     {formatNumber(state.stats.totalFollowersEarned)}
-                  </div>
-                </div>
-                <div className="p-3 rounded-lg bg-surface">
-                  <div className="text-xs text-muted mb-1">
-                    Prestiges
-                  </div>
-                  <div className="text-lg font-bold text-accent">
-                    {state.stats.prestigeCount}
                   </div>
                 </div>
               </div>
