@@ -133,6 +133,12 @@ export default function HomePage() {
             awardDropRate={state ? getAwardDropRate(state) : 0.003}
             followersPerSecond={followersPerSecond}
             reputation={state.reputation}
+            notoriety={state.notoriety?.amount || 0}
+            notorietyPerSecond={state.notoriety?.unlocked ? (
+              state.followers >= (state.notoriety.amount * state.notoriety.upkeepRate)
+                ? state.notoriety.basePerSec
+                : 0
+            ) : 0}
           />
         </header>
 

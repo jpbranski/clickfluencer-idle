@@ -34,5 +34,24 @@
       "Version updated to v0.2.0 Early Access for live branch claude/ui-upgrades-and-fixes-011CUiaKNaUaZCiPk3amDLrU",
       "Build verified successfully with no errors or data resets"
     ]
+  },
+  {
+    "version": "1.0.0",
+    "date": "2025-11-02",
+    "title": "v1.0.0 — Save Slots, Notoriety, UI Overhaul",
+    "changes": [
+      "Three save slots and a new Start page; legacy saves auto-migrate to Slot 1",
+      "Built-in save editor for debugging (Settings → Advanced)",
+      "New currency: Notoriety — very slow gain, 3-decimal /s display, with Creds upkeep",
+      "Two placeholder Notoriety power unlocks",
+      "Random events average every ~10 minutes (600s ± 120s jitter)",
+      "Prestige threshold lowered to 1e7 (from 1e9); preserves Themes, Infinite upgrades, Achievements",
+      "Shop ×10 button grays out when total cost is unaffordable",
+      "Achievements page (cosmetic, per slot) with placeholder trophies",
+      "UI overhaul with desktop sidebar and mobile slide-up bottom nav (coming soon)",
+      "Themes now support custom fonts and background/icon images; default assets applied",
+      "All stat/currency fonts switched to monospace",
+      "Notoriety displays with +X.XXX/s rate; pauses when creds can't afford upkeep"
+    ]
   }
 ]

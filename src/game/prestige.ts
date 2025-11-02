@@ -15,15 +15,18 @@
  * - Bonus: +10% to all production per Reputation point
  */
 
-import { GameState, createInitialState } from "./state";
+import { GameState, createInitialState, INITIAL_ACHIEVEMENTS } from "./state";
+import { PRESTIGE_THRESHOLD } from "./balance";
 
 // ============================================================================
 // CONSTANTS
 // ============================================================================
 
-export const PRESTIGE_THRESHOLD = 1e9; // 1 Billion followers
 export const PRESTIGE_EXPONENT = 0.4;
 export const REPUTATION_BONUS_PERCENT = 0.1; // 10% per point
+
+// Export PRESTIGE_THRESHOLD for backward compatibility
+export { PRESTIGE_THRESHOLD };
 
 // ============================================================================
 // PRESTIGE CALCULATIONS
@@ -144,8 +147,21 @@ export function executePrestige(state: GameState): PrestigeResult {
 
 /**
  * Reset game state for prestige while preserving certain elements
- * Preserves: reputation, shards, themes, statistics, settings
- * Resets: followers, generators, upgrades, events
+ *
+ * Preserves (v1.0.0):
+ * - Reputation, shards (prestige currencies)
+ * - Themes (cosmetic unlocks)
+ * - Infinite scaling upgrades (AI Enhancements, Better Filters)
+ * - Achievements (cosmetic)
+ * - Statistics (lifetime stats)
+ * - Settings
+ *
+ * Resets:
+ * - Followers (back to 0)
+ * - Generators (back to 0 count)
+ * - Non-infinite upgrades (one-time and tiered)
+ * - Notoriety (amount resets to 0, but structure preserved)
+ * - Active events
  */
 export function resetForPrestige(
   state: GameState,
@@ -153,12 +169,43 @@ export function resetForPrestige(
 ): GameState {
   const initial = createInitialState();
 
+  // Identify infinite scaling upgrades to preserve
+  const infiniteUpgradeIds = ["ai_enhancements", "better_filters"];
+
+  // Preserve infinite upgrades' progress
+  const preservedUpgrades = initial.upgrades.map((upgrade) => {
+    if (infiniteUpgradeIds.includes(upgrade.id)) {
+      const oldUpgrade = state.upgrades.find((u) => u.id === upgrade.id);
+      if (oldUpgrade && oldUpgrade.currentLevel !== undefined) {
+        return {
+          ...upgrade,
+          purchased: oldUpgrade.purchased,
+          currentLevel: oldUpgrade.currentLevel,
+          cost: oldUpgrade.cost, // Preserve cost progression
+        };
+      }
+    }
+    return upgrade;
+  });
+
   return {
     ...initial,
     // Preserve prestige currency and cosmetics
     reputation: state.reputation + reputationGained,
     shards: state.shards,
     themes: state.themes, // Keep unlocked themes
+
+    // Preserve infinite upgrades
+    upgrades: preservedUpgrades,
+
+    // Reset notoriety amount but keep structure
+    notoriety: {
+      ...state.notoriety,
+      amount: 0,
+    },
+
+    // Preserve achievements
+    achievements: state.achievements,
 
     // Update statistics
     stats: {
