@@ -189,7 +189,7 @@ export function SettingsDialog({
             </div>
           </section>
 
-          {/* Support */}
+          {/* TODO: Support the Developer - Commented out for now
           <section>
             <h3 className="text-lg font-bold mb-4">Support the Developer</h3>
             <div className="space-y-3">
@@ -213,6 +213,7 @@ export function SettingsDialog({
               </div>
             </div>
           </section>
+          */}
 
           {/* Navigation */}
           {onMainMenu && (
