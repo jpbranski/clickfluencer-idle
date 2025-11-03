@@ -26,6 +26,7 @@ interface SettingsDialogProps {
   onExport: () => void;
   onImport: (data: string) => void;
   onReset: () => void;
+  onMainMenu?: () => void;
 }
 
 export function SettingsDialog({
@@ -36,6 +37,7 @@ export function SettingsDialog({
   onExport,
   onImport,
   onReset,
+  onMainMenu,
 }: SettingsDialogProps) {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
@@ -209,6 +211,24 @@ export function SettingsDialog({
               </div>
             </div>
           </section>
+
+          {/* Navigation */}
+          {onMainMenu && (
+            <section>
+              <h3 className="text-lg font-bold mb-4">Navigation</h3>
+              <div className="space-y-3">
+                <button
+                  onClick={onMainMenu}
+                  className="w-full px-4 py-3 rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground font-semibold text-sm transition-colors duration-150 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent motion-reduce:transition-none"
+                >
+                  🏠 Main Menu
+                </button>
+                <div className="text-xs text-center text-muted">
+                  Return to save slot selection
+                </div>
+              </div>
+            </section>
+          )}
 
           {/* Data Management */}
           <section>

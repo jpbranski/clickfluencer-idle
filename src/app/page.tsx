@@ -214,6 +214,7 @@ export default function HomePage() {
         onExport={handleExportSave}
         onImport={handleImportSave}
         onReset={handleResetGame}
+        onMainMenu={() => router.push("/start")}
       />
 
       {/* New Game Shell Layout */}
