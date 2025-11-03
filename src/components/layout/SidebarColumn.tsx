@@ -14,7 +14,6 @@ import { ReactNode } from "react";
 
 interface SidebarColumnProps {
   currencyBar: ReactNode;
-  quickStats: ReactNode;
   shareButtons: ReactNode;
   activeTab: "generators" | "upgrades" | "themes" | "achievements" | "settings";
   onTabChange: (tab: "generators" | "upgrades" | "themes" | "achievements" | "settings") => void;
@@ -24,7 +23,6 @@ interface SidebarColumnProps {
 
 export function SidebarColumn({
   currencyBar,
-  quickStats,
   shareButtons,
   activeTab,
   onTabChange,
@@ -33,14 +31,13 @@ export function SidebarColumn({
 }: SidebarColumnProps) {
   return (
     <div className="w-[400px] xl:w-[480px] flex flex-col bg-card border-r border-border">
-      {/* Top Section - Currency & Stats */}
+      {/* Top Section - Currency */}
       <div className="p-4 space-y-4 border-b border-border">
         <div className="flex items-center justify-between mb-2">
           <h1 className="text-lg font-bold text-accent">Clickfluencer</h1>
           {settingsButton}
         </div>
         {currencyBar}
-        {quickStats}
       </div>
 
       {/* Tab Navigation */}

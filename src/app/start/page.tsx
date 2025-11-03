@@ -47,6 +47,19 @@ export default function StartPage() {
 
   const handleDelete = async (slotId: 1 | 2 | 3) => {
     if (!saveSystem) return;
+
+    // Count existing slots
+    const existingSlots = Object.keys(saveSystem.slots).length;
+
+    // If only one slot remains, create a new game in Slot 1 instead of deleting
+    if (existingSlots === 1) {
+      if (!confirm("This is your last save. Delete and start a new game in Slot 1?")) return;
+      const updated = createNewSlot(saveSystem, 1);
+      setSaveSystem(updated);
+      await saveSaveSystem(updated);
+      return;
+    }
+
     if (!confirm("Are you sure you want to delete this save? This cannot be undone.")) return;
 
     const updated = deleteSlot(saveSystem, slotId);
@@ -85,13 +98,10 @@ export default function StartPage() {
                   <>
                     <div className="flex-1 space-y-2 text-sm">
                       <p className="font-mono">
-                        <span className="text-muted">Creds:</span> {formatNumber(slotInfo.followers)}
+                        <span className="text-muted">Score:</span> {formatNumber(slotInfo.game.stats.totalFollowersEarned)}
                       </p>
                       <p className="font-mono">
                         <span className="text-muted">Prestige:</span> {slotInfo.reputation}
-                      </p>
-                      <p className="font-mono">
-                        <span className="text-muted">Notoriety:</span> {slotInfo.notoriety.toFixed(2)}
                       </p>
                       <p className="text-xs text-muted mt-4">
                         Created: {new Date(slotInfo.createdAt).toLocaleDateString()}
