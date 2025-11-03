@@ -25,6 +25,12 @@ export const RANDOM_EVENT_INTERVAL_JITTER = 120; // ±2 minutes
 // ============================================================================
 
 /**
+ * Base cost for first prestige point
+ * Cost formula: C_p = C_0 × (P+1)^2.5 where C_0 = 1e7
+ */
+export const PRESTIGE_BASE_COST = 1e7; // 10 million Creds
+
+/**
  * Follower threshold required to unlock prestige
  * Lowered from 1e9 to 1e7 for v1.0.0
  */

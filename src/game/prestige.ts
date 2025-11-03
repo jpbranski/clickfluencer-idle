@@ -16,7 +16,7 @@
  */
 
 import { GameState, createInitialState, INITIAL_ACHIEVEMENTS } from "./state";
-import { PRESTIGE_THRESHOLD } from "./balance";
+import { PRESTIGE_THRESHOLD, PRESTIGE_BASE_COST } from "./balance";
 
 // ============================================================================
 // CONSTANTS
