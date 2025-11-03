@@ -15,15 +15,18 @@
  * - Bonus: +10% to all production per Reputation point
  */
 
-import { GameState, createInitialState } from "./state";
+import { GameState, createInitialState, INITIAL_ACHIEVEMENTS } from "./state";
+import { PRESTIGE_THRESHOLD } from "./balance";
 
 // ============================================================================
 // CONSTANTS
 // ============================================================================
 
-export const PRESTIGE_BASE_COST = 1e7; // 10 million Creds for first prestige
-export const PRESTIGE_EXPONENT = 0.4; // Used as 1/E = 2.5 in cost formula
+export const PRESTIGE_EXPONENT = 0.4;
 export const REPUTATION_BONUS_PERCENT = 0.1; // 10% per point
+
+// Export PRESTIGE_THRESHOLD for backward compatibility
+export { PRESTIGE_THRESHOLD };
 
 // ============================================================================
 // PRESTIGE CALCULATIONS
@@ -112,19 +115,66 @@ export function executePrestige(state: GameState): PrestigeResult {
 }
 
 /**
- * Apply prestige by spending Creds and gaining reputation
- * No longer resets progress - just spends Creds for a permanent bonus
+ * Reset game state for prestige while preserving certain elements
+ *
+ * Preserves (v1.0.0):
+ * - Reputation, shards (prestige currencies)
+ * - Themes (cosmetic unlocks)
+ * - Infinite scaling upgrades (AI Enhancements, Better Filters)
+ * - Achievements (cosmetic)
+ * - Statistics (lifetime stats)
+ * - Settings
+ *
+ * Resets:
+ * - Followers (back to 0)
+ * - Generators (back to 0 count)
+ * - Non-infinite upgrades (one-time and tiered)
+ * - Notoriety (amount resets to 0, but structure preserved)
+ * - Active events
  */
 export function applyPrestige(
   state: GameState,
   reputationGained: number,
   credCost: number,
 ): GameState {
+  const initial = createInitialState();
+
+  // Identify infinite scaling upgrades to preserve
+  const infiniteUpgradeIds = ["ai_enhancements", "better_filters"];
+
+  // Preserve infinite upgrades' progress
+  const preservedUpgrades = initial.upgrades.map((upgrade) => {
+    if (infiniteUpgradeIds.includes(upgrade.id)) {
+      const oldUpgrade = state.upgrades.find((u) => u.id === upgrade.id);
+      if (oldUpgrade && oldUpgrade.currentLevel !== undefined) {
+        return {
+          ...upgrade,
+          purchased: oldUpgrade.purchased,
+          currentLevel: oldUpgrade.currentLevel,
+          cost: oldUpgrade.cost, // Preserve cost progression
+        };
+      }
+    }
+    return upgrade;
+  });
+
   return {
     ...state,
     // Spend Creds and gain reputation
     followers: state.followers - credCost,
     reputation: state.reputation + reputationGained,
+
+    // Preserve infinite upgrades
+    upgrades: preservedUpgrades,
+
+    // Reset notoriety amount but keep structure
+    notoriety: {
+      ...state.notoriety,
+      amount: 0,
+    },
+
+    // Preserve achievements
+    achievements: state.achievements,
 
     // Update statistics
     stats: {

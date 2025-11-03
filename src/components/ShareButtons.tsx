@@ -104,69 +104,51 @@ export function ShareButtons({ creds, score }: ShareButtonsProps) {
   }, [generateShareImage]);
 
   return (
-    <div className="bg-card rounded-lg shadow-sm border border-border p-6 transition-colors">
-      <h2 className="text-xl font-bold mb-4 text-foreground">
-        Share Your Progress
-      </h2>
-      <p className="text-sm text-muted mb-4">
-        Show off your achievements to your friends!
-      </p>
+    <div className="flex items-center justify-center gap-4 text-sm opacity-80">
+      <span>Share on:</span>
 
-      <div className="flex flex-wrap gap-3">
-        {/* X (Twitter) Button */}
-        <button
-          onClick={handleShareX}
-          className="btn-muted flex items-center gap-2"
-          aria-label="Share on X"
+      {/* X (Twitter) Button */}
+      <button
+        onClick={handleShareX}
+        className="hover:opacity-70 transition-opacity"
+        aria-label="Share on X"
+      >
+        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        </svg>
+      </button>
+
+      {/* Facebook Button */}
+      <button
+        onClick={handleShareFacebook}
+        className="hover:opacity-70 transition-opacity"
+        aria-label="Share on Facebook"
+      >
+        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+        </svg>
+      </button>
+
+      {/* Download Image Button */}
+      <button
+        onClick={handleDownloadImage}
+        className="hover:opacity-70 transition-opacity"
+        aria-label="Download Progress"
+      >
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
         >
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-          </svg>
-          Share on X
-        </button>
-
-        {/* Facebook Button */}
-        <button
-          onClick={handleShareFacebook}
-          className="flex items-center gap-2 px-4 py-3 rounded-lg font-semibold transition-colors bg-[#1877f2] hover:bg-[#0c63d4] text-white"
-          aria-label="Share on Facebook"
-        >
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-          </svg>
-          Share on Facebook
-        </button>
-
-        {/* Download Image Button */}
-        <button
-          onClick={handleDownloadImage}
-          className="btn-accent flex items-center gap-2"
-          aria-label="Download share image"
-        >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-            />
-          </svg>
-          Download Image
-        </button>
-      </div>
-
-      {/* Preview hint */}
-      <div className="mt-4 p-3 rounded-lg bg-accent/10 border border-accent/20">
-        <p className="text-xs text-accent">
-          💡 <strong>Tip:</strong> Download the image to share it with your
-          custom stats on any platform!
-        </p>
-      </div>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+          />
+        </svg>
+      </button>
 
       {/* Hidden canvas for image generation */}
       <canvas ref={canvasRef} className="hidden" />

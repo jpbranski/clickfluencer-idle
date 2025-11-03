@@ -12,6 +12,8 @@ export const themes: Theme[] = [
     preview: 'linear-gradient(to bottom right, #1b2330, #2b3350)',
     active: true,
     bonusMultiplier: 1.0, // No bonus (default)
+    backgroundImage: '/themes/default-bg.webp',
+    iconImage: '/themes/default-icon.webp',
   },
   {
     id: 'light',
@@ -23,6 +25,8 @@ export const themes: Theme[] = [
     preview: 'linear-gradient(to bottom right, #ffffff, #eaeef5)',
     active: false,
     bonusMultiplier: 1.0, // No bonus
+    backgroundImage: '/themes/default-bg.webp',
+    iconImage: '/themes/default-icon.webp',
   },
   {
     id: 'night-sky',
@@ -34,6 +38,8 @@ export const themes: Theme[] = [
     preview: 'linear-gradient(to bottom right, #1b1f3b 0%, #2a2450 50%, #0b0d1e 100%)',
     active: false,
     bonusMultiplier: 1.1, // +10% follower generation
+    backgroundImage: '/themes/default-bg.webp',
+    iconImage: '/themes/default-icon.webp',
   },
   {
     id: 'touch-grass',
@@ -45,6 +51,8 @@ export const themes: Theme[] = [
     preview: 'linear-gradient(to bottom right, #d8f3dc 0%, #b7e4c7 50%, #95d5b2 100%)',
     active: false,
     bonusMultiplier: 1.08, // +8% follower generation
+    backgroundImage: '/themes/default-bg.webp',
+    iconImage: '/themes/default-icon.webp',
   },
   {
     id: 'terminal',
@@ -56,6 +64,8 @@ export const themes: Theme[] = [
     preview: 'linear-gradient(to bottom right, #2a2b24 0%, #272822 50%, #1e1f1c 100%)',
     active: false,
     bonusMultiplier: 1.12, // +12% follower generation
+    backgroundImage: '/themes/default-bg.webp',
+    iconImage: '/themes/default-icon.webp',
   },
   {
     id: 'cherry-blossom',
@@ -67,6 +77,8 @@ export const themes: Theme[] = [
     preview: 'linear-gradient(to bottom right, #fff1f5 0%, #ffd9e5 50%, #ffc1d6 100%)',
     active: false,
     bonusMultiplier: 1.07, // +7% follower generation
+    backgroundImage: '/themes/default-bg.webp',
+    iconImage: '/themes/default-icon.webp',
   },
   {
     id: 'nightshade',
@@ -78,6 +90,8 @@ export const themes: Theme[] = [
     preview: 'linear-gradient(to bottom right, #211326 0%, #311b3a 50%, #0c0c0d 100%)',
     active: false,
     bonusMultiplier: 1.15, // +15% follower generation
+    backgroundImage: '/themes/default-bg.webp',
+    iconImage: '/themes/default-icon.webp',
   },
   {
     id: 'el-blue',
@@ -89,6 +103,8 @@ export const themes: Theme[] = [
     preview: 'linear-gradient(to bottom right, #0a192f 0%, #112240 50%, #0d2742 100%)',
     active: false,
     bonusMultiplier: 1.2, // +20% follower generation
+    backgroundImage: '/themes/default-bg.webp',
+    iconImage: '/themes/default-icon.webp',
   },
   {
     id: 'gold',
@@ -100,5 +116,7 @@ export const themes: Theme[] = [
     preview: 'linear-gradient(to bottom right, #3a2a10 0%, #6f5215 50%, #d4af37 100%)',
     active: false,
     bonusMultiplier: 1.25, // +25% follower generation
+    backgroundImage: '/themes/default-bg.webp',
+    iconImage: '/themes/default-icon.webp',
   },
 ];
