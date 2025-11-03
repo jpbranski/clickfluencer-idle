@@ -62,7 +62,22 @@ export function Header() {
           menuOpen ? "translate-x-0" : "translate-x-full"
         } md:hidden z-40`}
       >
-        <div className="flex flex-col p-6 space-y-4 pt-16">
+        <div className="flex flex-col p-6 space-y-4">
+          {/* Close Button */}
+          <div className="flex justify-between items-center pb-4 border-b border-border">
+            <span className="text-lg font-semibold">Menu</span>
+            <button
+              onClick={() => setMenuOpen(false)}
+              className="p-2 rounded-lg hover:bg-muted transition-colors"
+              aria-label="Close menu"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          {/* Navigation Links */}
           {navItems.map((item) => (
             <Link
               key={item.name}

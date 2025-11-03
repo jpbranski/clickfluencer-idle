@@ -32,6 +32,7 @@ export default function HomePage() {
     followersPerSecond,
     canPrestige,
     reputationGain,
+    prestigeCost,
     handleBuyGenerator,
     handleBuyUpgrade,
     handlePurchaseTheme,
