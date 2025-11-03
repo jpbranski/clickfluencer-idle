@@ -43,8 +43,9 @@ export const PRESTIGE_THRESHOLD = 1e7; // 10 million
 /**
  * Base notoriety gain per second
  * Approximately 2.52 per hour (0.0007 * 3600)
+ * DISABLED for v1.0.0 - will be reworked in future update
  */
-export const NOTORIETY_BASE_PER_SEC = 0.0007;
+export const NOTORIETY_BASE_PER_SEC = 0.0; // Disabled - was 0.0007
 
 /**
  * Credits drain per notoriety owned per second
