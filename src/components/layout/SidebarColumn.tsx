@@ -16,8 +16,8 @@ interface SidebarColumnProps {
   currencyBar: ReactNode;
   quickStats: ReactNode;
   shareButtons: ReactNode;
-  activeTab: "upgrades" | "themes" | "achievements" | "settings";
-  onTabChange: (tab: "upgrades" | "themes" | "achievements" | "settings") => void;
+  activeTab: "generators" | "upgrades" | "themes" | "achievements" | "settings";
+  onTabChange: (tab: "generators" | "upgrades" | "themes" | "achievements" | "settings") => void;
   settingsButton: ReactNode;
   children: ReactNode;
 }
@@ -44,10 +44,20 @@ export function SidebarColumn({
       </div>
 
       {/* Tab Navigation */}
-      <div className="p-2 border-b border-border flex gap-1">
+      <div className="p-2 border-b border-border grid grid-cols-2 gap-1">
+        <button
+          onClick={() => onTabChange("generators")}
+          className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+            activeTab === "generators"
+              ? "bg-accent text-accent-foreground"
+              : "hover:bg-surface text-foreground"
+          }`}
+        >
+          📈 Generators
+        </button>
         <button
           onClick={() => onTabChange("upgrades")}
-          className={`flex-1 px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+          className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
             activeTab === "upgrades"
               ? "bg-accent text-accent-foreground"
               : "hover:bg-surface text-foreground"
@@ -57,7 +67,7 @@ export function SidebarColumn({
         </button>
         <button
           onClick={() => onTabChange("themes")}
-          className={`flex-1 px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+          className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
             activeTab === "themes"
               ? "bg-accent text-accent-foreground"
               : "hover:bg-surface text-foreground"
@@ -67,7 +77,7 @@ export function SidebarColumn({
         </button>
         <button
           onClick={() => onTabChange("achievements")}
-          className={`flex-1 px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+          className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
             activeTab === "achievements"
               ? "bg-accent text-accent-foreground"
               : "hover:bg-surface text-foreground"

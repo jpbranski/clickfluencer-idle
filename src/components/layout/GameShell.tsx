@@ -17,6 +17,7 @@ interface GameShellProps {
   currencyBar: ReactNode;
   quickStats: ReactNode;
   shareButtons: ReactNode;
+  generatorsTab: ReactNode;
   upgradesTab: ReactNode;
   themesTab: ReactNode;
   achievementsTab: ReactNode;
@@ -29,13 +30,14 @@ export function GameShell({
   currencyBar,
   quickStats,
   shareButtons,
+  generatorsTab,
   upgradesTab,
   themesTab,
   achievementsTab,
   settingsButton,
   onShowSettings,
 }: GameShellProps) {
-  const [activeTab, setActiveTab] = useState<"upgrades" | "themes" | "achievements" | "settings">("upgrades");
+  const [activeTab, setActiveTab] = useState<"generators" | "upgrades" | "themes" | "achievements" | "settings">("generators");
   const [sheetOpen, setSheetOpen] = useState(false);
 
   return (
@@ -51,6 +53,7 @@ export function GameShell({
           onTabChange={setActiveTab}
           settingsButton={settingsButton}
         >
+          {activeTab === "generators" && generatorsTab}
           {activeTab === "upgrades" && upgradesTab}
           {activeTab === "themes" && themesTab}
           {activeTab === "achievements" && achievementsTab}
@@ -107,22 +110,10 @@ export function GameShell({
           activeTab={activeTab}
           onTabChange={setActiveTab}
         >
+          {activeTab === "generators" && generatorsTab}
           {activeTab === "upgrades" && upgradesTab}
           {activeTab === "themes" && themesTab}
           {activeTab === "achievements" && achievementsTab}
-          {activeTab === "settings" && (
-            <div className="p-6 text-center">
-              <button
-                onClick={() => {
-                  setSheetOpen(false);
-                  onShowSettings();
-                }}
-                className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
-              >
-                Open Settings
-              </button>
-            </div>
-          )}
         </SlideUpSheet>
       </div>
     </div>

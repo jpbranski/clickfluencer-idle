@@ -12,8 +12,8 @@ import { ReactNode, useEffect } from "react";
 interface SlideUpSheetProps {
   isOpen: boolean;
   onClose: () => void;
-  activeTab: "upgrades" | "themes" | "achievements" | "settings";
-  onTabChange: (tab: "upgrades" | "themes" | "achievements" | "settings") => void;
+  activeTab: "generators" | "upgrades" | "themes" | "achievements" | "settings";
+  onTabChange: (tab: "generators" | "upgrades" | "themes" | "achievements" | "settings") => void;
   children: ReactNode;
 }
 
@@ -60,6 +60,16 @@ export function SlideUpSheet({
         {/* Tab Navigation */}
         <div className="p-2 border-b border-border flex gap-1 overflow-x-auto">
           <button
+            onClick={() => onTabChange("generators")}
+            className={`flex-1 px-3 py-2 rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${
+              activeTab === "generators"
+                ? "bg-accent text-accent-foreground"
+                : "hover:bg-surface text-foreground"
+            }`}
+          >
+            📈 Generators
+          </button>
+          <button
             onClick={() => onTabChange("upgrades")}
             className={`flex-1 px-3 py-2 rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${
               activeTab === "upgrades"
@@ -88,16 +98,6 @@ export function SlideUpSheet({
             }`}
           >
             🏆 Achievements
-          </button>
-          <button
-            onClick={() => onTabChange("settings")}
-            className={`flex-1 px-3 py-2 rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${
-              activeTab === "settings"
-                ? "bg-accent text-accent-foreground"
-                : "hover:bg-surface text-foreground"
-            }`}
-          >
-            ⚙️ Settings
           </button>
         </div>
 

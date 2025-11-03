@@ -6,6 +6,7 @@ import { useGame } from "@/hooks/useGame";
 import PostButton from "@/components/PostButton";
 import { CurrencyBar } from "@/components/CurrencyBar";
 import { GeneratorCard } from "@/components/GeneratorCard";
+import { GeneratorsPanel } from "@/components/panels/GeneratorsPanel";
 import { SettingsDialog } from "@/components/SettingsDialog";
 import { EventToasts } from "@/components/EventToasts";
 import { OfflineEarningsModal } from "@/components/OfflineEarningsModal";
@@ -159,6 +160,16 @@ export default function HomePage() {
     />
   );
 
+  // Generators Tab Content
+  const generatorsTab = (
+    <GeneratorsPanel
+      generators={state.generators}
+      followers={state.followers}
+      followersPerSecond={followersPerSecond}
+      onBuyGenerator={handleBuyGenerator}
+    />
+  );
+
   // Upgrades Tab Content
   const upgradesTab = (
     <UpgradesPanel
@@ -223,6 +234,7 @@ export default function HomePage() {
         currencyBar={currencyBar}
         quickStats={quickStats}
         shareButtons={shareButtons}
+        generatorsTab={generatorsTab}
         upgradesTab={upgradesTab}
         themesTab={themesTab}
         achievementsTab={achievementsTab}
