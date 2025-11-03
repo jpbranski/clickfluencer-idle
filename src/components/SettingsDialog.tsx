@@ -146,7 +146,7 @@ export function SettingsDialog({
               />
               <SettingToggle
                 label="Offline Progress"
-                description="Earn followers while game is closed (up to 8 hours)"
+                description="Stores progress for up to 72 hours while you're away"
                 checked={settings.offlineProgressEnabled}
                 onChange={(checked) =>
                   onSettingChange("offlineProgressEnabled", checked)
@@ -167,12 +167,14 @@ export function SettingsDialog({
                   onSettingChange("showNotifications", checked)
                 }
               />
+              {/* TODO: Sound Effects - Commented out (no audio planned)
               <SettingToggle
                 label="Sound Effects"
                 description="Play audio feedback for actions"
                 checked={settings.soundEnabled}
                 onChange={(checked) => onSettingChange("soundEnabled", checked)}
               />
+              */}
               <div className="p-3 rounded-lg bg-accent/10 border border-accent/20">
                 <div className="flex items-start gap-2 text-xs text-muted">
                   <span className="text-accent">ℹ️</span>

@@ -34,7 +34,7 @@ import {
   getClickEventMultiplier,
   getCredCacheRate,
 } from "./state";
-import { executePrestige, resetForPrestige } from "./prestige";
+import { executePrestige, applyPrestige } from "./prestige";
 
 // ============================================================================
 // CONSTANTS
@@ -544,9 +544,9 @@ export function tick(state: GameState, deltaTime: number): GameState {
 
 /**
  * Execute prestige
- * - Resets most progress
- * - Awards reputation based on followers
- * - Preserves certain elements (awards, themes, stats)
+ * - Spends Creds to gain prestige points
+ * - Awards +10% permanent bonus per point
+ * - No longer resets progress
  */
 export function prestige(state: GameState): ActionResult {
   const result = executePrestige(state);
@@ -559,7 +559,7 @@ export function prestige(state: GameState): ActionResult {
     };
   }
 
-  const newState = resetForPrestige(state, result.reputationGained);
+  const newState = applyPrestige(state, result.reputationGained, result.followersLost);
 
   return {
     success: true,

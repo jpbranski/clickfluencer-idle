@@ -31,7 +31,7 @@ export function CurrencyBar({
     <div className="w-full">
       <div
         className={`
-        flex flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8
+        grid grid-cols-3 gap-4 sm:gap-6
         px-4 py-3 rounded-lg
         bg-surface backdrop-blur-sm
         border border-border
@@ -40,7 +40,7 @@ export function CurrencyBar({
       `}
       >
         {/* Prestige Level */}
-        <div className="flex items-center gap-2 min-w-[100px]">
+        <div className="flex items-center gap-2">
           <div
             className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-600 flex items-center justify-center"
             aria-hidden="true"
@@ -61,14 +61,9 @@ export function CurrencyBar({
             </div>
           </div>
         </div>
-        {/* Vertical Divider */}
-        <div
-          className="hidden sm:block w-px h-12 bg-border"
-          aria-hidden="true"
-        />
 
         {/* Followers (Main Currency) */}
-        <div className="flex items-center gap-2 min-w-[140px]">
+        <div className="flex items-center gap-2">
           <div
             className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center"
             aria-hidden="true"
@@ -97,14 +92,8 @@ export function CurrencyBar({
           </div>
         </div>
 
-        {/* Vertical Divider */}
-        <div
-          className="hidden sm:block w-px h-12 bg-border"
-          aria-hidden="true"
-        />
-
         {/* Awards (Premium Currency) */}
-        <div className="flex items-center gap-2 min-w-[120px]">
+        <div className="flex items-center gap-2">
           <div
             className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center"
             aria-hidden="true"

@@ -11,6 +11,7 @@ import { SettingsDialog } from "@/components/SettingsDialog";
 import { EventToasts } from "@/components/EventToasts";
 import { OfflineEarningsModal } from "@/components/OfflineEarningsModal";
 import { ShareButtons } from "@/components/ShareButtons";
+import { BottomNav } from "@/components/BottomNav";
 import { formatNumber } from "@/game/format";
 import { getGeneratorCost, canAfford, canAffordShards } from "@/game/state";
 import { getAwardDropRate, getUpgradeCost } from "@/game/actions";
@@ -19,8 +20,8 @@ import { themes } from '@/data/themes';
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState<
-    "generators" | "upgrades" | "themes"
-  >("generators");
+    "generators" | "upgrades" | "themes" | "achievements"
+  >("upgrades"); // Start with Upgrades tab (Generators is hidden)
   const [showSettings, setShowSettings] = useState(false);
 
   const {
@@ -30,6 +31,7 @@ export default function HomePage() {
     followersPerSecond,
     canPrestige,
     reputationGain,
+    prestigeCost,
     handleBuyGenerator,
     handleBuyUpgrade,
     handlePurchaseTheme,
@@ -59,7 +61,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background pb-20 lg:pb-0">
       {/* Event Toasts */}
       <EventToasts events={state.activeEvents} />
 
@@ -184,8 +186,8 @@ export default function HomePage() {
 
           {/* Middle & Right Columns - Tabbed Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Tab Navigation */}
-            <div className="bg-card rounded-lg shadow-lg p-2 flex gap-2">
+            {/* Tab Navigation - Desktop Only */}
+            <div className="hidden lg:flex bg-card rounded-lg shadow-lg p-2 gap-2">
               <button
                 onClick={() => setActiveTab("generators")}
                 className={`flex-1 px-4 py-3 rounded-lg font-semibold transition-colors ${
@@ -193,6 +195,7 @@ export default function HomePage() {
                     ? "bg-accent text-accent-foreground"
                     : "hover:bg-surface text-foreground"
                 }`}
+                style={{ display: "none" }} // Hidden generator tab
               >
                 📈 Generators
               </button>
@@ -215,6 +218,16 @@ export default function HomePage() {
                 }`}
               >
                 🎨 Themes
+              </button>
+              <button
+                onClick={() => setActiveTab("achievements")}
+                className={`flex-1 px-4 py-3 rounded-lg font-semibold transition-colors ${
+                  activeTab === "achievements"
+                    ? "bg-accent text-accent-foreground"
+                    : "hover:bg-surface text-foreground"
+                }`}
+              >
+                🏆 Achievements
               </button>
             </div>
 
@@ -262,38 +275,53 @@ export default function HomePage() {
                     Purchase permanent improvements to boost your production
                   </p>
 
-                  {/* Prestige Section */}
-                  {canPrestige && (
-                    <div className="mb-6 p-6 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg">
-                      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <div className="text-center sm:text-left">
-                          <div className="text-2xl font-bold flex items-center justify-center sm:justify-start gap-2 mb-2">
-                            ⭐ Prestige Available!
-                          </div>
-                          <div className="text-sm opacity-90">
-                            Reset your progress to gain{" "}
-                            <span className="font-bold">
-                              {reputationGain} Reputation
-                            </span>
-                          </div>
-                          <div className="text-xs opacity-75 mt-1">
-                            New bonus: ×
-                            {(
-                              (1 + (state.reputation + reputationGain) * 0.1) *
-                              100
-                            ).toFixed(0)}
-                            % production
-                          </div>
+                  {/* Prestige Section - Always Visible */}
+                  <div className={`mb-6 p-6 rounded-lg shadow-lg transition-all ${
+                    canPrestige
+                      ? "bg-gradient-to-r from-yellow-400 to-orange-500 text-white"
+                      : "bg-surface border border-border"
+                  }`}>
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                      <div className="text-center sm:text-left">
+                        <div className={`text-2xl font-bold flex items-center justify-center sm:justify-start gap-2 mb-2 ${
+                          !canPrestige ? "text-muted" : ""
+                        }`}>
+                          ⭐ Prestige
                         </div>
-                        <button
-                          onClick={handlePrestige}
-                          className="px-6 py-3 bg-white text-orange-600 rounded-lg font-bold hover:bg-gray-100 transition-colors shadow-md"
-                        >
-                          Prestige Now
-                        </button>
+                        <div className={`text-sm ${canPrestige ? "opacity-90" : "text-muted"}`}>
+                          {canPrestige ? (
+                            <>
+                              Spend <span className="font-bold">{formatNumber(prestigeCost)} Creds</span> to gain{" "}
+                              <span className="font-bold">+1 Prestige</span>
+                            </>
+                          ) : (
+                            <>
+                              Requires <span className="font-bold">{formatNumber(prestigeCost)} Creds</span> to Prestige
+                            </>
+                          )}
+                        </div>
+                        <div className={`text-xs mt-1 ${canPrestige ? "opacity-75" : "text-muted"}`}>
+                          New bonus: ×
+                          {(
+                            (1 + (state.reputation + reputationGain) * 0.1) *
+                            100
+                          ).toFixed(0)}
+                          % production
+                        </div>
                       </div>
+                      <button
+                        onClick={handlePrestige}
+                        disabled={!canPrestige}
+                        className={`px-6 py-3 rounded-lg font-bold transition-colors shadow-md ${
+                          canPrestige
+                            ? "bg-white text-orange-600 hover:bg-gray-100"
+                            : "bg-muted text-muted-foreground cursor-not-allowed opacity-50"
+                        }`}
+                      >
+                        Prestige Now
+                      </button>
                     </div>
-                  )}
+                  </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {state.upgrades
@@ -348,7 +376,7 @@ export default function HomePage() {
                     Unlock cosmetic themes with awards. Bonuses apply{" "}
                     <strong>permanently</strong> once unlocked!
                   </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {state.themes.map((theme) => {
                       const activeTheme = state.themes.find((t) => t.active);
                       return (
@@ -389,18 +417,42 @@ export default function HomePage() {
                   </div>
                 </div>
               )}
+
+              {/* Achievements Tab */}
+              {activeTab === "achievements" && (
+                <div>
+                  <h2 className="text-2xl font-bold mb-4 text-foreground">
+                    Achievements
+                  </h2>
+                  <p className="text-sm text-muted mb-6">
+                    Track your progress and unlock special rewards
+                  </p>
+                  <div className="text-center p-12 bg-surface rounded-lg border border-border">
+                    <div className="text-4xl mb-3">🏆</div>
+                    <div className="text-lg font-semibold text-muted-foreground">
+                      Coming Soon!
+                    </div>
+                    <div className="text-sm text-muted mt-2">
+                      Achievements system will be added in a future update
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
 
         {/* Share Buttons - Shown on mobile at bottom, hidden on large screens */}
-        <div className="lg:hidden mt-6">
+        <div className="lg:hidden mt-6 mb-4">
           <ShareButtons
             creds={state.followers}
             score={state.stats.totalFollowersEarned}
           />
         </div>
       </div>
+
+      {/* Bottom Navigation - Mobile Only */}
+      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </main>
   );
 }
