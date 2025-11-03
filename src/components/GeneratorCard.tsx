@@ -16,7 +16,7 @@ import {
   formatRate,
   formatTimeUntilAffordable,
 } from "@/game/format";
-import { Generator } from "@/game/state";
+import { Generator, getBulkGeneratorCost } from "@/game/state";
 
 interface GeneratorCardProps {
   generator: Generator & {
@@ -36,8 +36,13 @@ export function GeneratorCard({
   followersPerSecond,
   currentFollowers,
 }: GeneratorCardProps) {
+  // Calculate bulk cost for ×10 purchase
+  const bulkCost = getBulkGeneratorCost(generator, 10);
+  const canAffordBulk = currentFollowers >= bulkCost;
+
   const handleBuy = (count: number) => {
     if (!canAfford && count === 1) return;
+    if (!canAffordBulk && count === 10) return;
     onBuy(count);
   };
 
@@ -78,7 +83,7 @@ export function GeneratorCard({
             </h3>
             {generator.unlocked ? (
               <div className="text-xs text-muted">
-                Owned: <span className="font-semibold">{generator.count}</span>
+                Owned: <span className="font-semibold font-mono">{generator.count}</span>
               </div>
             ) : (
               <div className="text-xs text-muted">
@@ -94,14 +99,14 @@ export function GeneratorCard({
         <div className="mb-3 p-2 rounded bg-card">
           <div className="flex justify-between text-xs mb-1">
             <span className="text-muted">Each:</span>
-            <span className="font-semibold">
+            <span className="font-semibold font-mono">
               {formatRate(generator.baseFollowersPerSecond)}
             </span>
           </div>
           {generator.count > 0 && (
             <div className="flex justify-between text-xs">
               <span className="text-muted">Total:</span>
-              <span className="font-semibold" style={{ color: 'var(--success)' }}>
+              <span className="font-semibold font-mono" style={{ color: 'var(--success)' }}>
                 {formatRate(generator.totalProduction)}
               </span>
             </div>
@@ -117,7 +122,7 @@ export function GeneratorCard({
               Cost:
             </span>
             <span
-              className="text-sm font-bold number-display"
+              className="text-sm font-bold font-mono number-display"
               style={{ color: canAfford ? 'var(--success)' : 'var(--error)' }}
             >
               {formatNumber(generator.cost)}
@@ -153,16 +158,17 @@ export function GeneratorCard({
             {generator.count > 0 && (
               <button
                 onClick={() => handleBuy(10)}
-                disabled={!canAfford}
+                disabled={!canAffordBulk}
                 className={`
                   px-3 py-2 rounded font-semibold text-sm
                   transition-all duration-150
                   focus-visible:outline-none focus-visible:ring-2 ring-accent
                   motion-reduce:transition-none
-                  ${canAfford ? "active:scale-95" : "cursor-not-allowed"}
-                  ${canAfford ? "btn-accent" : "btn-muted"}
+                  ${canAffordBulk ? "active:scale-95" : "cursor-not-allowed"}
+                  ${canAffordBulk ? "btn-accent" : "btn-muted"}
                 `}
                 aria-label={`Buy 10 ${generator.name}`}
+                title={!canAffordBulk ? `Need ${formatNumber(bulkCost)} Creds for ×10` : `Buy 10 for ${formatNumber(bulkCost)} Creds`}
               >
                 ×10
               </button>
@@ -172,7 +178,7 @@ export function GeneratorCard({
       ) : (
         <div className="text-center py-3">
           <div className="text-xs text-muted">
-            Reach {formatNumber(generator.baseCost)} Creds to unlock
+            Reach <span className="font-mono">{formatNumber(generator.baseCost)}</span> Creds to unlock
           </div>
         </div>
       )}

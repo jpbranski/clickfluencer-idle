@@ -502,6 +502,7 @@ export function removeExpiredEvents(state: GameState): GameState {
 /**
  * Process one game tick
  * - Generates followers from all generators
+ * - Processes notoriety gain and upkeep (v1.0.0)
  * - Unlocks generators based on follower count
  * - Removes expired events
  * - Updates statistics
@@ -512,6 +513,21 @@ export function tick(state: GameState, deltaTime: number): GameState {
   const secondsElapsed = deltaTime / 1000;
   const followersGained = followersPerSecond * secondsElapsed;
 
+  // Calculate notoriety upkeep and gain (v1.0.0)
+  let notorietyGained = 0;
+  let upkeepDrain = 0;
+
+  if (state.notoriety && state.notoriety.unlocked && state.notoriety.amount > 0) {
+    // Calculate upkeep drain (creds per second * seconds elapsed)
+    upkeepDrain = state.notoriety.amount * state.notoriety.upkeepRate * secondsElapsed;
+  }
+
+  // Only gain notoriety if we can afford the upkeep
+  const followersAfterGain = state.followers + followersGained;
+  if (state.notoriety && state.notoriety.unlocked && followersAfterGain >= upkeepDrain) {
+    notorietyGained = state.notoriety.basePerSec * secondsElapsed;
+  }
+
   // Update generators unlock status
   const newGenerators = state.generators.map((g) => {
     if (shouldUnlockGenerator(g, state.followers)) {
@@ -520,11 +536,15 @@ export function tick(state: GameState, deltaTime: number): GameState {
     return g;
   });
 
-  // Remove expired events
+  // Apply all changes
   let newState: GameState = {
     ...state,
-    followers: state.followers + followersGained,
+    followers: Math.max(0, followersAfterGain - upkeepDrain), // Never go negative
     generators: newGenerators,
+    notoriety: state.notoriety ? {
+      ...state.notoriety,
+      amount: state.notoriety.amount + notorietyGained,
+    } : state.notoriety,
     stats: {
       ...state.stats,
       totalFollowersEarned: state.stats.totalFollowersEarned + followersGained,
