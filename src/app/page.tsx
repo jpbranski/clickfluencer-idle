@@ -5,21 +5,28 @@ import { useGame } from "@/hooks/useGame";
 import PostButton from "@/components/PostButton";
 import { CurrencyBar } from "@/components/CurrencyBar";
 import { GeneratorCard } from "@/components/GeneratorCard";
+import { NotorietyGeneratorCard } from "@/components/NotorietyGeneratorCard";
 import { UpgradeCard } from "@/components/UpgradeCard";
 import { ThemeCard } from "@/components/ThemeCard";
 import { SettingsDialog } from "@/components/SettingsDialog";
 import { EventToasts } from "@/components/EventToasts";
 import { OfflineEarningsModal } from "@/components/OfflineEarningsModal";
 import { ShareButtons } from "@/components/ShareButtons";
-import { formatNumber } from "@/game/format";
-import { getGeneratorCost, canAfford, canAffordShards } from "@/game/state";
+import { formatNumber, formatRate } from "@/game/format";
+import {
+  getGeneratorCost,
+  canAfford,
+  canAffordShards,
+  getNotorietyGeneratorCost,
+  canPurchaseNotorietyGenerator,
+} from "@/game/state";
 import { getAwardDropRate, getUpgradeCost } from "@/game/actions";
 import { themes } from '@/data/themes';
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState<
-    "generators" | "upgrades" | "themes"
+    "generators" | "notoriety" | "upgrades" | "themes"
   >("generators");
   const [showSettings, setShowSettings] = useState(false);
 
@@ -28,9 +35,13 @@ export default function HomePage() {
     isLoading,
     clickPower,
     followersPerSecond,
+    notorietyPerSecond,
+    totalUpkeep,
+    netFollowersPerSecond,
     canPrestige,
     reputationGain,
     handleBuyGenerator,
+    handleBuyNotorietyGenerator,
     handleBuyUpgrade,
     handlePurchaseTheme,
     handleActivateTheme,
@@ -133,6 +144,10 @@ export default function HomePage() {
             awardDropRate={state ? getAwardDropRate(state) : 0.003}
             followersPerSecond={followersPerSecond}
             reputation={state.reputation}
+            notoriety={state.notoriety}
+            notorietyPerSecond={notorietyPerSecond}
+            totalUpkeep={totalUpkeep}
+            netFollowersPerSecond={netFollowersPerSecond}
           />
         </header>
 
@@ -185,7 +200,7 @@ export default function HomePage() {
           {/* Middle & Right Columns - Tabbed Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Tab Navigation */}
-            <div className="bg-card rounded-lg shadow-lg p-2 flex gap-2">
+            <div className="bg-card rounded-lg shadow-lg p-2 flex gap-2 flex-wrap">
               <button
                 onClick={() => setActiveTab("generators")}
                 className={`flex-1 px-4 py-3 rounded-lg font-semibold transition-colors ${
@@ -195,6 +210,16 @@ export default function HomePage() {
                 }`}
               >
                 📈 Generators
+              </button>
+              <button
+                onClick={() => setActiveTab("notoriety")}
+                className={`flex-1 px-4 py-3 rounded-lg font-semibold transition-colors ${
+                  activeTab === "notoriety"
+                    ? "bg-accent text-accent-foreground"
+                    : "hover:bg-surface text-foreground"
+                }`}
+              >
+                💀 Notoriety
               </button>
               <button
                 onClick={() => setActiveTab("upgrades")}
@@ -248,6 +273,111 @@ export default function HomePage() {
                         />
                       );
                     })}
+                  </div>
+                </div>
+              )}
+
+              {/* Notoriety Generators Tab */}
+              {activeTab === "notoriety" && (
+                <div>
+                  <h2 className="text-2xl font-bold mb-4 text-foreground">
+                    Notoriety Generators
+                  </h2>
+                  <p className="text-sm text-muted mb-4">
+                    Hire professionals to generate Notoriety over time. Each
+                    generator costs <strong>Followers</strong> to hire and requires{" "}
+                    <strong className="text-error">ongoing upkeep</strong> that
+                    drains your Followers/s.
+                  </p>
+                  <div className="mb-6 p-4 rounded-lg bg-warning/10 border border-warning/30">
+                    <div className="flex items-start gap-2 text-sm">
+                      <span className="text-warning text-xl">⚠️</span>
+                      <div>
+                        <div className="font-semibold text-warning mb-1">
+                          Warning: Upkeep System
+                        </div>
+                        <p className="text-muted">
+                          You cannot hire a generator if it would reduce your net
+                          Clout/s below 1. Manage your economy carefully!
+                        </p>
+                        <div className="mt-2 text-xs">
+                          <div>
+                            Current production:{" "}
+                            <span className="font-semibold text-success">
+                              +{formatRate(followersPerSecond)}
+                            </span>
+                          </div>
+                          <div>
+                            Current upkeep:{" "}
+                            <span className="font-semibold text-error">
+                              -{formatRate(totalUpkeep)}
+                            </span>
+                          </div>
+                          <div className="mt-1 font-bold">
+                            Net Clout/s:{" "}
+                            <span
+                              className={
+                                netFollowersPerSecond >= 10
+                                  ? "text-success"
+                                  : netFollowersPerSecond >= 1
+                                    ? "text-warning"
+                                    : "text-error"
+                              }
+                            >
+                              {formatRate(netFollowersPerSecond)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {state.notorietyGenerators.map((generator) => {
+                      const cost = getNotorietyGeneratorCost(generator);
+                      const totalNotorietyPerHour =
+                        generator.baseNotorietyPerSecond *
+                        3600 *
+                        generator.count;
+                      const totalUpkeepCost = generator.upkeep * generator.count;
+                      const purchaseCheck = canPurchaseNotorietyGenerator(
+                        state,
+                        generator.id
+                      );
+                      return (
+                        <NotorietyGeneratorCard
+                          key={generator.id}
+                          generator={{
+                            ...generator,
+                            cost,
+                            totalNotorietyPerHour,
+                            totalUpkeep: totalUpkeepCost,
+                          }}
+                          canAfford={canAfford(state.followers, cost)}
+                          riskLevel={purchaseCheck.riskLevel || "safe"}
+                          reason={purchaseCheck.reason}
+                          onBuy={() => handleBuyNotorietyGenerator(generator.id)}
+                          followersPerSecond={followersPerSecond}
+                          netFollowersPerSecond={netFollowersPerSecond}
+                          currentFollowers={state.followers}
+                        />
+                      );
+                    })}
+                  </div>
+                  <div className="mt-6 p-4 rounded-lg bg-surface border border-border">
+                    <div className="flex items-start gap-2 text-sm text-muted">
+                      <span className="text-accent">💡</span>
+                      <div>
+                        <div className="font-semibold text-foreground mb-1">
+                          About Notoriety:
+                        </div>
+                        <p>
+                          Notoriety is a strategic resource that accumulates slowly
+                          over time. Each generator can be hired up to 10 times,
+                          and their effects stack. Plan your economy carefully to
+                          balance production and upkeep!
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}

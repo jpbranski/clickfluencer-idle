@@ -25,6 +25,7 @@ import {
   Upgrade,
   Theme,
   RandomEvent,
+  NotorietyGenerator,
   getGeneratorCost,
   getClickPower,
   getFollowersPerSecond,
@@ -33,6 +34,11 @@ import {
   canAffordShards,
   getClickEventMultiplier,
   getCredCacheRate,
+  getNotorietyGeneratorCost,
+  getNotorietyPerSecond,
+  getTotalUpkeep,
+  canPurchaseNotorietyGenerator,
+  shouldUnlockNotorietyGenerator,
 } from "./state";
 import { executePrestige, resetForPrestige } from "./prestige";
 
@@ -457,6 +463,64 @@ export function activateTheme(state: GameState, themeId: string): ActionResult {
 }
 
 // ============================================================================
+// NOTORIETY GENERATOR ACTIONS
+// ============================================================================
+
+/**
+ * Purchase a notoriety generator
+ * - Deducts followers equal to cost
+ * - Increments generator count
+ * - Checks upkeep constraint (followers/s must stay above 1)
+ * - Updates statistics
+ */
+export function buyNotorietyGenerator(
+  state: GameState,
+  generatorId: string,
+): ActionResult {
+  const purchaseCheck = canPurchaseNotorietyGenerator(state, generatorId);
+
+  if (!purchaseCheck.canPurchase) {
+    return {
+      success: false,
+      state,
+      message: purchaseCheck.reason || "Cannot purchase generator",
+    };
+  }
+
+  const generator = state.notorietyGenerators.find((g) => g.id === generatorId);
+  if (!generator) {
+    return {
+      success: false,
+      state,
+      message: "Generator not found",
+    };
+  }
+
+  const cost = getNotorietyGeneratorCost(generator);
+
+  // Update generator count and deduct cost
+  const newNotorietyGenerators = state.notorietyGenerators.map((g) =>
+    g.id === generatorId ? { ...g, count: g.count + 1 } : g,
+  );
+
+  const newState: GameState = {
+    ...state,
+    followers: state.followers - cost,
+    notorietyGenerators: newNotorietyGenerators,
+    stats: {
+      ...state.stats,
+      totalGeneratorsPurchased: state.stats.totalGeneratorsPurchased + 1,
+    },
+  };
+
+  return {
+    success: true,
+    state: newState,
+    message: `Hired ${generator.name}`,
+  };
+}
+
+// ============================================================================
 // EVENT ACTIONS
 // ============================================================================
 
@@ -501,7 +565,8 @@ export function removeExpiredEvents(state: GameState): GameState {
 
 /**
  * Process one game tick
- * - Generates followers from all generators
+ * - Generates followers from all generators (minus upkeep)
+ * - Generates notoriety from notoriety generators
  * - Unlocks generators based on follower count
  * - Removes expired events
  * - Updates statistics
@@ -509,8 +574,14 @@ export function removeExpiredEvents(state: GameState): GameState {
 export function tick(state: GameState, deltaTime: number): GameState {
   // Calculate followers generated this tick
   const followersPerSecond = getFollowersPerSecond(state);
+  const upkeep = getTotalUpkeep(state);
+  const netFollowersPerSecond = followersPerSecond - upkeep;
   const secondsElapsed = deltaTime / 1000;
-  const followersGained = followersPerSecond * secondsElapsed;
+  const followersGained = netFollowersPerSecond * secondsElapsed;
+
+  // Calculate notoriety generated this tick
+  const notorietyPerSecond = getNotorietyPerSecond(state);
+  const notorietyGained = notorietyPerSecond * secondsElapsed;
 
   // Update generators unlock status
   const newGenerators = state.generators.map((g) => {
@@ -520,14 +591,24 @@ export function tick(state: GameState, deltaTime: number): GameState {
     return g;
   });
 
+  // Update notoriety generators unlock status
+  const newNotorietyGenerators = state.notorietyGenerators.map((ng) => {
+    if (shouldUnlockNotorietyGenerator(ng, state.followers)) {
+      return { ...ng, unlocked: true };
+    }
+    return ng;
+  });
+
   // Remove expired events
   let newState: GameState = {
     ...state,
     followers: state.followers + followersGained,
+    notoriety: state.notoriety + notorietyGained,
     generators: newGenerators,
+    notorietyGenerators: newNotorietyGenerators,
     stats: {
       ...state.stats,
-      totalFollowersEarned: state.stats.totalFollowersEarned + followersGained,
+      totalFollowersEarned: state.stats.totalFollowersEarned + Math.max(0, followersGained),
       lastTickTime: Date.now(),
     },
   };

@@ -35,6 +35,7 @@ import {
   activateTheme,
   prestige,
   updateSetting,
+  buyNotorietyGenerator,
   ActionResult,
 } from "@/game/actions";
 import {
@@ -43,6 +44,9 @@ import {
   getGeneratorCost,
   canAfford,
   canAffordShards,
+  getNotorietyPerSecond,
+  getTotalUpkeep,
+  getNetFollowersPerSecond,
 } from "@/game/state";
 import { canPrestige, calculateReputationGain } from "@/game/prestige";
 import {
@@ -98,11 +102,15 @@ interface GameContextValue {
 
   clickPower: number;
   followersPerSecond: number;
+  notorietyPerSecond: number;
+  totalUpkeep: number;
+  netFollowersPerSecond: number;
   canPrestige: boolean;
   reputationGain: number;
 
   handleClick: () => void;
   handleBuyGenerator: (generatorId: string, count?: number) => void;
+  handleBuyNotorietyGenerator: (generatorId: string) => void;
   handleBuyUpgrade: (upgradeId: string) => void;
   handlePurchaseTheme: (themeId: string) => void;
   handleActivateTheme: (themeId: string) => void;
@@ -338,6 +346,9 @@ export function GameProvider({ children }: GameProviderProps) {
 
   const clickPower = state ? getClickPower(state) : 0;
   const followersPerSecond = state ? getFollowersPerSecond(state) : 0;
+  const notorietyPerSecond = state ? getNotorietyPerSecond(state) : 0;
+  const totalUpkeep = state ? getTotalUpkeep(state) : 0;
+  const netFollowersPerSecond = state ? getNetFollowersPerSecond(state) : 0;
   const canPrestigeNow = state ? canPrestige(state.followers) : false;
   const reputationGain = state ? calculateReputationGain(state.followers) : 0;
 
@@ -361,6 +372,16 @@ export function GameProvider({ children }: GameProviderProps) {
         }
         return result;
       });
+    },
+    [state]
+  );
+
+  const handleBuyNotorietyGenerator = useCallback(
+    (generatorId: string) => {
+      if (!engineRef.current || !state) return;
+      engineRef.current.executeAction((currentState) =>
+        buyNotorietyGenerator(currentState, generatorId)
+      );
     },
     [state]
   );
@@ -468,10 +489,14 @@ export function GameProvider({ children }: GameProviderProps) {
     error,
     clickPower,
     followersPerSecond,
+    notorietyPerSecond,
+    totalUpkeep,
+    netFollowersPerSecond,
     canPrestige: canPrestigeNow,
     reputationGain,
     handleClick,
     handleBuyGenerator,
+    handleBuyNotorietyGenerator,
     handleBuyUpgrade,
     handlePurchaseTheme,
     handleActivateTheme,
