@@ -8,7 +8,7 @@
  * - Awards (Premium currency from drops)
  */
 
-import { formatNumber, formatNumberCompact } from "@/game/format";
+import { formatNumber, formatNumberCompact, formatRate } from "@/game/format";
 
 interface CurrencyBarProps {
   followers: number;
@@ -16,8 +16,10 @@ interface CurrencyBarProps {
   followersPerSecond: number;
   awardDropRate?: number;
   reputation: number;
-  notoriety?: number; // v1.0.0
-  notorietyPerSecond?: number; // v1.0.0
+  notoriety?: number;
+  notorietyPerSecond?: number;
+  totalUpkeep?: number;
+  netFollowersPerSecond?: number;
   compact?: boolean;
 }
 
@@ -29,8 +31,11 @@ export function CurrencyBar({
   reputation,
   notoriety = 0,
   notorietyPerSecond = 0,
+  totalUpkeep = 0,
+  netFollowersPerSecond,
   compact = false,
 }: CurrencyBarProps) {
+  const displayFollowersPerSecond = netFollowersPerSecond !== undefined ? netFollowersPerSecond : followersPerSecond;
   return (
     <div className="w-full">
       <div

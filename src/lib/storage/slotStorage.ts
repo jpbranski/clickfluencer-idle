@@ -241,7 +241,7 @@ export function getSlotInfo(saveSystem: SaveSystemState, slotId: 1 | 2 | 3) {
     ...slot,
     followers: game.followers,
     reputation: game.reputation,
-    notoriety: game.notoriety.amount,
+    notoriety: game.notoriety || 0,
     prestigeCount: game.stats.prestigeCount,
     totalPlayTime: game.stats.playTime + (Date.now() - game.stats.runStartTime),
   };
@@ -260,13 +260,10 @@ function migrateLegacySave(legacyGame: GameState): SaveSystemState {
   // Ensure legacy save has all new fields with defaults
   const migratedGame: GameState = {
     ...legacyGame,
-    // Add notoriety if missing
-    notoriety: legacyGame.notoriety || {
-      amount: 0,
-      basePerSec: 0.0007,
-      upkeepRate: 0.02,
-      unlocked: true,
-    },
+    // Add notoriety if missing (convert old format to new simple number format)
+    notoriety: typeof legacyGame.notoriety === 'number' ? legacyGame.notoriety : 0,
+    // Add notoriety generators if missing
+    notorietyGenerators: legacyGame.notorietyGenerators || [],
     // Add achievements if missing
     achievements: legacyGame.achievements || [],
     // Update version

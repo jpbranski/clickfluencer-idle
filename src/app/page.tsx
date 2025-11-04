@@ -31,10 +31,14 @@ export default function HomePage() {
     isLoading,
     clickPower,
     followersPerSecond,
+    notorietyPerSecond,
+    totalUpkeep,
+    netFollowersPerSecond,
     canPrestige,
     reputationGain,
     prestigeCost,
     handleBuyGenerator,
+    handleBuyNotorietyGenerator,
     handleBuyUpgrade,
     handlePurchaseTheme,
     handleActivateTheme,
@@ -122,12 +126,10 @@ export default function HomePage() {
       awardDropRate={state ? getAwardDropRate(state) : 0.003}
       followersPerSecond={followersPerSecond}
       reputation={state.reputation}
-      notoriety={state.notoriety?.amount || 0}
-      notorietyPerSecond={state.notoriety?.unlocked ? (
-        state.followers >= (state.notoriety.amount * state.notoriety.upkeepRate)
-          ? state.notoriety.basePerSec
-          : 0
-      ) : 0}
+      notoriety={state.notoriety}
+      notorietyPerSecond={notorietyPerSecond}
+      totalUpkeep={totalUpkeep}
+      netFollowersPerSecond={netFollowersPerSecond}
     />
   );
 
@@ -180,7 +182,7 @@ export default function HomePage() {
       reputation={state.reputation}
       onBuyUpgrade={handleBuyUpgrade}
       onPrestige={handlePrestige}
-      notoriety={state.notoriety?.amount || 0}
+      notoriety={state.notoriety || 0}
     />
   );
 
