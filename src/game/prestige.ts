@@ -167,13 +167,15 @@ export function applyPrestige(
     // Preserve infinite upgrades
     upgrades: preservedUpgrades,
 
-    // Reset notoriety amount but keep structure
-    notoriety: {
-      ...state.notoriety,
-      amount: 0,
-    },
+    // Reset notoriety to 0
+    notoriety: 0,
 
-    // Preserve achievements
+    // Reset notoriety generators
+    notorietyGenerators: state.notorietyGenerators
+      ? state.notorietyGenerators.map((ng) => ({ ...ng, count: 0 }))
+      : [],
+
+    // Preserve achievements (if they exist)
     achievements: state.achievements,
 
     // Update statistics

@@ -356,6 +356,9 @@ export function GameProvider({ children }: GameProviderProps) {
 
   const clickPower = state ? getClickPower(state) : 0;
   const followersPerSecond = state ? getFollowersPerSecond(state) : 0;
+  const notorietyPerSecond = state ? getNotorietyPerSecond(state) : 0;
+  const totalUpkeep = state ? getTotalUpkeep(state) : 0;
+  const netFollowersPerSecond = state ? getNetFollowersPerSecond(state) : 0;
   const canPrestigeNow = state ? canPrestige(state.followers, state.reputation) : false;
   const reputationGain = 1; // Always gain 1 prestige point per purchase
   const prestigeCostValue = state ? prestigeCost(state.reputation) : 0;
