@@ -48,7 +48,7 @@ import {
   getTotalUpkeep,
   getNetFollowersPerSecond,
 } from "@/game/state";
-import { canPrestige, calculateReputationGain } from "@/game/prestige";
+import { canPrestige, prestigeCost } from "@/game/prestige";
 import {
   saveGame,
   loadGame,
@@ -107,6 +107,7 @@ interface GameContextValue {
   netFollowersPerSecond: number;
   canPrestige: boolean;
   reputationGain: number;
+  prestigeCost: number;
 
   handleClick: () => void;
   handleBuyGenerator: (generatorId: string, count?: number) => void;
@@ -355,11 +356,9 @@ export function GameProvider({ children }: GameProviderProps) {
 
   const clickPower = state ? getClickPower(state) : 0;
   const followersPerSecond = state ? getFollowersPerSecond(state) : 0;
-  const notorietyPerSecond = state ? getNotorietyPerSecond(state) : 0;
-  const totalUpkeep = state ? getTotalUpkeep(state) : 0;
-  const netFollowersPerSecond = state ? getNetFollowersPerSecond(state) : 0;
-  const canPrestigeNow = state ? canPrestige(state.followers) : false;
-  const reputationGain = state ? calculateReputationGain(state.followers) : 0;
+  const canPrestigeNow = state ? canPrestige(state.followers, state.reputation) : false;
+  const reputationGain = 1; // Always gain 1 prestige point per purchase
+  const prestigeCostValue = state ? prestigeCost(state.reputation) : 0;
 
   // ============================================================================
   // ACTIONS
@@ -503,6 +502,7 @@ export function GameProvider({ children }: GameProviderProps) {
     netFollowersPerSecond,
     canPrestige: canPrestigeNow,
     reputationGain,
+    prestigeCost: prestigeCostValue,
     handleClick,
     handleBuyGenerator,
     handleBuyNotorietyGenerator,
