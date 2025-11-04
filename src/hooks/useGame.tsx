@@ -192,6 +192,15 @@ export function GameProvider({ children }: GameProviderProps) {
           initialState.upgrades = mergeUpgrades();
         }
 
+        // ✅ Initialize notoriety and notoriety generators if missing (for backward compatibility)
+        if (!initialState.notoriety) {
+          initialState.notoriety = 0;
+        }
+        if (!initialState.notorietyGenerators) {
+          const { INITIAL_NOTORIETY_GENERATORS } = await import("@/game/state");
+          initialState.notorietyGenerators = INITIAL_NOTORIETY_GENERATORS.map((ng) => ({ ...ng }));
+        }
+
         if (!mounted) return;
 
         // ✅ Create engine only once

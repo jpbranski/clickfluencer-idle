@@ -332,7 +332,7 @@ export default function HomePage() {
                     </div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {state.notorietyGenerators.map((generator) => {
+                    {(state.notorietyGenerators || []).map((generator) => {
                       const cost = getNotorietyGeneratorCost(generator);
                       const totalNotorietyPerHour =
                         generator.baseNotorietyPerSecond *

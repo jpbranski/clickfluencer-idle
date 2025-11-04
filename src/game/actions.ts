@@ -477,6 +477,14 @@ export function buyNotorietyGenerator(
   state: GameState,
   generatorId: string,
 ): ActionResult {
+  if (!state.notorietyGenerators) {
+    return {
+      success: false,
+      state,
+      message: "Notoriety generators not available",
+    };
+  }
+
   const purchaseCheck = canPurchaseNotorietyGenerator(state, generatorId);
 
   if (!purchaseCheck.canPurchase) {
@@ -592,18 +600,20 @@ export function tick(state: GameState, deltaTime: number): GameState {
   });
 
   // Update notoriety generators unlock status
-  const newNotorietyGenerators = state.notorietyGenerators.map((ng) => {
-    if (shouldUnlockNotorietyGenerator(ng, state.followers)) {
-      return { ...ng, unlocked: true };
-    }
-    return ng;
-  });
+  const newNotorietyGenerators = state.notorietyGenerators
+    ? state.notorietyGenerators.map((ng) => {
+        if (shouldUnlockNotorietyGenerator(ng, state.followers)) {
+          return { ...ng, unlocked: true };
+        }
+        return ng;
+      })
+    : [];
 
   // Remove expired events
   let newState: GameState = {
     ...state,
     followers: state.followers + followersGained,
-    notoriety: state.notoriety + notorietyGained,
+    notoriety: (state.notoriety || 0) + notorietyGained,
     generators: newGenerators,
     notorietyGenerators: newNotorietyGenerators,
     stats: {

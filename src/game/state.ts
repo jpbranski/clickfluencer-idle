@@ -108,13 +108,13 @@ export interface GameState {
   followers: number;
   shards: number; // Awards (premium currency from random drops)
   reputation: number; // Prestige currency
-  notoriety: number; // Strategic drain resource from Notoriety Generators
+  notoriety?: number; // Strategic drain resource from Notoriety Generators
 
   // Generators (content creation systems)
   generators: Generator[];
 
   // Notoriety Generators (strategic resource with upkeep)
-  notorietyGenerators: NotorietyGenerator[];
+  notorietyGenerators?: NotorietyGenerator[];
 
   // Upgrades (permanent improvements)
   upgrades: Upgrade[];
@@ -607,6 +607,8 @@ export function getNotorietyGeneratorCost(generator: NotorietyGenerator): number
  * Calculate total notoriety per second from all notoriety generators
  */
 export function getNotorietyPerSecond(state: GameState): number {
+  if (!state.notorietyGenerators) return 0;
+
   let total = 0;
 
   state.notorietyGenerators.forEach((generator) => {
@@ -621,6 +623,8 @@ export function getNotorietyPerSecond(state: GameState): number {
  * Calculate total upkeep cost (followers per second) from all notoriety generators
  */
 export function getTotalUpkeep(state: GameState): number {
+  if (!state.notorietyGenerators) return 0;
+
   let total = 0;
 
   state.notorietyGenerators.forEach((generator) => {
@@ -648,6 +652,10 @@ export function canPurchaseNotorietyGenerator(
   state: GameState,
   generatorId: string,
 ): { canPurchase: boolean; reason?: string; riskLevel?: "safe" | "risky" | "blocked" } {
+  if (!state.notorietyGenerators) {
+    return { canPurchase: false, reason: "Notoriety generators not available" };
+  }
+
   const generator = state.notorietyGenerators.find((g) => g.id === generatorId);
 
   if (!generator) {
