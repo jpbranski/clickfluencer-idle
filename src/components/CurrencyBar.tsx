@@ -35,6 +35,10 @@ export function CurrencyBar({
   netFollowersPerSecond,
   compact = false,
 }: CurrencyBarProps) {
+  // Ensure numeric values with fallbacks for undefined/null
+  const safeNotoriety = typeof notoriety === 'number' ? notoriety : 0;
+  const safeNotorietyPerSecond = typeof notorietyPerSecond === 'number' ? notorietyPerSecond : 0;
+
   const displayFollowersPerSecond = netFollowersPerSecond !== undefined ? netFollowersPerSecond : followersPerSecond;
   return (
     <div className="w-full">
@@ -149,16 +153,16 @@ export function CurrencyBar({
             </div>
             <div
               className="text-lg font-bold font-mono number-display truncate text-accent"
-              aria-label={`${notoriety.toFixed(3)} notoriety`}
+              aria-label={`${safeNotoriety.toFixed(3)} notoriety`}
             >
-              {notoriety.toFixed(2)}
+              {safeNotoriety.toFixed(2)}
             </div>
-            {notorietyPerSecond > 0 && (
+            {safeNotorietyPerSecond > 0 && (
               <div className="text-xs text-success font-mono">
-                +{notorietyPerSecond.toFixed(3)}/s
+                +{safeNotorietyPerSecond.toFixed(3)}/s
               </div>
             )}
-            {notorietyPerSecond === 0 && notoriety > 0 && (
+            {safeNotorietyPerSecond === 0 && safeNotoriety > 0 && (
               <div className="text-xs text-warning font-mono">
                 Paused (no creds)
               </div>
@@ -176,7 +180,7 @@ export function CurrencyBar({
           <span className="mx-2">•</span>
           <span>Awards: {shards}</span>
           <span className="mx-2">•</span>
-          <span>Notoriety: {notoriety.toFixed(2)}</span>
+          <span>Notoriety: {safeNotoriety.toFixed(2)}</span>
         </div>
       )}
     </div>
