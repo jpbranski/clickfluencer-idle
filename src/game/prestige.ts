@@ -170,10 +170,10 @@ export function applyPrestige(
     // Preserve achievements (if they exist)
     achievements: state.achievements,
 
-    // Preserve notoriety system (prestige-tier meta resource)
+    // Preserve notoriety system (currency persists, generators reset)
     notoriety: state.notoriety || 0,
-    notorietyGenerators: state.notorietyGenerators || [],
-    notorietyUpgrades: state.notorietyUpgrades || {},
+    notorietyGenerators: { smm: 0, pr_team: 0, key_client: 0 }, // Reset generators
+    notorietyUpgrades: state.notorietyUpgrades || {}, // Preserve all upgrades
 
     // Update statistics
     stats: {
