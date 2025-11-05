@@ -45,10 +45,12 @@ import {
   getGeneratorCost,
   canAfford,
   canAffordShards,
-  getNotorietyPerSecond,
-  getTotalUpkeep,
-  getNetFollowersPerSecond,
 } from "@/game/state";
+import {
+  getNotorietyGainPerSecond,
+  getNotorietyGainPerHour,
+  getTotalUpkeep as getNotorietyUpkeep,
+} from "@/game/logic/notorietyLogic";
 import { canPrestige, prestigeCost } from "@/game/prestige";
 import {
   saveGame,
@@ -149,8 +151,6 @@ interface GameContextValue {
   handleExportSave: () => void;
   handleImportSave: (data: string) => void;
   handleResetGame: () => void;
-  handleBuyNotorietyGenerator: (generatorId: string) => void;
-  handleBuyNotorietyUpgrade: (upgradeId: string) => void;
 
   currentTheme: string;
   setTheme: (themeId: string) => void;
@@ -229,8 +229,11 @@ export function GameProvider({ children }: GameProviderProps) {
           initialState.notoriety = 0;
         }
         if (!initialState.notorietyGenerators) {
-          const { INITIAL_NOTORIETY_GENERATORS } = await import("@/game/state");
-          initialState.notorietyGenerators = INITIAL_NOTORIETY_GENERATORS.map((ng) => ({ ...ng }));
+          initialState.notorietyGenerators = {
+            smm: 0,
+            pr_team: 0,
+            key_client: 0,
+          };
         }
         if (!initialState.notorietyUpgrades) {
           initialState.notorietyUpgrades = ensureNotorietyUpgrades();
@@ -390,9 +393,9 @@ export function GameProvider({ children }: GameProviderProps) {
 
   const clickPower = state ? getClickPower(state) : 0;
   const followersPerSecond = state ? getFollowersPerSecond(state) : 0;
-  const notorietyPerSecond = state ? getNotorietyPerSecond(state) : 0;
-  const totalUpkeep = state ? getTotalUpkeep(state) : 0;
-  const netFollowersPerSecond = state ? getNetFollowersPerSecond(state) : 0;
+  const notorietyPerSecond = state ? getNotorietyGainPerSecond(state.notorietyGenerators) : 0;
+  const totalUpkeep = state ? getNotorietyUpkeep(state.notorietyGenerators) : 0;
+  const netFollowersPerSecond = state ? followersPerSecond - totalUpkeep : 0;
   const canPrestigeNow = state ? canPrestige(state.followers, state.reputation) : false;
   const reputationGain = 1; // Always gain 1 prestige point per purchase
   const prestigeCostValue = state ? prestigeCost(state.reputation) : 0;
@@ -530,26 +533,6 @@ export function GameProvider({ children }: GameProviderProps) {
     }
   }, []);
 
-  const handleBuyNotorietyGenerator = useCallback(
-    (generatorId: string) => {
-      if (!engineRef.current || !state) return;
-      engineRef.current.executeAction((currentState) =>
-        buyNotorietyGenerator(currentState, generatorId)
-      );
-    },
-    [state]
-  );
-
-  const handleBuyNotorietyUpgrade = useCallback(
-    (upgradeId: string) => {
-      if (!engineRef.current || !state) return;
-      engineRef.current.executeAction((currentState) =>
-        buyNotorietyUpgrade(currentState, upgradeId)
-      );
-    },
-    [state]
-  );
-
   const dismissOfflineProgress = useCallback(() => {
     setOfflineProgress(null);
   }, []);
@@ -582,8 +565,6 @@ export function GameProvider({ children }: GameProviderProps) {
     handleExportSave,
     handleImportSave,
     handleResetGame,
-    handleBuyNotorietyGenerator,
-    handleBuyNotorietyUpgrade,
     currentTheme,
     setTheme,
     offlineProgress,
