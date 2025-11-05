@@ -18,6 +18,7 @@ import {
   NOTORIETY_BASE_PER_SEC,
   NOTORIETY_UPKEEP_PER_SEC,
 } from "./balance";
+import { NotorietyState } from "./logic/notorietyLogic";
 export interface Generator {
   id: string;
   name: string;
@@ -77,6 +78,7 @@ export interface Theme {
   unlocked: boolean;
   active: boolean;
   bonusMultiplier: number; // required for gameplay bonuses
+  bonusClickPower?: number; // optional bonus to click power
 }
 
 export interface RandomEvent {
@@ -120,13 +122,13 @@ export interface GameState {
   followers: number;
   shards: number; // Awards (premium currency from random drops)
   reputation: number; // Prestige currency
-  notoriety?: number; // Strategic drain resource from Notoriety Generators
+  notoriety: number; // Strategic drain resource from Notoriety Generators
 
   // Generators (content creation systems)
   generators: Generator[];
 
   // Notoriety Generators (strategic resource with upkeep)
-  notorietyGenerators?: NotorietyGenerator[];
+  notorietyGenerators: NotorietyState;
 
   // Upgrades (permanent improvements)
   upgrades: Upgrade[];
@@ -252,8 +254,8 @@ export const INITIAL_GENERATORS: Generator[] = [
     id: "agency",
     name: "🏢 Talent Agency",
     count: 0,
-    baseFollowersPerSecond: 1400.0,
-    baseCost: 1400000,
+    baseFollowersPerSecond: 1500.0,
+    baseCost: 750000,
     costMultiplier: 1.1,
     unlocked: false,
   },
@@ -435,16 +437,7 @@ export function createInitialState(): GameState {
     reputation: 0,
     notoriety: 0,
     generators: INITIAL_GENERATORS.map((g) => ({ ...g })),
-    notorietyGenerators: INITIAL_NOTORIETY_GENERATORS.map((ng) => ({ ...ng })),
     upgrades: INITIAL_UPGRADES.map((u) => ({ ...u })),
-    notorietyUpgrades: {
-      cache_value: 0,
-      drama_boost: 0,
-      buy_creds: 0,
-      cred_boost: 0,
-      notoriety_boost: 0,
-      influencer_endorsement: 0,
-    },
     activeEvents: [],
     stats: {
       totalClicks: 0,
@@ -456,6 +449,19 @@ export function createInitialState(): GameState {
       playTime: 0,
       lastTickTime: now,
       runStartTime: now,
+    },
+    notorietyGenerators: {
+      smm: 0,
+      pr_team: 0,
+      key_client: 0,
+    },
+    notorietyUpgrades: {
+      cache_value: 0,
+      drama_boost: 0,
+      buy_creds: 0,
+      cred_boost: 0,
+      notoriety_boost: 0,
+      influencer_endorsement: 0,
     },
     settings: {
       autoSave: true,
@@ -513,6 +519,12 @@ export function getClickPower(state: GameState): number {
       basePower += u.effect.value;
     });
 
+  // Apply active theme click power bonus (additive to base power)
+  const activeTheme = state.themes.find((t) => t.active);
+  if (activeTheme && activeTheme.bonusClickPower) {
+    basePower += activeTheme.bonusClickPower;
+  }
+
   let power = basePower;
 
   // Apply click multiplier upgrades
@@ -542,8 +554,7 @@ export function getClickPower(state: GameState): number {
   // Apply reputation bonus (+10% per reputation point)
   power *= 1 + state.reputation * 0.1;
 
-  // Apply active theme bonus (only the active theme)
-  const activeTheme = state.themes.find((t) => t.active);
+  // Apply active theme multiplier bonus (only the active theme)
   if (activeTheme) {
     power *= activeTheme.bonusMultiplier;
   }
@@ -732,122 +743,3 @@ export function getCredCachePayoutMultiplier(state: GameState): number {
   return 1 + cacheValueLevel * 0.05;
 }
 
-// ============================================================================
-// NOTORIETY GENERATOR SELECTORS
-// ============================================================================
-
-/**
- * Calculate the current cost of purchasing a notoriety generator
- * Uses exponential scaling: baseCost * (costMultiplier ^ count)
- */
-export function getNotorietyGeneratorCost(generator: NotorietyGenerator): number {
-  return Math.floor(
-    generator.baseCost * Math.pow(generator.costMultiplier, generator.count),
-  );
-}
-
-/**
- * Calculate total notoriety per second from all notoriety generators
- */
-export function getNotorietyPerSecond(state: GameState): number {
-  if (!state.notorietyGenerators) return 0;
-
-  let total = 0;
-
-  state.notorietyGenerators.forEach((generator) => {
-    if (generator.count === 0) return;
-    total += generator.baseNotorietyPerSecond * generator.count;
-  });
-
-  return total;
-}
-
-/**
- * Calculate total upkeep cost (followers per second) from all notoriety generators
- */
-export function getTotalUpkeep(state: GameState): number {
-  if (!state.notorietyGenerators) return 0;
-
-  let total = 0;
-
-  state.notorietyGenerators.forEach((generator) => {
-    if (generator.count === 0) return;
-    total += generator.upkeep * generator.count;
-  });
-
-  return total;
-}
-
-/**
- * Calculate net followers per second (production - upkeep)
- */
-export function getNetFollowersPerSecond(state: GameState): number {
-  const production = getFollowersPerSecond(state);
-  const upkeep = getTotalUpkeep(state);
-  return production - upkeep;
-}
-
-/**
- * Check if a notoriety generator can be purchased without dropping followers/s below 1
- * Returns an object with canPurchase boolean and reason
- */
-export function canPurchaseNotorietyGenerator(
-  state: GameState,
-  generatorId: string,
-): { canPurchase: boolean; reason?: string; riskLevel?: "safe" | "risky" | "blocked" } {
-  if (!state.notorietyGenerators) {
-    return { canPurchase: false, reason: "Notoriety generators not available" };
-  }
-
-  const generator = state.notorietyGenerators.find((g) => g.id === generatorId);
-
-  if (!generator) {
-    return { canPurchase: false, reason: "Generator not found" };
-  }
-
-  if (!generator.unlocked) {
-    return { canPurchase: false, reason: "Not unlocked yet" };
-  }
-
-  if (generator.count >= generator.maxLevel) {
-    return { canPurchase: false, reason: "Maximum level reached" };
-  }
-
-  const cost = getNotorietyGeneratorCost(generator);
-  if (!canAfford(state.followers, cost)) {
-    return { canPurchase: false, reason: "Not enough followers" };
-  }
-
-  // Check upkeep constraint
-  const currentFollowersPerSecond = getFollowersPerSecond(state);
-  const currentUpkeep = getTotalUpkeep(state);
-  const newUpkeep = currentUpkeep + generator.upkeep;
-  const netFollowersPerSecond = currentFollowersPerSecond - newUpkeep;
-
-  if (netFollowersPerSecond < 1) {
-    return {
-      canPurchase: false,
-      reason: "You can't hire this — your Clout/s would drop below 1!",
-      riskLevel: "blocked",
-    };
-  }
-
-  // Determine risk level
-  if (netFollowersPerSecond < 10) {
-    return { canPurchase: true, riskLevel: "risky" };
-  }
-
-  return { canPurchase: true, riskLevel: "safe" };
-}
-
-/**
- * Check if a notoriety generator should be unlocked based on followers
- * Unlock thresholds are equal to the base cost
- */
-export function shouldUnlockNotorietyGenerator(
-  generator: NotorietyGenerator,
-  followers: number,
-): boolean {
-  if (generator.unlocked) return false;
-  return followers >= generator.baseCost * 0.5; // Unlock at 50% of base cost
-}

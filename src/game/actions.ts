@@ -25,7 +25,6 @@ import {
   Upgrade,
   Theme,
   RandomEvent,
-  NotorietyGenerator,
   getGeneratorCost,
   getClickPower,
   getFollowersPerSecond,
@@ -35,11 +34,6 @@ import {
   getClickEventMultiplier,
   getCredCacheRate,
   getCredCachePayoutMultiplier,
-  getNotorietyGeneratorCost,
-  getNotorietyPerSecond,
-  getTotalUpkeep,
-  canPurchaseNotorietyGenerator,
-  shouldUnlockNotorietyGenerator,
 } from "./state";
 import { executePrestige, applyPrestige } from "./prestige";
 import {
@@ -47,7 +41,15 @@ import {
   getUpgradeCost as getNotorietyUpgradeCost,
   canAffordUpgrade as canAffordNotorietyUpgrade,
   applyUpgradeEffect,
+  NOTORIETY_UPGRADES,
 } from "./upgrades/notorietyUpgrades";
+import { NOTORIETY_GENERATORS } from "./generators/notorietyGenerators";
+import {
+  calculateGeneratorCost,
+  canPurchaseGenerator,
+  getNotorietyGainPerSecond,
+  getTotalUpkeep as getNotorietyUpkeep,
+} from "./logic/notorietyLogic";
 
 // ============================================================================
 // CONSTANTS
@@ -473,72 +475,6 @@ export function activateTheme(state: GameState, themeId: string): ActionResult {
 }
 
 // ============================================================================
-// NOTORIETY GENERATOR ACTIONS
-// ============================================================================
-
-/**
- * Purchase a notoriety generator
- * - Deducts followers equal to cost
- * - Increments generator count
- * - Checks upkeep constraint (followers/s must stay above 1)
- * - Updates statistics
- */
-export function buyNotorietyGenerator(
-  state: GameState,
-  generatorId: string,
-): ActionResult {
-  if (!state.notorietyGenerators) {
-    return {
-      success: false,
-      state,
-      message: "Notoriety generators not available",
-    };
-  }
-
-  const purchaseCheck = canPurchaseNotorietyGenerator(state, generatorId);
-
-  if (!purchaseCheck.canPurchase) {
-    return {
-      success: false,
-      state,
-      message: purchaseCheck.reason || "Cannot purchase generator",
-    };
-  }
-
-  const generator = state.notorietyGenerators.find((g) => g.id === generatorId);
-  if (!generator) {
-    return {
-      success: false,
-      state,
-      message: "Generator not found",
-    };
-  }
-
-  const cost = getNotorietyGeneratorCost(generator);
-
-  // Update generator count and deduct cost
-  const newNotorietyGenerators = state.notorietyGenerators.map((g) =>
-    g.id === generatorId ? { ...g, count: g.count + 1 } : g,
-  );
-
-  const newState: GameState = {
-    ...state,
-    followers: state.followers - cost,
-    notorietyGenerators: newNotorietyGenerators,
-    stats: {
-      ...state.stats,
-      totalGeneratorsPurchased: state.stats.totalGeneratorsPurchased + 1,
-    },
-  };
-
-  return {
-    success: true,
-    state: newState,
-    message: `Hired ${generator.name}`,
-  };
-}
-
-// ============================================================================
 // EVENT ACTIONS
 // ============================================================================
 
@@ -579,73 +515,6 @@ export function removeExpiredEvents(state: GameState): GameState {
 
 
 // ============================================================================
-// NOTORIETY UPGRADE ACTIONS
-// ============================================================================
-
-/**
- * Purchase a notoriety upgrade
- * - Deducts notoriety equal to cost
- * - Increments upgrade level
- * - Applies upgrade effect
- */
-export function buyNotorietyUpgrade(
-  state: GameState,
-  upgradeId: string
-): ActionResult {
-  const upgrade = getNotorietyUpgradeById(upgradeId);
-
-  if (!upgrade) {
-    return {
-      success: false,
-      state,
-      message: "Upgrade not found",
-    };
-  }
-
-  const currentLevel = state.notorietyUpgrades[upgradeId] || 0;
-  const currentNotoriety = state.notoriety || 0;
-
-  // Check max level
-  if (currentLevel >= upgrade.cap) {
-    return {
-      success: false,
-      state,
-      message: "Already at max level",
-    };
-  }
-
-  // Check if can afford
-  if (!canAffordNotorietyUpgrade(currentNotoriety, upgrade, currentLevel)) {
-    return {
-      success: false,
-      state,
-      message: "Not enough notoriety",
-    };
-  }
-
-  const cost = getNotorietyUpgradeCost(upgrade, currentLevel);
-
-  // Apply upgrade effect and get state changes
-  const effectChanges = applyUpgradeEffect(state, upgrade);
-
-  const newState: GameState = {
-    ...state,
-    ...effectChanges,
-    notoriety: currentNotoriety - cost,
-    notorietyUpgrades: {
-      ...state.notorietyUpgrades,
-      [upgradeId]: currentLevel + 1,
-    },
-  };
-
-  return {
-    success: true,
-    state: newState,
-    message: `Purchased ${upgrade.name}`,
-  };
-}
-
-// ============================================================================
 // TICK ACTION
 // ============================================================================
 
@@ -658,15 +527,20 @@ export function buyNotorietyUpgrade(
  * - Updates statistics
  */
 export function tick(state: GameState, deltaTime: number): GameState {
+  const secondsElapsed = deltaTime / 1000;
+
   // Calculate followers generated this tick
   const followersPerSecond = getFollowersPerSecond(state);
-  const upkeep = getTotalUpkeep(state);
-  const netFollowersPerSecond = followersPerSecond - upkeep;
-  const secondsElapsed = deltaTime / 1000;
+
+  // Calculate upkeep cost from notoriety generators
+  const upkeepPerSecond = getNotorietyUpkeep(state.notorietyGenerators);
+
+  // Net followers after upkeep
+  const netFollowersPerSecond = followersPerSecond - upkeepPerSecond;
   const followersGained = netFollowersPerSecond * secondsElapsed;
 
-  // Calculate notoriety generated this tick
-  const notorietyPerSecond = getNotorietyPerSecond(state);
+  // Calculate notoriety gain this tick
+  const notorietyPerSecond = getNotorietyGainPerSecond(state.notorietyGenerators);
   const notorietyGained = notorietyPerSecond * secondsElapsed;
 
   // Update generators unlock status
@@ -677,23 +551,12 @@ export function tick(state: GameState, deltaTime: number): GameState {
     return g;
   });
 
-  // Update notoriety generators unlock status
-  const newNotorietyGenerators = state.notorietyGenerators
-    ? state.notorietyGenerators.map((ng) => {
-        if (shouldUnlockNotorietyGenerator(ng, state.followers)) {
-          return { ...ng, unlocked: true };
-        }
-        return ng;
-      })
-    : [];
-
   // Remove expired events
   let newState: GameState = {
     ...state,
     followers: state.followers + followersGained,
     notoriety: (state.notoriety || 0) + notorietyGained,
     generators: newGenerators,
-    notorietyGenerators: newNotorietyGenerators,
     stats: {
       ...state.stats,
       totalFollowersEarned: state.stats.totalFollowersEarned + Math.max(0, followersGained),
@@ -734,6 +597,139 @@ export function prestige(state: GameState): ActionResult {
     success: true,
     state: newState,
     message: result.message,
+  };
+}
+
+// ============================================================================
+// NOTORIETY ACTIONS
+// ============================================================================
+
+/**
+ * Purchase a notoriety generator
+ * - Deducts followers equal to cost
+ * - Increases generator level by 1
+ * - Validates that Creds/s remains above 1 after upkeep
+ */
+export function buyNotorietyGenerator(
+  state: GameState,
+  generatorId: string,
+): ActionResult {
+  const generator = NOTORIETY_GENERATORS.find((g) => g.id === generatorId);
+
+  if (!generator) {
+    return {
+      success: false,
+      state,
+      message: "Generator not found",
+    };
+  }
+
+  const currentLevel = state.notorietyGenerators[generatorId as keyof typeof state.notorietyGenerators] || 0;
+
+  if (currentLevel >= generator.maxLevel) {
+    return {
+      success: false,
+      state,
+      message: "Max level reached",
+    };
+  }
+
+  const cost = calculateGeneratorCost(generator, currentLevel);
+  const followersPerSecond = getFollowersPerSecond(state);
+
+  if (!canAfford(state.followers, cost)) {
+    return {
+      success: false,
+      state,
+      message: "Not enough Creds",
+    };
+  }
+
+  if (!canPurchaseGenerator(state, generator, state.notorietyGenerators, followersPerSecond)) {
+    return {
+      success: false,
+      state,
+      message: "Your Creds/s would drop below 1!",
+    };
+  }
+
+  const newState: GameState = {
+    ...state,
+    followers: state.followers - cost,
+    notorietyGenerators: {
+      ...state.notorietyGenerators,
+      [generatorId]: currentLevel + 1,
+    },
+  };
+
+  return {
+    success: true,
+    state: newState,
+    message: `Purchased ${generator.name}`,
+  };
+}
+
+/**
+ * Purchase a notoriety upgrade
+ * - Deducts notoriety equal to cost
+ * - Increases upgrade level by 1
+ * - Applies upgrade effects
+ */
+export function buyNotorietyUpgrade(
+  state: GameState,
+  upgradeId: string,
+): ActionResult {
+  const upgrade = NOTORIETY_UPGRADES.find((u) => u.id === upgradeId);
+
+  if (!upgrade) {
+    return {
+      success: false,
+      state,
+      message: "Upgrade not found",
+    };
+  }
+
+  const currentLevel = state.notorietyUpgrades[upgradeId] || 0;
+
+  if (currentLevel >= upgrade.cap) {
+    return {
+      success: false,
+      state,
+      message: "Max level reached",
+    };
+  }
+
+  const cost = upgrade.costFormula(currentLevel);
+
+  if (state.notoriety < cost) {
+    return {
+      success: false,
+      state,
+      message: "Not enough Notoriety",
+    };
+  }
+
+  // Handle special instant-effect upgrades like "buy_creds"
+  let bonusFollowers = 0;
+  if (upgradeId === "buy_creds") {
+    const followersPerSecond = getFollowersPerSecond(state);
+    bonusFollowers = followersPerSecond * 30 * 60; // 30 minutes worth
+  }
+
+  const newState: GameState = {
+    ...state,
+    notoriety: state.notoriety - cost,
+    followers: state.followers + bonusFollowers,
+    notorietyUpgrades: {
+      ...state.notorietyUpgrades,
+      [upgradeId]: currentLevel + 1,
+    },
+  };
+
+  return {
+    success: true,
+    state: newState,
+    message: `Purchased ${upgrade.name}`,
   };
 }
 
