@@ -8,7 +8,7 @@
  * - Awards (Premium currency from drops)
  */
 
-import { formatNumber, formatNumberCompact } from "@/game/format";
+import { formatNumber, formatNumberCompact, formatRate } from "@/game/format";
 
 interface CurrencyBarProps {
   followers: number;
@@ -18,6 +18,8 @@ interface CurrencyBarProps {
   reputation: number;
   notoriety?: number;
   notorietyPerSecond?: number;
+  totalUpkeep?: number;
+  netFollowersPerSecond?: number;
   compact?: boolean;
 }
 
@@ -29,13 +31,20 @@ export function CurrencyBar({
   reputation,
   notoriety = 0,
   notorietyPerSecond = 0,
+  totalUpkeep = 0,
+  netFollowersPerSecond,
   compact = false,
 }: CurrencyBarProps) {
+  // Ensure numeric values with fallbacks for undefined/null
+  const safeNotoriety = typeof notoriety === 'number' ? notoriety : 0;
+  const safeNotorietyPerSecond = typeof notorietyPerSecond === 'number' ? notorietyPerSecond : 0;
+
+  const displayFollowersPerSecond = netFollowersPerSecond !== undefined ? netFollowersPerSecond : followersPerSecond;
   return (
     <div className="w-full">
       <div
         className={`
-        flex flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8
+        grid grid-cols-3 gap-4 sm:gap-6
         px-4 py-3 rounded-lg
         bg-surface backdrop-blur-sm
         border border-border
@@ -44,7 +53,7 @@ export function CurrencyBar({
       `}
       >
         {/* Prestige Level */}
-        <div className="flex items-center gap-2 min-w-[100px]">
+        <div className="flex items-center gap-2">
           <div
             className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-600 flex items-center justify-center"
             aria-hidden="true"
@@ -58,21 +67,16 @@ export function CurrencyBar({
               Prestige
             </div>
             <div
-              className="text-lg font-bold number-display truncate text-accent"
+              className="text-lg font-bold font-mono number-display truncate text-accent"
               aria-label={`Prestige level ${reputation}`}
             >
               {reputation}
             </div>
           </div>
         </div>
-        {/* Vertical Divider */}
-        <div
-          className="hidden sm:block w-px h-12 bg-border"
-          aria-hidden="true"
-        />
 
         {/* Followers (Main Currency) */}
-        <div className="flex items-center gap-2 min-w-[140px]">
+        <div className="flex items-center gap-2">
           <div
             className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center"
             aria-hidden="true"
@@ -86,7 +90,7 @@ export function CurrencyBar({
               Creds
             </div>
             <div
-              className="text-lg font-bold number-display truncate"
+              className="text-lg font-bold font-mono number-display truncate"
               aria-label={`${followers.toFixed(0)} followers`}
             >
               {compact
@@ -94,21 +98,15 @@ export function CurrencyBar({
                 : formatNumber(followers, 2)}
             </div>
             {followersPerSecond > 0 && (
-              <div className="text-xs text-success">
+              <div className="text-xs text-success font-mono">
                 +{formatNumber(followersPerSecond, 1)}/s
               </div>
             )}
           </div>
         </div>
 
-        {/* Vertical Divider */}
-        <div
-          className="hidden sm:block w-px h-12 bg-border"
-          aria-hidden="true"
-        />
-
         {/* Awards (Premium Currency) */}
-        <div className="flex items-center gap-2 min-w-[120px]">
+        <div className="flex items-center gap-2">
           <div
             className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center"
             aria-hidden="true"
@@ -122,12 +120,12 @@ export function CurrencyBar({
               Awards
             </div>
             <div
-              className="text-lg font-bold number-display truncate text-accent"
+              className="text-lg font-bold font-mono number-display truncate text-accent"
               aria-label={`${shards} awards`}
             >
               {shards.toLocaleString()}
             </div>
-            <div className="text-xs text-muted">
+            <div className="text-xs text-muted font-mono">
               {((awardDropRate || 0) * 100).toFixed(1)}% drop rate
             </div>
           </div>
@@ -139,14 +137,14 @@ export function CurrencyBar({
           aria-hidden="true"
         />
 
-        {/* Notoriety (Secondary Currency) */}
-        <div className="flex items-center gap-2 min-w-[120px]">
+        {/* Notoriety (Third Currency - v1.0.0) */}
+        <div className="flex items-center gap-2 min-w-[140px]">
           <div
-            className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-red-600 flex items-center justify-center"
+            className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center"
             aria-hidden="true"
           >
             <span className="text-2xl" role="img" aria-label="notoriety">
-              🔥
+              😎
             </span>
           </div>
           <div className="flex-1 min-w-0">
@@ -154,14 +152,19 @@ export function CurrencyBar({
               Notoriety
             </div>
             <div
-              className="text-lg font-bold number-display truncate text-accent"
-              aria-label={`${notoriety.toFixed(1)} notoriety`}
+              className="text-lg font-bold font-mono number-display truncate text-accent"
+              aria-label={`${safeNotoriety.toFixed(3)} notoriety`}
             >
-              {formatNumber(notoriety, 1)}
+              {safeNotoriety.toFixed(2)}
             </div>
-            {notorietyPerSecond > 0 && (
-              <div className="text-xs text-success">
-                +{formatNumber(notorietyPerSecond, 2)}/s
+            {safeNotorietyPerSecond > 0 && (
+              <div className="text-xs text-success font-mono">
+                +{safeNotorietyPerSecond.toFixed(3)}/s
+              </div>
+            )}
+            {safeNotorietyPerSecond === 0 && safeNotoriety > 0 && (
+              <div className="text-xs text-warning font-mono">
+                Paused (no creds)
               </div>
             )}
           </div>
@@ -170,14 +173,14 @@ export function CurrencyBar({
 
       {/* Mobile Compact View Alternative */}
       {compact && (
-        <div className="sm:hidden mt-2 text-center text-xs text-muted">
+        <div className="sm:hidden mt-2 text-center text-xs text-muted font-mono">
           <span>Prestige: {reputation}</span>
           <span className="mx-2">•</span>
           <span>Creds: {formatNumber(followers)}</span>
           <span className="mx-2">•</span>
           <span>Awards: {shards}</span>
           <span className="mx-2">•</span>
-          <span>Notoriety: {formatNumber(notoriety)}</span>
+          <span>Notoriety: {safeNotoriety.toFixed(2)}</span>
         </div>
       )}
     </div>

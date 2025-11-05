@@ -14,6 +14,11 @@
 // TYPE DEFINITIONS
 // ============================================================================
 import { themes as baseThemes } from "@/data/themes";
+import {
+  NOTORIETY_BASE_PER_SEC,
+  NOTORIETY_UPKEEP_PER_SEC,
+} from "./balance";
+import { NotorietyState } from "./logic/notorietyLogic";
 export interface Generator {
   id: string;
   name: string;
@@ -21,6 +26,18 @@ export interface Generator {
   baseFollowersPerSecond: number;
   baseCost: number;
   costMultiplier: number; // 1.10 - 1.22 per tier
+  unlocked: boolean;
+}
+
+export interface NotorietyGenerator {
+  id: string;
+  name: string;
+  count: number;
+  baseNotorietyPerSecond: number; // Notoriety generated per second
+  baseCost: number; // Cost in followers
+  costMultiplier: number; // Growth rate
+  upkeep: number; // Followers per second upkeep cost
+  maxLevel: number; // Maximum count allowed
   unlocked: boolean;
 }
 
@@ -61,6 +78,7 @@ export interface Theme {
   unlocked: boolean;
   active: boolean;
   bonusMultiplier: number; // required for gameplay bonuses
+  bonusClickPower?: number; // optional bonus to click power
 }
 
 export interface RandomEvent {
@@ -90,23 +108,33 @@ export interface Statistics {
   runStartTime: number;
 }
 
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  unlocked: boolean;
+  icon: string; // emoji or icon identifier
+}
+
 
 export interface GameState {
   // Core Resources
   followers: number;
   shards: number; // Awards (premium currency from random drops)
   reputation: number; // Prestige currency
-  notoriety: number; // Notoriety currency (persists through prestige)
+  notoriety: number; // Strategic drain resource from Notoriety Generators
 
   // Generators (content creation systems)
   generators: Generator[];
 
+  // Notoriety Generators (strategic resource with upkeep)
+  notorietyGenerators: NotorietyState;
+
   // Upgrades (permanent improvements)
   upgrades: Upgrade[];
 
-  // Notoriety System
-  notorietyGenerators: Record<string, number>; // generatorId -> count
-  notorietyUpgrades: Record<string, number>; // upgradeId -> level
+  // Notoriety Upgrades (permanent notoriety-based improvements)
+  notorietyUpgrades: Record<string, number>; // { cache_value: 3, cred_boost: 1 }
 
   // Active Events
   activeEvents: RandomEvent[];
@@ -117,6 +145,9 @@ export interface GameState {
   // Themes
   themes: Theme[];
 
+  // Achievements (cosmetic placeholder from v1-test)
+  achievements?: Achievement[];
+
   // Settings
   settings: {
     autoSave: boolean;
@@ -124,6 +155,9 @@ export interface GameState {
     soundEnabled: boolean;
     offlineProgressEnabled: boolean;
   };
+
+  // Cached Values (computed each tick for efficiency)
+  followersPerSecond?: number;
 
   // Meta
   version: string;
@@ -133,6 +167,42 @@ export interface GameState {
 // ============================================================================
 // INITIAL STATE
 // ============================================================================
+
+export const INITIAL_NOTORIETY_GENERATORS: NotorietyGenerator[] = [
+  {
+    id: "smm",
+    name: "📱 Social Media Manager",
+    count: 0,
+    baseNotorietyPerSecond: 1 / 3600, // +1 notoriety per hour = 1/3600 per second
+    baseCost: 1e5, // 100,000 followers
+    costMultiplier: 1.8,
+    upkeep: 5000, // followers per second
+    maxLevel: 10,
+    unlocked: false,
+  },
+  {
+    id: "pr_team",
+    name: "📢 PR Team",
+    count: 0,
+    baseNotorietyPerSecond: 5 / 3600, // +5 notoriety per hour
+    baseCost: 1e8, // 100,000,000 followers
+    costMultiplier: 2.2,
+    upkeep: 25000, // followers per second
+    maxLevel: 10,
+    unlocked: false,
+  },
+  {
+    id: "key_client",
+    name: "🔑 Key Client",
+    count: 0,
+    baseNotorietyPerSecond: 25 / 3600, // +25 notoriety per hour
+    baseCost: 1e10, // 10,000,000,000 followers
+    costMultiplier: 2.5,
+    upkeep: 250000, // followers per second
+    maxLevel: 10,
+    unlocked: false,
+  },
+];
 
 export const INITIAL_GENERATORS: Generator[] = [
   {
@@ -184,8 +254,8 @@ export const INITIAL_GENERATORS: Generator[] = [
     id: "agency",
     name: "🏢 Talent Agency",
     count: 0,
-    baseFollowersPerSecond: 1400.0,
-    baseCost: 1400000,
+    baseFollowersPerSecond: 1500.0,
+    baseCost: 750000,
     costMultiplier: 1.1,
     unlocked: false,
   },
@@ -286,6 +356,79 @@ export const INITIAL_UPGRADES: Upgrade[] = [
   },
 ];
 
+export const INITIAL_ACHIEVEMENTS: Achievement[] = [
+  {
+    id: "first_click",
+    name: "First Click",
+    description: "Click your first post",
+    unlocked: false,
+    icon: "👆",
+  },
+  {
+    id: "hundred_followers",
+    name: "Rising Star",
+    description: "Reach 100 followers",
+    unlocked: false,
+    icon: "⭐",
+  },
+  {
+    id: "first_generator",
+    name: "Content Creator",
+    description: "Purchase your first generator",
+    unlocked: false,
+    icon: "📸",
+  },
+  {
+    id: "first_upgrade",
+    name: "Self Improvement",
+    description: "Purchase your first upgrade",
+    unlocked: false,
+    icon: "🔧",
+  },
+  {
+    id: "million_followers",
+    name: "Influencer Status",
+    description: "Reach 1 million followers",
+    unlocked: false,
+    icon: "💫",
+  },
+  {
+    id: "first_prestige",
+    name: "Fresh Start",
+    description: "Perform your first prestige",
+    unlocked: false,
+    icon: "🔄",
+  },
+  {
+    id: "collector",
+    name: "Award Collector",
+    description: "Collect 100 Awards",
+    unlocked: false,
+    icon: "💎",
+  },
+  {
+    id: "theme_master",
+    name: "Fashion Icon",
+    description: "Unlock all themes",
+    unlocked: false,
+    icon: "🎨",
+  },
+  {
+    id: "notorious",
+    name: "Notorious",
+    description: "Reach 100 Notoriety",
+    unlocked: false,
+    icon: "😎",
+  },
+  {
+    id: "prestige_veteran",
+    name: "Prestige Veteran",
+    description: "Reach prestige level 10",
+    unlocked: false,
+    icon: "🏆",
+  },
+];
+
 export function createInitialState(): GameState {
   const now = Date.now();
   return {
@@ -309,19 +452,33 @@ export function createInitialState(): GameState {
       lastTickTime: now,
       runStartTime: now,
     },
+    notorietyGenerators: {
+      smm: 0,
+      pr_team: 0,
+      key_client: 0,
+    },
+    notorietyUpgrades: {
+      cache_value: 0,
+      drama_boost: 0,
+      buy_creds: 0,
+      cred_boost: 0,
+      notoriety_boost: 0,
+      influencer_endorsement: 0,
+    },
     settings: {
       autoSave: true,
       showNotifications: true,
       soundEnabled: true,
       offlineProgressEnabled: true,
     },
-    version: "v0.2.0 Early Access",
+    version: "v1.0.0",
     lastSaveTime: now,
     themes: baseThemes.map((t) => ({
       ...t,
       unlocked: t.id === "dark" || t.id === "light", // whatever defaults you want
       active: t.id === "dark", // default active
    })),
+    achievements: INITIAL_ACHIEVEMENTS.map((a) => ({ ...a })),
   };
 }
 
@@ -364,6 +521,12 @@ export function getClickPower(state: GameState): number {
       basePower += u.effect.value;
     });
 
+  // Apply active theme click power bonus (additive to base power)
+  const activeTheme = state.themes.find((t) => t.active);
+  if (activeTheme && activeTheme.bonusClickPower) {
+    basePower += activeTheme.bonusClickPower;
+  }
+
   let power = basePower;
 
   // Apply click multiplier upgrades
@@ -393,8 +556,7 @@ export function getClickPower(state: GameState): number {
   // Apply reputation bonus (+10% per reputation point)
   power *= 1 + state.reputation * 0.1;
 
-  // Apply active theme bonus (only the active theme)
-  const activeTheme = state.themes.find((t) => t.active);
+  // Apply active theme multiplier bonus (only the active theme)
   if (activeTheme) {
     power *= activeTheme.bonusMultiplier;
   }
@@ -462,16 +624,12 @@ export function getFollowersPerSecond(state: GameState): number {
     }
   });
 
-  // Apply Cred Boost from notoriety upgrades
-  const credBoostLevel = state.notorietyUpgrades?.['cred_boost'] || 0;
-  if (credBoostLevel > 0) {
-    total *= Math.pow(1.01, credBoostLevel); // 1% per level
-  }
-
-  // Apply Drama Boost from notoriety upgrades
-  const dramaBoostLevel = state.notorietyUpgrades?.['drama_boost'] || 0;
-  if (dramaBoostLevel > 0) {
-    total *= 1 + dramaBoostLevel * 0.002; // 0.2% per level
+  // Apply Notoriety Cred Boost (from notoriety upgrades)
+  if (state.notorietyUpgrades) {
+    const credBoostLevel = state.notorietyUpgrades.cred_boost || 0;
+    if (credBoostLevel > 0) {
+      total *= 1 + credBoostLevel * 0.01; // +1% per level
+    }
   }
 
   return total;
@@ -487,6 +645,23 @@ export function shouldUnlockGenerator(
 ): boolean {
   if (generator.unlocked) return false;
   return followers >= generator.baseCost * 1.0;
+}
+
+/**
+ * Calculate cumulative cost for buying multiple generators
+ * Uses geometric series formula: baseCost * (multiplier^count) * (1 - multiplier^quantity) / (1 - multiplier)
+ */
+export function getBulkGeneratorCost(generator: Generator, quantity: number): number {
+  const { baseCost, costMultiplier, count } = generator;
+
+  if (quantity <= 0) return 0;
+  if (quantity === 1) return getGeneratorCost(generator);
+
+  // Geometric series sum: a * (1 - r^n) / (1 - r) where a = baseCost * multiplier^count
+  const firstCost = baseCost * Math.pow(costMultiplier, count);
+  const sum = firstCost * (1 - Math.pow(costMultiplier, quantity)) / (1 - costMultiplier);
+
+  return Math.floor(sum);
 }
 
 /**
@@ -542,6 +717,7 @@ export function getOfflineEfficiency(state: GameState): number {
 /**
  * Calculate Cred Cache drop rate based on upgrade tier
  * Base: 0 (no drops), Tier 1-6: 1/1000 → 1/900 → 1/800 → 1/700 → 1/600 → 1/500
+ * Also applies Notoriety Cache Value boost
  */
 export function getCredCacheRate(state: GameState): number {
   const credCache = state.upgrades.find((u) => u.id === "cred_cache");
@@ -554,3 +730,18 @@ export function getCredCacheRate(state: GameState): number {
   const tier = credCache.tier;
   return rateByTier[tier] || 0;
 }
+
+/**
+ * Calculate Cred Cache payout multiplier based on Notoriety Cache Value upgrade
+ * This multiplies the payout amount when Cred Cache drops occur
+ */
+export function getCredCachePayoutMultiplier(state: GameState): number {
+  if (!state.notorietyUpgrades) return 1;
+
+  const cacheValueLevel = state.notorietyUpgrades.cache_value || 0;
+  if (cacheValueLevel === 0) return 1;
+
+  // +5% per level
+  return 1 + cacheValueLevel * 0.05;
+}
+

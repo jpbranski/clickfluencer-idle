@@ -1,233 +1,82 @@
 /**
  * notorietyLogic.ts - Notoriety System Logic
  *
- * This module contains all calculations for the Notoriety system:
- * - Notoriety generation from generators
- * - Upkeep drain on Creds/second
+ * Handles all calculations related to the notoriety system:
  * - Generator costs
- * - Upgrade costs and effects
- * - Unlock conditions
+ * - Upkeep calculations
+ * - Purchase validation
+ * - Notoriety gain rates
  */
 
+import { NotorietyGenerator } from "../generators/notorietyGenerators";
 import { GameState } from "../state";
-import {
-  NOTORIETY_GENERATORS,
-  NOTORIETY_UPGRADES,
-  NotorietyGenerator,
-  NotorietyUpgrade,
-} from "@/data/notoriety";
 
-// ============================================================================
-// GENERATOR CALCULATIONS
-// ============================================================================
+export interface NotorietyState {
+  smm: number;
+  pr_team: number;
+  key_client: number;
+}
 
 /**
- * Calculate the cost of a notoriety generator at a given level
+ * Calculate the cost to purchase a notoriety generator at a given level
  */
-export function getNotorietyGeneratorCost(
+export function calculateGeneratorCost(
   generator: NotorietyGenerator,
-  currentLevel: number,
+  level: number
 ): number {
   return Math.floor(
-    generator.baseCost * Math.pow(generator.costMultiplier, currentLevel),
+    generator.baseCost * Math.pow(generator.costMultiplier, level)
   );
 }
 
 /**
- * Calculate total Notoriety/second from all generators
+ * Get total upkeep cost (Creds/s) from all notoriety generators
  */
-export function getNotorietyGainPerSecond(state: GameState): number {
-  let total = 0;
-
-  for (const gen of NOTORIETY_GENERATORS) {
-    const count = state.notorietyGenerators[gen.id] || 0;
-    if (count > 0) {
-      total += gen.baseNotorietyPerSecond * count;
-    }
-  }
-
-  // Apply notoriety boost upgrades
-  const notorietyBoostLevel = state.notorietyUpgrades['notoriety_boost'] || 0;
-  if (notorietyBoostLevel > 0) {
-    total *= Math.pow(1.01, notorietyBoostLevel); // 1% per level
-  }
-
-  return total;
+export function getTotalUpkeep(notorietyGenerators: NotorietyState): number {
+  return (
+    (notorietyGenerators.smm || 0) * 5000 +
+    (notorietyGenerators.pr_team || 0) * 25000 +
+    (notorietyGenerators.key_client || 0) * 250000
+  );
 }
 
 /**
- * Calculate total upkeep drain (Creds/second consumed by notoriety generators)
+ * Check if player can afford a notoriety generator purchase
+ * Must ensure Creds/s remains above 1 after purchase
  */
-export function getTotalUpkeep(state: GameState): number {
-  let total = 0;
-
-  for (const gen of NOTORIETY_GENERATORS) {
-    const count = state.notorietyGenerators[gen.id] || 0;
-    if (count > 0) {
-      total += gen.baseUpkeep * count;
-    }
-  }
-
-  return total;
-}
-
-/**
- * Check if a notoriety generator should be unlocked
- */
-export function shouldUnlockNotorietyGenerator(
+export function canPurchaseGenerator(
+  state: GameState,
   generator: NotorietyGenerator,
-  followers: number,
+  notorietyGenerators: NotorietyState,
+  credsPerSecond: number
 ): boolean {
-  // Unlock at 50% of base cost
-  return followers >= generator.baseCost * 0.5;
+  const totalUpkeep = getTotalUpkeep(notorietyGenerators);
+  const projectedUpkeep = totalUpkeep + generator.upkeep;
+  const netCredsPerSecond = credsPerSecond - projectedUpkeep;
+  return netCredsPerSecond >= 1;
 }
 
 /**
- * Get all notoriety generators with their current unlock status
+ * Get notoriety gain rate per second
+ * Converts per-hour rates to per-second
  */
-export function getNotorietyGeneratorsWithStatus(
-  state: GameState,
-): Array<NotorietyGenerator & { count: number; cost: number; unlocked: boolean }> {
-  return NOTORIETY_GENERATORS.map((gen) => {
-    const count = state.notorietyGenerators[gen.id] || 0;
-    const cost = getNotorietyGeneratorCost(gen, count);
-    const unlocked =
-      gen.unlocked || shouldUnlockNotorietyGenerator(gen, state.followers);
-
-    return {
-      ...gen,
-      count,
-      cost,
-      unlocked,
-    };
-  });
-}
-
-// ============================================================================
-// UPGRADE CALCULATIONS
-// ============================================================================
-
-/**
- * Calculate the cost of a notoriety upgrade at a given level
- */
-export function getNotorietyUpgradeCost(
-  upgrade: NotorietyUpgrade,
-  currentLevel: number,
+export function getNotorietyGainPerSecond(
+  notorietyGenerators: NotorietyState
 ): number {
-  if (upgrade.costFormula) {
-    return upgrade.costFormula(currentLevel);
-  }
-  return upgrade.baseCost;
+  const smm = (notorietyGenerators.smm || 0) * 1;
+  const pr = (notorietyGenerators.pr_team || 0) * 5;
+  const kc = (notorietyGenerators.key_client || 0) * 25;
+  return (smm + pr + kc) / 3600;
 }
 
 /**
- * Check if a notoriety upgrade can be purchased
+ * Get notoriety gain rate per hour (for display)
  */
-export function canPurchaseNotorietyUpgrade(
-  state: GameState,
-  upgrade: NotorietyUpgrade,
-): boolean {
-  const currentLevel = state.notorietyUpgrades[upgrade.id] || 0;
-
-  // Check if at cap
-  if (upgrade.cap !== Infinity && currentLevel >= upgrade.cap) {
-    return false;
-  }
-
-  // Check if can afford
-  const cost = getNotorietyUpgradeCost(upgrade, currentLevel);
-  return state.notoriety >= cost;
-}
-
-/**
- * Get all notoriety upgrades with their current status
- */
-export function getNotorietyUpgradesWithStatus(
-  state: GameState,
-): Array<
-  NotorietyUpgrade & {
-    level: number;
-    cost: number;
-    canPurchase: boolean;
-    isMaxed: boolean;
-    isInfinite: boolean;
-  }
-> {
-  return NOTORIETY_UPGRADES.map((upgrade) => {
-    const level = state.notorietyUpgrades[upgrade.id] || 0;
-    const cost = getNotorietyUpgradeCost(upgrade, level);
-    const isMaxed = upgrade.cap !== Infinity && level >= upgrade.cap;
-    const canPurchase = !isMaxed && state.notoriety >= cost;
-    const isInfinite = upgrade.cap === Infinity;
-
-    return {
-      ...upgrade,
-      level,
-      cost,
-      canPurchase,
-      isMaxed,
-      isInfinite,
-    };
-  });
-}
-
-// ============================================================================
-// UPGRADE EFFECTS
-// ============================================================================
-
-/**
- * Calculate the total Cred boost from notoriety upgrades
- * Returns multiplier (e.g., 1.05 = 5% boost)
- */
-export function getCredBoostMultiplier(state: GameState): number {
-  const credBoostLevel = state.notorietyUpgrades['cred_boost'] || 0;
-  return Math.pow(1.01, credBoostLevel); // 1% per level
-}
-
-/**
- * Calculate the cache value bonus multiplier
- * Increases the amount gained from Cred Cache drops
- */
-export function getCacheValueBonus(state: GameState): number {
-  const cacheValueLevel = state.notorietyUpgrades['cache_value'] || 0;
-  return 1 + cacheValueLevel * 0.05; // +5% per level
-}
-
-/**
- * Calculate the drama boost (global prestige bonus)
- */
-export function getDramaBoostMultiplier(state: GameState): number {
-  const dramaBoostLevel = state.notorietyUpgrades['drama_boost'] || 0;
-  return 1 + dramaBoostLevel * 0.002; // +0.2% per level
-}
-
-/**
- * Calculate the influencer endorsement multiplier for prestige gain
- */
-export function getInfluencerEndorsementMultiplier(state: GameState): number {
-  const endorsementLevel = state.notorietyUpgrades['influencer_endorsement'] || 0;
-  return 1 + endorsementLevel * 0.1; // +10% per level
-}
-
-// ============================================================================
-// UTILITY FUNCTIONS
-// ============================================================================
-
-/**
- * Check if player has any notoriety generators
- */
-export function hasAnyNotorietyGenerators(state: GameState): boolean {
-  return Object.values(state.notorietyGenerators).some((count) => count > 0);
-}
-
-/**
- * Get total notoriety earned (for statistics)
- */
-export function getTotalNotorietyProduction(state: GameState): number {
-  let total = 0;
-  for (const gen of NOTORIETY_GENERATORS) {
-    const count = state.notorietyGenerators[gen.id] || 0;
-    total += gen.baseNotorietyPerSecond * count;
-  }
-  return total;
+export function getNotorietyGainPerHour(
+  notorietyGenerators: NotorietyState
+): number {
+  const smm = (notorietyGenerators.smm || 0) * 1;
+  const pr = (notorietyGenerators.pr_team || 0) * 5;
+  const kc = (notorietyGenerators.key_client || 0) * 25;
+  return smm + pr + kc;
 }
