@@ -718,6 +718,20 @@ export function getCredCacheRate(state: GameState): number {
   return rateByTier[tier] || 0;
 }
 
+/**
+ * Calculate Cred Cache payout multiplier based on Notoriety Cache Value upgrade
+ * This multiplies the payout amount when Cred Cache drops occur
+ */
+export function getCredCachePayoutMultiplier(state: GameState): number {
+  if (!state.notorietyUpgrades) return 1;
+
+  const cacheValueLevel = state.notorietyUpgrades.cache_value || 0;
+  if (cacheValueLevel === 0) return 1;
+
+  // +5% per level
+  return 1 + cacheValueLevel * 0.05;
+}
+
 // ============================================================================
 // NOTORIETY GENERATOR SELECTORS
 // ============================================================================

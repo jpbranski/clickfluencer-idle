@@ -36,6 +36,7 @@ import {
   prestige,
   updateSetting,
   buyNotorietyGenerator,
+  buyNotorietyUpgrade,
   ActionResult,
 } from "@/game/actions";
 import {
@@ -140,7 +141,6 @@ interface GameContextValue {
   handleBuyGenerator: (generatorId: string, count?: number) => void;
   handleBuyNotorietyGenerator: (generatorId: string) => void;
   handleBuyUpgrade: (upgradeId: string) => void;
-  handleBuyNotorietyGenerator: (generatorId: string) => void;
   handleBuyNotorietyUpgrade: (upgradeId: string) => void;
   handlePurchaseTheme: (themeId: string) => void;
   handleActivateTheme: (themeId: string) => void;
@@ -458,16 +458,6 @@ export function GameProvider({ children }: GameProviderProps) {
     [state, setTheme]
   );
 
-  const handleBuyNotorietyGenerator = useCallback(
-    (generatorId: string) => {
-      if (!engineRef.current || !state) return;
-      engineRef.current.executeAction((currentState) =>
-        buyNotorietyGenerator(currentState, generatorId)
-      );
-    },
-    [state]
-  );
-
   const handleBuyNotorietyUpgrade = useCallback(
     (upgradeId: string) => {
       if (!engineRef.current || !state) return;
@@ -559,7 +549,6 @@ export function GameProvider({ children }: GameProviderProps) {
     handleBuyGenerator,
     handleBuyNotorietyGenerator,
     handleBuyUpgrade,
-    handleBuyNotorietyGenerator,
     handleBuyNotorietyUpgrade,
     handlePurchaseTheme,
     handleActivateTheme,

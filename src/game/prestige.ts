@@ -167,21 +167,13 @@ export function applyPrestige(
     // Preserve infinite upgrades
     upgrades: preservedUpgrades,
 
-    // Reset notoriety to 0
-    notoriety: 0,
-
-    // Reset notoriety generators
-    notorietyGenerators: state.notorietyGenerators
-      ? state.notorietyGenerators.map((ng) => ({ ...ng, count: 0 }))
-      : [],
-
     // Preserve achievements (if they exist)
     achievements: state.achievements,
 
     // Preserve notoriety system (prestige-tier meta resource)
-    notoriety: state.notoriety,
-    notorietyGenerators: state.notorietyGenerators,
-    notorietyUpgrades: state.notorietyUpgrades,
+    notoriety: state.notoriety || 0,
+    notorietyGenerators: state.notorietyGenerators || [],
+    notorietyUpgrades: state.notorietyUpgrades || {},
 
     // Update statistics
     stats: {
