@@ -1,178 +1,3477 @@
 {
-  "generators": {
-    "notoriety": [
-      {
-        "id": "smm",
-        "name": "Social Media Manager",
-        "costs": [100000, 180000, 324000, 583200, 1049760, 1889568, 3401222, 6122200, 11019960, 19835928],
-        "upkeep": 5000,
-        "notorietyPerHour": 1
-      },
-      {
-        "id": "pr_team",
-        "name": "PR Team",
-        "costs": [100000000, 220000000, 484000000, 1064800000, 2342560000, 5153632000, 11337990400, 24943577880, 54875871336, 120726915339],
-        "upkeep": 25000,
-        "notorietyPerHour": 5
-      },
-      {
-        "id": "key_client",
-        "name": "Key Client",
-        "costs": [10000000000, 25000000000, 62500000000, 156250000000, 390625000000, 976562500000, 2441406250000, 6103515625000, 15258789062500, 38146972656250],
-        "upkeep": 250000,
-        "notorietyPerHour": 25
-      }
-    ]
-  },
-  "upgrades": {
-    "notoriety": [
-      {
-        "id": "cache_value",
-        "name": "Cache Value Increase",
-        "cap": 10,
-        "effect": "+5% to Cred Cache payout per level",
-        "costs": [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-      },
-      {
-        "id": "drama_boost",
-        "name": "Drama Multiplier Boost",
-        "cap": 5,
-        "effect": "+0.2% to global Prestige bonus per level",
-        "costs": [25, 62, 156, 390, 976]
-      },
-      {
-        "id": "buy_creds",
-        "name": "Buy Creds",
-        "cap": "Infinity",
-        "effect": "Instantly grants 30 minutes of current Creds/s",
-        "costs": [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
-      },
-      {
-        "id": "cred_boost",
-        "name": "Cred Boost",
-        "cap": "Infinity",
-        "effect": "+1% to all passive Creds/s",
-        "costs": [50, 70, 98, 137, 192, 269, 376, 527, 738, 1033]
-      },
-      {
-        "id": "notoriety_boost",
-        "name": "Notoriety Boost",
-        "cap": "Infinity",
-        "effect": "+1% to total Notoriety/hr",
-        "costs": [100, 155, 240, 372, 577, 894, 1386, 2148, 3330, 5161]
-      },
-      {
-        "id": "influencer_endorsement",
-        "name": "Influencer Endorsement",
-        "cap": 3,
-        "effect": "+10%, +25%, +50% Prestige gain bonuses",
-        "costs": [1000, 3000, 9000]
-      }
-    ]
-  },
+  "generators": [
+    {
+      "id": "photo",
+      "name": "📸 Photo Post",
+      "baseCost": 10,
+      "growthRate": 1.15,
+      "baseFollowersPerSecond": 0.1,
+      "levels": [
+        {
+          "level": 1,
+          "cost": 10,
+          "totalCost": 10
+        },
+        {
+          "level": 2,
+          "cost": 11,
+          "totalCost": 21
+        },
+        {
+          "level": 3,
+          "cost": 13,
+          "totalCost": 34
+        },
+        {
+          "level": 4,
+          "cost": 15,
+          "totalCost": 49
+        },
+        {
+          "level": 5,
+          "cost": 17,
+          "totalCost": 66
+        },
+        {
+          "level": 6,
+          "cost": 20,
+          "totalCost": 86
+        },
+        {
+          "level": 7,
+          "cost": 23,
+          "totalCost": 109
+        },
+        {
+          "level": 8,
+          "cost": 26,
+          "totalCost": 135
+        },
+        {
+          "level": 9,
+          "cost": 30,
+          "totalCost": 165
+        },
+        {
+          "level": 10,
+          "cost": 35,
+          "totalCost": 200
+        },
+        {
+          "level": 11,
+          "cost": 40,
+          "totalCost": 240
+        },
+        {
+          "level": 12,
+          "cost": 46,
+          "totalCost": 286
+        },
+        {
+          "level": 13,
+          "cost": 53,
+          "totalCost": 339
+        },
+        {
+          "level": 14,
+          "cost": 61,
+          "totalCost": 400
+        },
+        {
+          "level": 15,
+          "cost": 70,
+          "totalCost": 470
+        },
+        {
+          "level": 16,
+          "cost": 81,
+          "totalCost": 551
+        },
+        {
+          "level": 17,
+          "cost": 93,
+          "totalCost": 644
+        },
+        {
+          "level": 18,
+          "cost": 107,
+          "totalCost": 751
+        },
+        {
+          "level": 19,
+          "cost": 123,
+          "totalCost": 874
+        },
+        {
+          "level": 20,
+          "cost": 142,
+          "totalCost": 1016
+        },
+        {
+          "level": 21,
+          "cost": 163,
+          "totalCost": 1179
+        },
+        {
+          "level": 22,
+          "cost": 188,
+          "totalCost": 1367
+        },
+        {
+          "level": 23,
+          "cost": 216,
+          "totalCost": 1583
+        },
+        {
+          "level": 24,
+          "cost": 248,
+          "totalCost": 1831
+        },
+        {
+          "level": 25,
+          "cost": 286,
+          "totalCost": 2117
+        },
+        {
+          "level": 26,
+          "cost": 329,
+          "totalCost": 2446
+        },
+        {
+          "level": 27,
+          "cost": 378,
+          "totalCost": 2824
+        },
+        {
+          "level": 28,
+          "cost": 435,
+          "totalCost": 3259
+        },
+        {
+          "level": 29,
+          "cost": 500,
+          "totalCost": 3759
+        },
+        {
+          "level": 30,
+          "cost": 575,
+          "totalCost": 4334
+        },
+        {
+          "level": 31,
+          "cost": 662,
+          "totalCost": 4996
+        },
+        {
+          "level": 32,
+          "cost": 761,
+          "totalCost": 5757
+        },
+        {
+          "level": 33,
+          "cost": 875,
+          "totalCost": 6632
+        },
+        {
+          "level": 34,
+          "cost": 1006,
+          "totalCost": 7638
+        },
+        {
+          "level": 35,
+          "cost": 1158,
+          "totalCost": 8796
+        },
+        {
+          "level": 36,
+          "cost": 1331,
+          "totalCost": 10127
+        },
+        {
+          "level": 37,
+          "cost": 1531,
+          "totalCost": 11658
+        },
+        {
+          "level": 38,
+          "cost": 1761,
+          "totalCost": 13419
+        },
+        {
+          "level": 39,
+          "cost": 2025,
+          "totalCost": 15444
+        },
+        {
+          "level": 40,
+          "cost": 2329,
+          "totalCost": 17773
+        },
+        {
+          "level": 41,
+          "cost": 2678,
+          "totalCost": 20451
+        },
+        {
+          "level": 42,
+          "cost": 3080,
+          "totalCost": 23531
+        },
+        {
+          "level": 43,
+          "cost": 3542,
+          "totalCost": 27073
+        },
+        {
+          "level": 44,
+          "cost": 4073,
+          "totalCost": 31146
+        },
+        {
+          "level": 45,
+          "cost": 4684,
+          "totalCost": 35830
+        },
+        {
+          "level": 46,
+          "cost": 5387,
+          "totalCost": 41217
+        },
+        {
+          "level": 47,
+          "cost": 6195,
+          "totalCost": 47412
+        },
+        {
+          "level": 48,
+          "cost": 7125,
+          "totalCost": 54537
+        },
+        {
+          "level": 49,
+          "cost": 8194,
+          "totalCost": 62731
+        },
+        {
+          "level": 50,
+          "cost": 9423,
+          "totalCost": 72154
+        },
+        {
+          "level": 51,
+          "cost": 10836,
+          "totalCost": 82990
+        },
+        {
+          "level": 52,
+          "cost": 12462,
+          "totalCost": 95452
+        },
+        {
+          "level": 53,
+          "cost": 14331,
+          "totalCost": 109783
+        },
+        {
+          "level": 54,
+          "cost": 16481,
+          "totalCost": 126264
+        },
+        {
+          "level": 55,
+          "cost": 18953,
+          "totalCost": 145217
+        },
+        {
+          "level": 56,
+          "cost": 21796,
+          "totalCost": 167013
+        },
+        {
+          "level": 57,
+          "cost": 25065,
+          "totalCost": 192078
+        },
+        {
+          "level": 58,
+          "cost": 28825,
+          "totalCost": 220903
+        },
+        {
+          "level": 59,
+          "cost": 33149,
+          "totalCost": 254052
+        },
+        {
+          "level": 60,
+          "cost": 38121,
+          "totalCost": 292173
+        },
+        {
+          "level": 61,
+          "cost": 43839,
+          "totalCost": 336012
+        },
+        {
+          "level": 62,
+          "cost": 50415,
+          "totalCost": 386427
+        },
+        {
+          "level": 63,
+          "cost": 57978,
+          "totalCost": 444405
+        },
+        {
+          "level": 64,
+          "cost": 66675,
+          "totalCost": 511080
+        },
+        {
+          "level": 65,
+          "cost": 76676,
+          "totalCost": 587756
+        },
+        {
+          "level": 66,
+          "cost": 88177,
+          "totalCost": 675933
+        },
+        {
+          "level": 67,
+          "cost": 101404,
+          "totalCost": 777337
+        },
+        {
+          "level": 68,
+          "cost": 116615,
+          "totalCost": 893952
+        },
+        {
+          "level": 69,
+          "cost": 134107,
+          "totalCost": 1028059
+        },
+        {
+          "level": 70,
+          "cost": 154223,
+          "totalCost": 1182282
+        },
+        {
+          "level": 71,
+          "cost": 177357,
+          "totalCost": 1359639
+        },
+        {
+          "level": 72,
+          "cost": 203960,
+          "totalCost": 1563599
+        },
+        {
+          "level": 73,
+          "cost": 234554,
+          "totalCost": 1798153
+        },
+        {
+          "level": 74,
+          "cost": 269738,
+          "totalCost": 2067891
+        },
+        {
+          "level": 75,
+          "cost": 310198,
+          "totalCost": 2378089
+        },
+        {
+          "level": 76,
+          "cost": 356728,
+          "totalCost": 2734817
+        },
+        {
+          "level": 77,
+          "cost": 410237,
+          "totalCost": 3145054
+        },
+        {
+          "level": 78,
+          "cost": 471773,
+          "totalCost": 3616827
+        },
+        {
+          "level": 79,
+          "cost": 542539,
+          "totalCost": 4159366
+        },
+        {
+          "level": 80,
+          "cost": 623920,
+          "totalCost": 4783286
+        },
+        {
+          "level": 81,
+          "cost": 717508,
+          "totalCost": 5500794
+        },
+        {
+          "level": 82,
+          "cost": 825135,
+          "totalCost": 6325929
+        },
+        {
+          "level": 83,
+          "cost": 948905,
+          "totalCost": 7274834
+        },
+        {
+          "level": 84,
+          "cost": 1091241,
+          "totalCost": 8366075
+        },
+        {
+          "level": 85,
+          "cost": 1254927,
+          "totalCost": 9621002
+        },
+        {
+          "level": 86,
+          "cost": 1443166,
+          "totalCost": 11064168
+        },
+        {
+          "level": 87,
+          "cost": 1659641,
+          "totalCost": 12723809
+        },
+        {
+          "level": 88,
+          "cost": 1908587,
+          "totalCost": 14632396
+        },
+        {
+          "level": 89,
+          "cost": 2194875,
+          "totalCost": 16827271
+        },
+        {
+          "level": 90,
+          "cost": 2524107,
+          "totalCost": 19351378
+        },
+        {
+          "level": 91,
+          "cost": 2902723,
+          "totalCost": 22254101
+        },
+        {
+          "level": 92,
+          "cost": 3338131,
+          "totalCost": 25592232
+        },
+        {
+          "level": 93,
+          "cost": 3838851,
+          "totalCost": 29431083
+        },
+        {
+          "level": 94,
+          "cost": 4414679,
+          "totalCost": 33845762
+        },
+        {
+          "level": 95,
+          "cost": 5076881,
+          "totalCost": 38922643
+        },
+        {
+          "level": 96,
+          "cost": 5838413,
+          "totalCost": 44761056
+        },
+        {
+          "level": 97,
+          "cost": 6714175,
+          "totalCost": 51475231
+        },
+        {
+          "level": 98,
+          "cost": 7721301,
+          "totalCost": 59196532
+        },
+        {
+          "level": 99,
+          "cost": 8879496,
+          "totalCost": 68076028
+        },
+        {
+          "level": 100,
+          "cost": 10211421,
+          "totalCost": 78287449
+        }
+      ],
+      "totalCostToMax": 78287449
+    },
+    {
+      "id": "video",
+      "name": "🎥 Video Content",
+      "baseCost": 100,
+      "growthRate": 1.14,
+      "baseFollowersPerSecond": 1,
+      "levels": [
+        {
+          "level": 1,
+          "cost": 100,
+          "totalCost": 100
+        },
+        {
+          "level": 2,
+          "cost": 113,
+          "totalCost": 213
+        },
+        {
+          "level": 3,
+          "cost": 129,
+          "totalCost": 342
+        },
+        {
+          "level": 4,
+          "cost": 148,
+          "totalCost": 490
+        },
+        {
+          "level": 5,
+          "cost": 168,
+          "totalCost": 658
+        },
+        {
+          "level": 6,
+          "cost": 192,
+          "totalCost": 850
+        },
+        {
+          "level": 7,
+          "cost": 219,
+          "totalCost": 1069
+        },
+        {
+          "level": 8,
+          "cost": 250,
+          "totalCost": 1319
+        },
+        {
+          "level": 9,
+          "cost": 285,
+          "totalCost": 1604
+        },
+        {
+          "level": 10,
+          "cost": 325,
+          "totalCost": 1929
+        },
+        {
+          "level": 11,
+          "cost": 370,
+          "totalCost": 2299
+        },
+        {
+          "level": 12,
+          "cost": 422,
+          "totalCost": 2721
+        },
+        {
+          "level": 13,
+          "cost": 481,
+          "totalCost": 3202
+        },
+        {
+          "level": 14,
+          "cost": 549,
+          "totalCost": 3751
+        },
+        {
+          "level": 15,
+          "cost": 626,
+          "totalCost": 4377
+        },
+        {
+          "level": 16,
+          "cost": 713,
+          "totalCost": 5090
+        },
+        {
+          "level": 17,
+          "cost": 813,
+          "totalCost": 5903
+        },
+        {
+          "level": 18,
+          "cost": 927,
+          "totalCost": 6830
+        },
+        {
+          "level": 19,
+          "cost": 1057,
+          "totalCost": 7887
+        },
+        {
+          "level": 20,
+          "cost": 1205,
+          "totalCost": 9092
+        },
+        {
+          "level": 21,
+          "cost": 1374,
+          "totalCost": 10466
+        },
+        {
+          "level": 22,
+          "cost": 1566,
+          "totalCost": 12032
+        },
+        {
+          "level": 23,
+          "cost": 1786,
+          "totalCost": 13818
+        },
+        {
+          "level": 24,
+          "cost": 2036,
+          "totalCost": 15854
+        },
+        {
+          "level": 25,
+          "cost": 2321,
+          "totalCost": 18175
+        },
+        {
+          "level": 26,
+          "cost": 2646,
+          "totalCost": 20821
+        },
+        {
+          "level": 27,
+          "cost": 3016,
+          "totalCost": 23837
+        },
+        {
+          "level": 28,
+          "cost": 3438,
+          "totalCost": 27275
+        },
+        {
+          "level": 29,
+          "cost": 3920,
+          "totalCost": 31195
+        },
+        {
+          "level": 30,
+          "cost": 4469,
+          "totalCost": 35664
+        },
+        {
+          "level": 31,
+          "cost": 5095,
+          "totalCost": 40759
+        },
+        {
+          "level": 32,
+          "cost": 5808,
+          "totalCost": 46567
+        },
+        {
+          "level": 33,
+          "cost": 6621,
+          "totalCost": 53188
+        },
+        {
+          "level": 34,
+          "cost": 7548,
+          "totalCost": 60736
+        },
+        {
+          "level": 35,
+          "cost": 8605,
+          "totalCost": 69341
+        },
+        {
+          "level": 36,
+          "cost": 9810,
+          "totalCost": 79151
+        },
+        {
+          "level": 37,
+          "cost": 11183,
+          "totalCost": 90334
+        },
+        {
+          "level": 38,
+          "cost": 12749,
+          "totalCost": 103083
+        },
+        {
+          "level": 39,
+          "cost": 14533,
+          "totalCost": 117616
+        },
+        {
+          "level": 40,
+          "cost": 16568,
+          "totalCost": 134184
+        },
+        {
+          "level": 41,
+          "cost": 18888,
+          "totalCost": 153072
+        },
+        {
+          "level": 42,
+          "cost": 21532,
+          "totalCost": 174604
+        },
+        {
+          "level": 43,
+          "cost": 24547,
+          "totalCost": 199151
+        },
+        {
+          "level": 44,
+          "cost": 27983,
+          "totalCost": 227134
+        },
+        {
+          "level": 45,
+          "cost": 31901,
+          "totalCost": 259035
+        },
+        {
+          "level": 46,
+          "cost": 36367,
+          "totalCost": 295402
+        },
+        {
+          "level": 47,
+          "cost": 41459,
+          "totalCost": 336861
+        },
+        {
+          "level": 48,
+          "cost": 47263,
+          "totalCost": 384124
+        },
+        {
+          "level": 49,
+          "cost": 53880,
+          "totalCost": 438004
+        },
+        {
+          "level": 50,
+          "cost": 61423,
+          "totalCost": 499427
+        },
+        {
+          "level": 51,
+          "cost": 70023,
+          "totalCost": 569450
+        },
+        {
+          "level": 52,
+          "cost": 79826,
+          "totalCost": 649276
+        },
+        {
+          "level": 53,
+          "cost": 91002,
+          "totalCost": 740278
+        },
+        {
+          "level": 54,
+          "cost": 103742,
+          "totalCost": 844020
+        },
+        {
+          "level": 55,
+          "cost": 118266,
+          "totalCost": 962286
+        },
+        {
+          "level": 56,
+          "cost": 134823,
+          "totalCost": 1097109
+        },
+        {
+          "level": 57,
+          "cost": 153699,
+          "totalCost": 1250808
+        },
+        {
+          "level": 58,
+          "cost": 175217,
+          "totalCost": 1426025
+        },
+        {
+          "level": 59,
+          "cost": 199747,
+          "totalCost": 1625772
+        },
+        {
+          "level": 60,
+          "cost": 227712,
+          "totalCost": 1853484
+        },
+        {
+          "level": 61,
+          "cost": 259591,
+          "totalCost": 2113075
+        },
+        {
+          "level": 62,
+          "cost": 295934,
+          "totalCost": 2409009
+        },
+        {
+          "level": 63,
+          "cost": 337365,
+          "totalCost": 2746374
+        },
+        {
+          "level": 64,
+          "cost": 384596,
+          "totalCost": 3130970
+        },
+        {
+          "level": 65,
+          "cost": 438440,
+          "totalCost": 3569410
+        },
+        {
+          "level": 66,
+          "cost": 499821,
+          "totalCost": 4069231
+        },
+        {
+          "level": 67,
+          "cost": 569797,
+          "totalCost": 4639028
+        },
+        {
+          "level": 68,
+          "cost": 649568,
+          "totalCost": 5288596
+        },
+        {
+          "level": 69,
+          "cost": 740508,
+          "totalCost": 6029104
+        },
+        {
+          "level": 70,
+          "cost": 844179,
+          "totalCost": 6873283
+        },
+        {
+          "level": 71,
+          "cost": 962364,
+          "totalCost": 7835647
+        },
+        {
+          "level": 72,
+          "cost": 1097095,
+          "totalCost": 8932742
+        },
+        {
+          "level": 73,
+          "cost": 1250688,
+          "totalCost": 10183430
+        },
+        {
+          "level": 74,
+          "cost": 1425785,
+          "totalCost": 11609215
+        },
+        {
+          "level": 75,
+          "cost": 1625395,
+          "totalCost": 13234610
+        },
+        {
+          "level": 76,
+          "cost": 1852950,
+          "totalCost": 15087560
+        },
+        {
+          "level": 77,
+          "cost": 2112363,
+          "totalCost": 17199923
+        },
+        {
+          "level": 78,
+          "cost": 2408094,
+          "totalCost": 19608017
+        },
+        {
+          "level": 79,
+          "cost": 2745227,
+          "totalCost": 22353244
+        },
+        {
+          "level": 80,
+          "cost": 3129559,
+          "totalCost": 25482803
+        },
+        {
+          "level": 81,
+          "cost": 3567698,
+          "totalCost": 29050501
+        },
+        {
+          "level": 82,
+          "cost": 4067175,
+          "totalCost": 33117676
+        },
+        {
+          "level": 83,
+          "cost": 4636580,
+          "totalCost": 37754256
+        },
+        {
+          "level": 84,
+          "cost": 5285701,
+          "totalCost": 43039957
+        },
+        {
+          "level": 85,
+          "cost": 6025700,
+          "totalCost": 49065657
+        },
+        {
+          "level": 86,
+          "cost": 6869298,
+          "totalCost": 55934955
+        },
+        {
+          "level": 87,
+          "cost": 7830999,
+          "totalCost": 63765954
+        },
+        {
+          "level": 88,
+          "cost": 8927339,
+          "totalCost": 72693293
+        },
+        {
+          "level": 89,
+          "cost": 10177167,
+          "totalCost": 82870460
+        },
+        {
+          "level": 90,
+          "cost": 11601970,
+          "totalCost": 94472430
+        },
+        {
+          "level": 91,
+          "cost": 13226246,
+          "totalCost": 107698676
+        },
+        {
+          "level": 92,
+          "cost": 15077921,
+          "totalCost": 122776597
+        },
+        {
+          "level": 93,
+          "cost": 17188830,
+          "totalCost": 139965427
+        },
+        {
+          "level": 94,
+          "cost": 19595266,
+          "totalCost": 159560693
+        },
+        {
+          "level": 95,
+          "cost": 22338603,
+          "totalCost": 181899296
+        },
+        {
+          "level": 96,
+          "cost": 25466008,
+          "totalCost": 207365304
+        },
+        {
+          "level": 97,
+          "cost": 29031249,
+          "totalCost": 236396553
+        },
+        {
+          "level": 98,
+          "cost": 33095624,
+          "totalCost": 269492177
+        },
+        {
+          "level": 99,
+          "cost": 37729011,
+          "totalCost": 307221188
+        },
+        {
+          "level": 100,
+          "cost": 43011073,
+          "totalCost": 350232261
+        }
+      ],
+      "totalCostToMax": 350232261
+    },
+    {
+      "id": "stream",
+      "name": "📹 Live Stream",
+      "baseCost": 1100,
+      "growthRate": 1.13,
+      "baseFollowersPerSecond": 8,
+      "levels": [
+        {
+          "level": 1,
+          "cost": 1100,
+          "totalCost": 1100
+        },
+        {
+          "level": 2,
+          "cost": 1242,
+          "totalCost": 2342
+        },
+        {
+          "level": 3,
+          "cost": 1404,
+          "totalCost": 3746
+        },
+        {
+          "level": 4,
+          "cost": 1587,
+          "totalCost": 5333
+        },
+        {
+          "level": 5,
+          "cost": 1793,
+          "totalCost": 7126
+        },
+        {
+          "level": 6,
+          "cost": 2026,
+          "totalCost": 9152
+        },
+        {
+          "level": 7,
+          "cost": 2290,
+          "totalCost": 11442
+        },
+        {
+          "level": 8,
+          "cost": 2587,
+          "totalCost": 14029
+        },
+        {
+          "level": 9,
+          "cost": 2924,
+          "totalCost": 16953
+        },
+        {
+          "level": 10,
+          "cost": 3304,
+          "totalCost": 20257
+        },
+        {
+          "level": 11,
+          "cost": 3734,
+          "totalCost": 23991
+        },
+        {
+          "level": 12,
+          "cost": 4219,
+          "totalCost": 28210
+        },
+        {
+          "level": 13,
+          "cost": 4767,
+          "totalCost": 32977
+        },
+        {
+          "level": 14,
+          "cost": 5387,
+          "totalCost": 38364
+        },
+        {
+          "level": 15,
+          "cost": 6088,
+          "totalCost": 44452
+        },
+        {
+          "level": 16,
+          "cost": 6879,
+          "totalCost": 51331
+        },
+        {
+          "level": 17,
+          "cost": 7774,
+          "totalCost": 59105
+        },
+        {
+          "level": 18,
+          "cost": 8784,
+          "totalCost": 67889
+        },
+        {
+          "level": 19,
+          "cost": 9926,
+          "totalCost": 77815
+        },
+        {
+          "level": 20,
+          "cost": 11217,
+          "totalCost": 89032
+        },
+        {
+          "level": 21,
+          "cost": 12675,
+          "totalCost": 101707
+        },
+        {
+          "level": 22,
+          "cost": 14323,
+          "totalCost": 116030
+        },
+        {
+          "level": 23,
+          "cost": 16185,
+          "totalCost": 132215
+        },
+        {
+          "level": 24,
+          "cost": 18289,
+          "totalCost": 150504
+        },
+        {
+          "level": 25,
+          "cost": 20666,
+          "totalCost": 171170
+        },
+        {
+          "level": 26,
+          "cost": 23353,
+          "totalCost": 194523
+        },
+        {
+          "level": 27,
+          "cost": 26389,
+          "totalCost": 220912
+        },
+        {
+          "level": 28,
+          "cost": 29820,
+          "totalCost": 250732
+        },
+        {
+          "level": 29,
+          "cost": 33696,
+          "totalCost": 284428
+        },
+        {
+          "level": 30,
+          "cost": 38077,
+          "totalCost": 322505
+        },
+        {
+          "level": 31,
+          "cost": 43027,
+          "totalCost": 365532
+        },
+        {
+          "level": 32,
+          "cost": 48621,
+          "totalCost": 414153
+        },
+        {
+          "level": 33,
+          "cost": 54941,
+          "totalCost": 469094
+        },
+        {
+          "level": 34,
+          "cost": 62084,
+          "totalCost": 531178
+        },
+        {
+          "level": 35,
+          "cost": 70155,
+          "totalCost": 601333
+        },
+        {
+          "level": 36,
+          "cost": 79275,
+          "totalCost": 680608
+        },
+        {
+          "level": 37,
+          "cost": 89581,
+          "totalCost": 770189
+        },
+        {
+          "level": 38,
+          "cost": 101226,
+          "totalCost": 871415
+        },
+        {
+          "level": 39,
+          "cost": 114386,
+          "totalCost": 985801
+        },
+        {
+          "level": 40,
+          "cost": 129256,
+          "totalCost": 1115057
+        },
+        {
+          "level": 41,
+          "cost": 146059,
+          "totalCost": 1261116
+        },
+        {
+          "level": 42,
+          "cost": 165047,
+          "totalCost": 1426163
+        },
+        {
+          "level": 43,
+          "cost": 186503,
+          "totalCost": 1612666
+        },
+        {
+          "level": 44,
+          "cost": 210749,
+          "totalCost": 1823415
+        },
+        {
+          "level": 45,
+          "cost": 238146,
+          "totalCost": 2061561
+        },
+        {
+          "level": 46,
+          "cost": 269105,
+          "totalCost": 2330666
+        },
+        {
+          "level": 47,
+          "cost": 304089,
+          "totalCost": 2634755
+        },
+        {
+          "level": 48,
+          "cost": 343620,
+          "totalCost": 2978375
+        },
+        {
+          "level": 49,
+          "cost": 388291,
+          "totalCost": 3366666
+        },
+        {
+          "level": 50,
+          "cost": 438769,
+          "totalCost": 3805435
+        },
+        {
+          "level": 51,
+          "cost": 495809,
+          "totalCost": 4301244
+        },
+        {
+          "level": 52,
+          "cost": 560264,
+          "totalCost": 4861508
+        },
+        {
+          "level": 53,
+          "cost": 633099,
+          "totalCost": 5494607
+        },
+        {
+          "level": 54,
+          "cost": 715402,
+          "totalCost": 6210009
+        },
+        {
+          "level": 55,
+          "cost": 808404,
+          "totalCost": 7018413
+        },
+        {
+          "level": 56,
+          "cost": 913496,
+          "totalCost": 7931909
+        },
+        {
+          "level": 57,
+          "cost": 1032251,
+          "totalCost": 8964160
+        },
+        {
+          "level": 58,
+          "cost": 1166444,
+          "totalCost": 10130604
+        },
+        {
+          "level": 59,
+          "cost": 1318081,
+          "totalCost": 11448685
+        },
+        {
+          "level": 60,
+          "cost": 1489432,
+          "totalCost": 12938117
+        },
+        {
+          "level": 61,
+          "cost": 1683058,
+          "totalCost": 14621175
+        },
+        {
+          "level": 62,
+          "cost": 1901856,
+          "totalCost": 16523031
+        },
+        {
+          "level": 63,
+          "cost": 2149097,
+          "totalCost": 18672128
+        },
+        {
+          "level": 64,
+          "cost": 2428480,
+          "totalCost": 21100608
+        },
+        {
+          "level": 65,
+          "cost": 2744182,
+          "totalCost": 23844790
+        },
+        {
+          "level": 66,
+          "cost": 3100926,
+          "totalCost": 26945716
+        },
+        {
+          "level": 67,
+          "cost": 3504047,
+          "totalCost": 30449763
+        },
+        {
+          "level": 68,
+          "cost": 3959573,
+          "totalCost": 34409336
+        },
+        {
+          "level": 69,
+          "cost": 4474317,
+          "totalCost": 38883653
+        },
+        {
+          "level": 70,
+          "cost": 5055979,
+          "totalCost": 43939632
+        },
+        {
+          "level": 71,
+          "cost": 5713256,
+          "totalCost": 49652888
+        },
+        {
+          "level": 72,
+          "cost": 6455979,
+          "totalCost": 56108867
+        },
+        {
+          "level": 73,
+          "cost": 7295257,
+          "totalCost": 63404124
+        },
+        {
+          "level": 74,
+          "cost": 8243640,
+          "totalCost": 71647764
+        },
+        {
+          "level": 75,
+          "cost": 9315314,
+          "totalCost": 80963078
+        },
+        {
+          "level": 76,
+          "cost": 10526304,
+          "totalCost": 91489382
+        },
+        {
+          "level": 77,
+          "cost": 11894724,
+          "totalCost": 103384106
+        },
+        {
+          "level": 78,
+          "cost": 13441038,
+          "totalCost": 116825144
+        },
+        {
+          "level": 79,
+          "cost": 15188373,
+          "totalCost": 132013517
+        },
+        {
+          "level": 80,
+          "cost": 17162862,
+          "totalCost": 149176379
+        },
+        {
+          "level": 81,
+          "cost": 19394034,
+          "totalCost": 168570413
+        },
+        {
+          "level": 82,
+          "cost": 21915258,
+          "totalCost": 190485671
+        },
+        {
+          "level": 83,
+          "cost": 24764242,
+          "totalCost": 215249913
+        },
+        {
+          "level": 84,
+          "cost": 27983594,
+          "totalCost": 243233507
+        },
+        {
+          "level": 85,
+          "cost": 31621461,
+          "totalCost": 274854968
+        },
+        {
+          "level": 86,
+          "cost": 35732251,
+          "totalCost": 310587219
+        },
+        {
+          "level": 87,
+          "cost": 40377444,
+          "totalCost": 350964663
+        },
+        {
+          "level": 88,
+          "cost": 45626511,
+          "totalCost": 396591174
+        },
+        {
+          "level": 89,
+          "cost": 51557958,
+          "totalCost": 448149132
+        },
+        {
+          "level": 90,
+          "cost": 58260492,
+          "totalCost": 506409624
+        },
+        {
+          "level": 91,
+          "cost": 65834357,
+          "totalCost": 572243981
+        },
+        {
+          "level": 92,
+          "cost": 74392823,
+          "totalCost": 646636804
+        },
+        {
+          "level": 93,
+          "cost": 84063890,
+          "totalCost": 730700694
+        },
+        {
+          "level": 94,
+          "cost": 94992196,
+          "totalCost": 825692890
+        },
+        {
+          "level": 95,
+          "cost": 107341181,
+          "totalCost": 933034071
+        },
+        {
+          "level": 96,
+          "cost": 121295535,
+          "totalCost": 1054329606
+        },
+        {
+          "level": 97,
+          "cost": 137063955,
+          "totalCost": 1191393561
+        },
+        {
+          "level": 98,
+          "cost": 154882269,
+          "totalCost": 1346275830
+        },
+        {
+          "level": 99,
+          "cost": 175016964,
+          "totalCost": 1521292794
+        },
+        {
+          "level": 100,
+          "cost": 197769169,
+          "totalCost": 1719061963
+        }
+      ],
+      "totalCostToMax": 1719061963
+    },
+    {
+      "id": "collab",
+      "name": "🤝 Collaboration",
+      "baseCost": 12000,
+      "growthRate": 1.12,
+      "baseFollowersPerSecond": 47,
+      "levels": [
+        {
+          "level": 1,
+          "cost": 12000,
+          "totalCost": 12000
+        },
+        {
+          "level": 2,
+          "cost": 13440,
+          "totalCost": 25440
+        },
+        {
+          "level": 3,
+          "cost": 15052,
+          "totalCost": 40492
+        },
+        {
+          "level": 4,
+          "cost": 16859,
+          "totalCost": 57351
+        },
+        {
+          "level": 5,
+          "cost": 18882,
+          "totalCost": 76233
+        },
+        {
+          "level": 6,
+          "cost": 21148,
+          "totalCost": 97381
+        },
+        {
+          "level": 7,
+          "cost": 23685,
+          "totalCost": 121066
+        },
+        {
+          "level": 8,
+          "cost": 26528,
+          "totalCost": 147594
+        },
+        {
+          "level": 9,
+          "cost": 29711,
+          "totalCost": 177305
+        },
+        {
+          "level": 10,
+          "cost": 33276,
+          "totalCost": 210581
+        },
+        {
+          "level": 11,
+          "cost": 37270,
+          "totalCost": 247851
+        },
+        {
+          "level": 12,
+          "cost": 41742,
+          "totalCost": 289593
+        },
+        {
+          "level": 13,
+          "cost": 46751,
+          "totalCost": 336344
+        },
+        {
+          "level": 14,
+          "cost": 52361,
+          "totalCost": 388705
+        },
+        {
+          "level": 15,
+          "cost": 58645,
+          "totalCost": 447350
+        },
+        {
+          "level": 16,
+          "cost": 65682,
+          "totalCost": 513032
+        },
+        {
+          "level": 17,
+          "cost": 73564,
+          "totalCost": 586596
+        },
+        {
+          "level": 18,
+          "cost": 82392,
+          "totalCost": 668988
+        },
+        {
+          "level": 19,
+          "cost": 92279,
+          "totalCost": 761267
+        },
+        {
+          "level": 20,
+          "cost": 103353,
+          "totalCost": 864620
+        },
+        {
+          "level": 21,
+          "cost": 115755,
+          "totalCost": 980375
+        },
+        {
+          "level": 22,
+          "cost": 129646,
+          "totalCost": 1110021
+        },
+        {
+          "level": 23,
+          "cost": 145203,
+          "totalCost": 1255224
+        },
+        {
+          "level": 24,
+          "cost": 162628,
+          "totalCost": 1417852
+        },
+        {
+          "level": 25,
+          "cost": 182143,
+          "totalCost": 1599995
+        },
+        {
+          "level": 26,
+          "cost": 204000,
+          "totalCost": 1803995
+        },
+        {
+          "level": 27,
+          "cost": 228480,
+          "totalCost": 2032475
+        },
+        {
+          "level": 28,
+          "cost": 255898,
+          "totalCost": 2288373
+        },
+        {
+          "level": 29,
+          "cost": 286606,
+          "totalCost": 2574979
+        },
+        {
+          "level": 30,
+          "cost": 320999,
+          "totalCost": 2895978
+        },
+        {
+          "level": 31,
+          "cost": 359519,
+          "totalCost": 3255497
+        },
+        {
+          "level": 32,
+          "cost": 402661,
+          "totalCost": 3658158
+        },
+        {
+          "level": 33,
+          "cost": 450980,
+          "totalCost": 4109138
+        },
+        {
+          "level": 34,
+          "cost": 505098,
+          "totalCost": 4614236
+        },
+        {
+          "level": 35,
+          "cost": 565710,
+          "totalCost": 5179946
+        },
+        {
+          "level": 36,
+          "cost": 633595,
+          "totalCost": 5813541
+        },
+        {
+          "level": 37,
+          "cost": 709626,
+          "totalCost": 6523167
+        },
+        {
+          "level": 38,
+          "cost": 794782,
+          "totalCost": 7317949
+        },
+        {
+          "level": 39,
+          "cost": 890155,
+          "totalCost": 8208104
+        },
+        {
+          "level": 40,
+          "cost": 996974,
+          "totalCost": 9205078
+        },
+        {
+          "level": 41,
+          "cost": 1116611,
+          "totalCost": 10321689
+        },
+        {
+          "level": 42,
+          "cost": 1250605,
+          "totalCost": 11572294
+        },
+        {
+          "level": 43,
+          "cost": 1400677,
+          "totalCost": 12972971
+        },
+        {
+          "level": 44,
+          "cost": 1568758,
+          "totalCost": 14541729
+        },
+        {
+          "level": 45,
+          "cost": 1757010,
+          "totalCost": 16298739
+        },
+        {
+          "level": 46,
+          "cost": 1967851,
+          "totalCost": 18266590
+        },
+        {
+          "level": 47,
+          "cost": 2203993,
+          "totalCost": 20470583
+        },
+        {
+          "level": 48,
+          "cost": 2468472,
+          "totalCost": 22939055
+        },
+        {
+          "level": 49,
+          "cost": 2764689,
+          "totalCost": 25703744
+        },
+        {
+          "level": 50,
+          "cost": 3096452,
+          "totalCost": 28800196
+        },
+        {
+          "level": 51,
+          "cost": 3468026,
+          "totalCost": 32268222
+        },
+        {
+          "level": 52,
+          "cost": 3884189,
+          "totalCost": 36152411
+        },
+        {
+          "level": 53,
+          "cost": 4350292,
+          "totalCost": 40502703
+        },
+        {
+          "level": 54,
+          "cost": 4872327,
+          "totalCost": 45375030
+        },
+        {
+          "level": 55,
+          "cost": 5457006,
+          "totalCost": 50832036
+        },
+        {
+          "level": 56,
+          "cost": 6111847,
+          "totalCost": 56943883
+        },
+        {
+          "level": 57,
+          "cost": 6845268,
+          "totalCost": 63789151
+        },
+        {
+          "level": 58,
+          "cost": 7666701,
+          "totalCost": 71455852
+        },
+        {
+          "level": 59,
+          "cost": 8586705,
+          "totalCost": 80042557
+        },
+        {
+          "level": 60,
+          "cost": 9617110,
+          "totalCost": 89659667
+        },
+        {
+          "level": 61,
+          "cost": 10771163,
+          "totalCost": 100430830
+        },
+        {
+          "level": 62,
+          "cost": 12063702,
+          "totalCost": 112494532
+        },
+        {
+          "level": 63,
+          "cost": 13511347,
+          "totalCost": 126005879
+        },
+        {
+          "level": 64,
+          "cost": 15132708,
+          "totalCost": 141138587
+        },
+        {
+          "level": 65,
+          "cost": 16948633,
+          "totalCost": 158087220
+        },
+        {
+          "level": 66,
+          "cost": 18982469,
+          "totalCost": 177069689
+        },
+        {
+          "level": 67,
+          "cost": 21260366,
+          "totalCost": 198330055
+        },
+        {
+          "level": 68,
+          "cost": 23811610,
+          "totalCost": 222141665
+        },
+        {
+          "level": 69,
+          "cost": 26669003,
+          "totalCost": 248810668
+        },
+        {
+          "level": 70,
+          "cost": 29869283,
+          "totalCost": 278679951
+        },
+        {
+          "level": 71,
+          "cost": 33453597,
+          "totalCost": 312133548
+        },
+        {
+          "level": 72,
+          "cost": 37468029,
+          "totalCost": 349601577
+        },
+        {
+          "level": 73,
+          "cost": 41964193,
+          "totalCost": 391565770
+        },
+        {
+          "level": 74,
+          "cost": 46999896,
+          "totalCost": 438565666
+        },
+        {
+          "level": 75,
+          "cost": 52639884,
+          "totalCost": 491205550
+        },
+        {
+          "level": 76,
+          "cost": 58956670,
+          "totalCost": 550162220
+        },
+        {
+          "level": 77,
+          "cost": 66031470,
+          "totalCost": 616193690
+        },
+        {
+          "level": 78,
+          "cost": 73955246,
+          "totalCost": 690148936
+        },
+        {
+          "level": 79,
+          "cost": 82829876,
+          "totalCost": 772978812
+        },
+        {
+          "level": 80,
+          "cost": 92769461,
+          "totalCost": 865748273
+        },
+        {
+          "level": 81,
+          "cost": 103901797,
+          "totalCost": 969650070
+        },
+        {
+          "level": 82,
+          "cost": 116370012,
+          "totalCost": 1086020082
+        },
+        {
+          "level": 83,
+          "cost": 130334414,
+          "totalCost": 1216354496
+        },
+        {
+          "level": 84,
+          "cost": 145974544,
+          "totalCost": 1362329040
+        },
+        {
+          "level": 85,
+          "cost": 163491489,
+          "totalCost": 1525820529
+        },
+        {
+          "level": 86,
+          "cost": 183110468,
+          "totalCost": 1708930997
+        },
+        {
+          "level": 87,
+          "cost": 205083724,
+          "totalCost": 1914014721
+        },
+        {
+          "level": 88,
+          "cost": 229693771,
+          "totalCost": 2143708492
+        },
+        {
+          "level": 89,
+          "cost": 257257023,
+          "totalCost": 2400965515
+        },
+        {
+          "level": 90,
+          "cost": 288127866,
+          "totalCost": 2689093381
+        },
+        {
+          "level": 91,
+          "cost": 322703210,
+          "totalCost": 3011796591
+        },
+        {
+          "level": 92,
+          "cost": 361427595,
+          "totalCost": 3373224186
+        },
+        {
+          "level": 93,
+          "cost": 404798907,
+          "totalCost": 3778023093
+        },
+        {
+          "level": 94,
+          "cost": 453374776,
+          "totalCost": 4231397869
+        },
+        {
+          "level": 95,
+          "cost": 507779749,
+          "totalCost": 4739177618
+        },
+        {
+          "level": 96,
+          "cost": 568713319,
+          "totalCost": 5307890937
+        },
+        {
+          "level": 97,
+          "cost": 636958917,
+          "totalCost": 5944849854
+        },
+        {
+          "level": 98,
+          "cost": 713393987,
+          "totalCost": 6658243841
+        },
+        {
+          "level": 99,
+          "cost": 799001266,
+          "totalCost": 7457245107
+        },
+        {
+          "level": 100,
+          "cost": 894881418,
+          "totalCost": 8352126525
+        }
+      ],
+      "totalCostToMax": 8352126525
+    },
+    {
+      "id": "brand",
+      "name": "💼 Brand Deal",
+      "baseCost": 130000,
+      "growthRate": 1.11,
+      "baseFollowersPerSecond": 260,
+      "levels": [
+        {
+          "level": 1,
+          "cost": 130000,
+          "totalCost": 130000
+        },
+        {
+          "level": 2,
+          "cost": 144300,
+          "totalCost": 274300
+        },
+        {
+          "level": 3,
+          "cost": 160173,
+          "totalCost": 434473
+        },
+        {
+          "level": 4,
+          "cost": 177792,
+          "totalCost": 612265
+        },
+        {
+          "level": 5,
+          "cost": 197349,
+          "totalCost": 809614
+        },
+        {
+          "level": 6,
+          "cost": 219057,
+          "totalCost": 1028671
+        },
+        {
+          "level": 7,
+          "cost": 243153,
+          "totalCost": 1271824
+        },
+        {
+          "level": 8,
+          "cost": 269900,
+          "totalCost": 1541724
+        },
+        {
+          "level": 9,
+          "cost": 299589,
+          "totalCost": 1841313
+        },
+        {
+          "level": 10,
+          "cost": 332544,
+          "totalCost": 2173857
+        },
+        {
+          "level": 11,
+          "cost": 369124,
+          "totalCost": 2542981
+        },
+        {
+          "level": 12,
+          "cost": 409728,
+          "totalCost": 2952709
+        },
+        {
+          "level": 13,
+          "cost": 454798,
+          "totalCost": 3407507
+        },
+        {
+          "level": 14,
+          "cost": 504826,
+          "totalCost": 3912333
+        },
+        {
+          "level": 15,
+          "cost": 560357,
+          "totalCost": 4472690
+        },
+        {
+          "level": 16,
+          "cost": 621996,
+          "totalCost": 5094686
+        },
+        {
+          "level": 17,
+          "cost": 690416,
+          "totalCost": 5785102
+        },
+        {
+          "level": 18,
+          "cost": 766362,
+          "totalCost": 6551464
+        },
+        {
+          "level": 19,
+          "cost": 850661,
+          "totalCost": 7402125
+        },
+        {
+          "level": 20,
+          "cost": 944234,
+          "totalCost": 8346359
+        },
+        {
+          "level": 21,
+          "cost": 1048100,
+          "totalCost": 9394459
+        },
+        {
+          "level": 22,
+          "cost": 1163391,
+          "totalCost": 10557850
+        },
+        {
+          "level": 23,
+          "cost": 1291364,
+          "totalCost": 11849214
+        },
+        {
+          "level": 24,
+          "cost": 1433414,
+          "totalCost": 13282628
+        },
+        {
+          "level": 25,
+          "cost": 1591090,
+          "totalCost": 14873718
+        },
+        {
+          "level": 26,
+          "cost": 1766110,
+          "totalCost": 16639828
+        },
+        {
+          "level": 27,
+          "cost": 1960382,
+          "totalCost": 18600210
+        },
+        {
+          "level": 28,
+          "cost": 2176024,
+          "totalCost": 20776234
+        },
+        {
+          "level": 29,
+          "cost": 2415387,
+          "totalCost": 23191621
+        },
+        {
+          "level": 30,
+          "cost": 2681079,
+          "totalCost": 25872700
+        },
+        {
+          "level": 31,
+          "cost": 2975998,
+          "totalCost": 28848698
+        },
+        {
+          "level": 32,
+          "cost": 3303358,
+          "totalCost": 32152056
+        },
+        {
+          "level": 33,
+          "cost": 3666727,
+          "totalCost": 35818783
+        },
+        {
+          "level": 34,
+          "cost": 4070067,
+          "totalCost": 39888850
+        },
+        {
+          "level": 35,
+          "cost": 4517775,
+          "totalCost": 44406625
+        },
+        {
+          "level": 36,
+          "cost": 5014730,
+          "totalCost": 49421355
+        },
+        {
+          "level": 37,
+          "cost": 5566351,
+          "totalCost": 54987706
+        },
+        {
+          "level": 38,
+          "cost": 6178649,
+          "totalCost": 61166355
+        },
+        {
+          "level": 39,
+          "cost": 6858301,
+          "totalCost": 68024656
+        },
+        {
+          "level": 40,
+          "cost": 7612714,
+          "totalCost": 75637370
+        },
+        {
+          "level": 41,
+          "cost": 8450112,
+          "totalCost": 84087482
+        },
+        {
+          "level": 42,
+          "cost": 9379625,
+          "totalCost": 93467107
+        },
+        {
+          "level": 43,
+          "cost": 10411383,
+          "totalCost": 103878490
+        },
+        {
+          "level": 44,
+          "cost": 11556636,
+          "totalCost": 115435126
+        },
+        {
+          "level": 45,
+          "cost": 12827866,
+          "totalCost": 128262992
+        },
+        {
+          "level": 46,
+          "cost": 14238931,
+          "totalCost": 142501923
+        },
+        {
+          "level": 47,
+          "cost": 15805213,
+          "totalCost": 158307136
+        },
+        {
+          "level": 48,
+          "cost": 17543787,
+          "totalCost": 175850923
+        },
+        {
+          "level": 49,
+          "cost": 19473603,
+          "totalCost": 195324526
+        },
+        {
+          "level": 50,
+          "cost": 21615700,
+          "totalCost": 216940226
+        },
+        {
+          "level": 51,
+          "cost": 23993427,
+          "totalCost": 240933653
+        },
+        {
+          "level": 52,
+          "cost": 26632704,
+          "totalCost": 267566357
+        },
+        {
+          "level": 53,
+          "cost": 29562301,
+          "totalCost": 297128658
+        },
+        {
+          "level": 54,
+          "cost": 32814155,
+          "totalCost": 329942813
+        },
+        {
+          "level": 55,
+          "cost": 36423712,
+          "totalCost": 366366525
+        },
+        {
+          "level": 56,
+          "cost": 40430320,
+          "totalCost": 406796845
+        },
+        {
+          "level": 57,
+          "cost": 44877655,
+          "totalCost": 451674500
+        },
+        {
+          "level": 58,
+          "cost": 49814198,
+          "totalCost": 501488698
+        },
+        {
+          "level": 59,
+          "cost": 55293759,
+          "totalCost": 556782457
+        },
+        {
+          "level": 60,
+          "cost": 61376073,
+          "totalCost": 618158530
+        },
+        {
+          "level": 61,
+          "cost": 68127441,
+          "totalCost": 686285971
+        },
+        {
+          "level": 62,
+          "cost": 75621460,
+          "totalCost": 761907431
+        },
+        {
+          "level": 63,
+          "cost": 83939820,
+          "totalCost": 845847251
+        },
+        {
+          "level": 64,
+          "cost": 93173200,
+          "totalCost": 939020451
+        },
+        {
+          "level": 65,
+          "cost": 103422253,
+          "totalCost": 1042442704
+        },
+        {
+          "level": 66,
+          "cost": 114798700,
+          "totalCost": 1157241404
+        },
+        {
+          "level": 67,
+          "cost": 127426557,
+          "totalCost": 1284667961
+        },
+        {
+          "level": 68,
+          "cost": 141443479,
+          "totalCost": 1426111440
+        },
+        {
+          "level": 69,
+          "cost": 157002262,
+          "totalCost": 1583113702
+        },
+        {
+          "level": 70,
+          "cost": 174272510,
+          "totalCost": 1757386212
+        },
+        {
+          "level": 71,
+          "cost": 193442487,
+          "totalCost": 1950828699
+        },
+        {
+          "level": 72,
+          "cost": 214721160,
+          "totalCost": 2165549859
+        },
+        {
+          "level": 73,
+          "cost": 238340488,
+          "totalCost": 2403890347
+        },
+        {
+          "level": 74,
+          "cost": 264557942,
+          "totalCost": 2668448289
+        },
+        {
+          "level": 75,
+          "cost": 293659315,
+          "totalCost": 2962107604
+        },
+        {
+          "level": 76,
+          "cost": 325961840,
+          "totalCost": 3288069444
+        },
+        {
+          "level": 77,
+          "cost": 361817642,
+          "totalCost": 3649887086
+        },
+        {
+          "level": 78,
+          "cost": 401617583,
+          "totalCost": 4051504669
+        },
+        {
+          "level": 79,
+          "cost": 445795517,
+          "totalCost": 4497300186
+        },
+        {
+          "level": 80,
+          "cost": 494833024,
+          "totalCost": 4992133210
+        },
+        {
+          "level": 81,
+          "cost": 549264657,
+          "totalCost": 5541397867
+        },
+        {
+          "level": 82,
+          "cost": 609683769,
+          "totalCost": 6151081636
+        },
+        {
+          "level": 83,
+          "cost": 676748984,
+          "totalCost": 6827830620
+        },
+        {
+          "level": 84,
+          "cost": 751191372,
+          "totalCost": 7579021992
+        },
+        {
+          "level": 85,
+          "cost": 833822423,
+          "totalCost": 8412844415
+        },
+        {
+          "level": 86,
+          "cost": 925542890,
+          "totalCost": 9338387305
+        },
+        {
+          "level": 87,
+          "cost": 1027352608,
+          "totalCost": 10365739913
+        },
+        {
+          "level": 88,
+          "cost": 1140361395,
+          "totalCost": 11506101308
+        },
+        {
+          "level": 89,
+          "cost": 1265801148,
+          "totalCost": 12771902456
+        },
+        {
+          "level": 90,
+          "cost": 1405039275,
+          "totalCost": 14176941731
+        },
+        {
+          "level": 91,
+          "cost": 1559593595,
+          "totalCost": 15736535326
+        },
+        {
+          "level": 92,
+          "cost": 1731148891,
+          "totalCost": 17467684217
+        },
+        {
+          "level": 93,
+          "cost": 1921575269,
+          "totalCost": 19389259486
+        },
+        {
+          "level": 94,
+          "cost": 2132948548,
+          "totalCost": 21522208034
+        },
+        {
+          "level": 95,
+          "cost": 2367572889,
+          "totalCost": 23889780923
+        },
+        {
+          "level": 96,
+          "cost": 2628005906,
+          "totalCost": 26517786829
+        },
+        {
+          "level": 97,
+          "cost": 2917086556,
+          "totalCost": 29434873385
+        },
+        {
+          "level": 98,
+          "cost": 3237966077,
+          "totalCost": 32672839462
+        },
+        {
+          "level": 99,
+          "cost": 3594142346,
+          "totalCost": 36266981808
+        },
+        {
+          "level": 100,
+          "cost": 3989498004,
+          "totalCost": 40256479812
+        }
+      ],
+      "totalCostToMax": 40256479812
+    },
+    {
+      "id": "agency",
+      "name": "🏢 Talent Agency",
+      "baseCost": 1400000,
+      "growthRate": 1.1,
+      "baseFollowersPerSecond": 1400,
+      "levels": [
+        {
+          "level": 1,
+          "cost": 1400000,
+          "totalCost": 1400000
+        },
+        {
+          "level": 2,
+          "cost": 1540000,
+          "totalCost": 2940000
+        },
+        {
+          "level": 3,
+          "cost": 1694000,
+          "totalCost": 4634000
+        },
+        {
+          "level": 4,
+          "cost": 1863400,
+          "totalCost": 6497400
+        },
+        {
+          "level": 5,
+          "cost": 2049740,
+          "totalCost": 8547140
+        },
+        {
+          "level": 6,
+          "cost": 2254714,
+          "totalCost": 10801854
+        },
+        {
+          "level": 7,
+          "cost": 2480185,
+          "totalCost": 13282039
+        },
+        {
+          "level": 8,
+          "cost": 2728203,
+          "totalCost": 16010242
+        },
+        {
+          "level": 9,
+          "cost": 3001024,
+          "totalCost": 19011266
+        },
+        {
+          "level": 10,
+          "cost": 3301126,
+          "totalCost": 22312392
+        },
+        {
+          "level": 11,
+          "cost": 3631239,
+          "totalCost": 25943631
+        },
+        {
+          "level": 12,
+          "cost": 3994363,
+          "totalCost": 29937994
+        },
+        {
+          "level": 13,
+          "cost": 4393799,
+          "totalCost": 34331793
+        },
+        {
+          "level": 14,
+          "cost": 4833179,
+          "totalCost": 39164972
+        },
+        {
+          "level": 15,
+          "cost": 5316497,
+          "totalCost": 44481469
+        },
+        {
+          "level": 16,
+          "cost": 5848147,
+          "totalCost": 50329616
+        },
+        {
+          "level": 17,
+          "cost": 6432962,
+          "totalCost": 56762578
+        },
+        {
+          "level": 18,
+          "cost": 7076258,
+          "totalCost": 63838836
+        },
+        {
+          "level": 19,
+          "cost": 7783884,
+          "totalCost": 71622720
+        },
+        {
+          "level": 20,
+          "cost": 8562272,
+          "totalCost": 80184992
+        },
+        {
+          "level": 21,
+          "cost": 9418499,
+          "totalCost": 89603491
+        },
+        {
+          "level": 22,
+          "cost": 10360349,
+          "totalCost": 99963840
+        },
+        {
+          "level": 23,
+          "cost": 11396384,
+          "totalCost": 111360224
+        },
+        {
+          "level": 24,
+          "cost": 12536023,
+          "totalCost": 123896247
+        },
+        {
+          "level": 25,
+          "cost": 13789625,
+          "totalCost": 137685872
+        },
+        {
+          "level": 26,
+          "cost": 15168588,
+          "totalCost": 152854460
+        },
+        {
+          "level": 27,
+          "cost": 16685447,
+          "totalCost": 169539907
+        },
+        {
+          "level": 28,
+          "cost": 18353991,
+          "totalCost": 187893898
+        },
+        {
+          "level": 29,
+          "cost": 20189391,
+          "totalCost": 208083289
+        },
+        {
+          "level": 30,
+          "cost": 22208330,
+          "totalCost": 230291619
+        },
+        {
+          "level": 31,
+          "cost": 24429163,
+          "totalCost": 254720782
+        },
+        {
+          "level": 32,
+          "cost": 26872079,
+          "totalCost": 281592861
+        },
+        {
+          "level": 33,
+          "cost": 29559287,
+          "totalCost": 311152148
+        },
+        {
+          "level": 34,
+          "cost": 32515216,
+          "totalCost": 343667364
+        },
+        {
+          "level": 35,
+          "cost": 35766737,
+          "totalCost": 379434101
+        },
+        {
+          "level": 36,
+          "cost": 39343411,
+          "totalCost": 418777512
+        },
+        {
+          "level": 37,
+          "cost": 43277752,
+          "totalCost": 462055264
+        },
+        {
+          "level": 38,
+          "cost": 47605528,
+          "totalCost": 509660792
+        },
+        {
+          "level": 39,
+          "cost": 52366080,
+          "totalCost": 562026872
+        },
+        {
+          "level": 40,
+          "cost": 57602688,
+          "totalCost": 619629560
+        },
+        {
+          "level": 41,
+          "cost": 63362957,
+          "totalCost": 682992517
+        },
+        {
+          "level": 42,
+          "cost": 69699253,
+          "totalCost": 752691770
+        },
+        {
+          "level": 43,
+          "cost": 76669178,
+          "totalCost": 829360948
+        },
+        {
+          "level": 44,
+          "cost": 84336096,
+          "totalCost": 913697044
+        },
+        {
+          "level": 45,
+          "cost": 92769706,
+          "totalCost": 1006466750
+        },
+        {
+          "level": 46,
+          "cost": 102046677,
+          "totalCost": 1108513427
+        },
+        {
+          "level": 47,
+          "cost": 112251344,
+          "totalCost": 1220764771
+        },
+        {
+          "level": 48,
+          "cost": 123476479,
+          "totalCost": 1344241250
+        },
+        {
+          "level": 49,
+          "cost": 135824127,
+          "totalCost": 1480065377
+        },
+        {
+          "level": 50,
+          "cost": 149406540,
+          "totalCost": 1629471917
+        },
+        {
+          "level": 51,
+          "cost": 164347194,
+          "totalCost": 1793819111
+        },
+        {
+          "level": 52,
+          "cost": 180781913,
+          "totalCost": 1974601024
+        },
+        {
+          "level": 53,
+          "cost": 198860104,
+          "totalCost": 2173461128
+        },
+        {
+          "level": 54,
+          "cost": 218746115,
+          "totalCost": 2392207243
+        },
+        {
+          "level": 55,
+          "cost": 240620726,
+          "totalCost": 2632827969
+        },
+        {
+          "level": 56,
+          "cost": 264682799,
+          "totalCost": 2897510768
+        },
+        {
+          "level": 57,
+          "cost": 291151079,
+          "totalCost": 3188661847
+        },
+        {
+          "level": 58,
+          "cost": 320266187,
+          "totalCost": 3508928034
+        },
+        {
+          "level": 59,
+          "cost": 352292806,
+          "totalCost": 3861220840
+        },
+        {
+          "level": 60,
+          "cost": 387522086,
+          "totalCost": 4248742926
+        },
+        {
+          "level": 61,
+          "cost": 426274295,
+          "totalCost": 4675017221
+        },
+        {
+          "level": 62,
+          "cost": 468901724,
+          "totalCost": 5143918945
+        },
+        {
+          "level": 63,
+          "cost": 515791897,
+          "totalCost": 5659710842
+        },
+        {
+          "level": 64,
+          "cost": 567371087,
+          "totalCost": 6227081929
+        },
+        {
+          "level": 65,
+          "cost": 624108195,
+          "totalCost": 6851190124
+        },
+        {
+          "level": 66,
+          "cost": 686519015,
+          "totalCost": 7537709139
+        },
+        {
+          "level": 67,
+          "cost": 755170916,
+          "totalCost": 8292880055
+        },
+        {
+          "level": 68,
+          "cost": 830688008,
+          "totalCost": 9123568063
+        },
+        {
+          "level": 69,
+          "cost": 913756809,
+          "totalCost": 10037324872
+        },
+        {
+          "level": 70,
+          "cost": 1005132490,
+          "totalCost": 11042457362
+        },
+        {
+          "level": 71,
+          "cost": 1105645739,
+          "totalCost": 12148103101
+        },
+        {
+          "level": 72,
+          "cost": 1216210313,
+          "totalCost": 13364313414
+        },
+        {
+          "level": 73,
+          "cost": 1337831344,
+          "totalCost": 14702144758
+        },
+        {
+          "level": 74,
+          "cost": 1471614479,
+          "totalCost": 16173759237
+        },
+        {
+          "level": 75,
+          "cost": 1618775927,
+          "totalCost": 17792535164
+        },
+        {
+          "level": 76,
+          "cost": 1780653519,
+          "totalCost": 19573188683
+        },
+        {
+          "level": 77,
+          "cost": 1958718871,
+          "totalCost": 21531907554
+        },
+        {
+          "level": 78,
+          "cost": 2154590759,
+          "totalCost": 23686498313
+        },
+        {
+          "level": 79,
+          "cost": 2370049835,
+          "totalCost": 26056548148
+        },
+        {
+          "level": 80,
+          "cost": 2607054818,
+          "totalCost": 28663602966
+        },
+        {
+          "level": 81,
+          "cost": 2867760300,
+          "totalCost": 31531363266
+        },
+        {
+          "level": 82,
+          "cost": 3154536330,
+          "totalCost": 34685899596
+        },
+        {
+          "level": 83,
+          "cost": 3469989963,
+          "totalCost": 38155889559
+        },
+        {
+          "level": 84,
+          "cost": 3816988959,
+          "totalCost": 41972878518
+        },
+        {
+          "level": 85,
+          "cost": 4198687855,
+          "totalCost": 46171566373
+        },
+        {
+          "level": 86,
+          "cost": 4618556641,
+          "totalCost": 50790123014
+        },
+        {
+          "level": 87,
+          "cost": 5080412305,
+          "totalCost": 55870535319
+        },
+        {
+          "level": 88,
+          "cost": 5588453536,
+          "totalCost": 61458988855
+        },
+        {
+          "level": 89,
+          "cost": 6147298889,
+          "totalCost": 67606287744
+        },
+        {
+          "level": 90,
+          "cost": 6762028778,
+          "totalCost": 74368316522
+        },
+        {
+          "level": 91,
+          "cost": 7438231656,
+          "totalCost": 81806548178
+        },
+        {
+          "level": 92,
+          "cost": 8182054822,
+          "totalCost": 89988603000
+        },
+        {
+          "level": 93,
+          "cost": 9000260304,
+          "totalCost": 98988863304
+        },
+        {
+          "level": 94,
+          "cost": 9900286334,
+          "totalCost": 108889149638
+        },
+        {
+          "level": 95,
+          "cost": 10890314968,
+          "totalCost": 119779464606
+        },
+        {
+          "level": 96,
+          "cost": 11979346465,
+          "totalCost": 131758811071
+        },
+        {
+          "level": 97,
+          "cost": 13177281111,
+          "totalCost": 144936092182
+        },
+        {
+          "level": 98,
+          "cost": 14495009222,
+          "totalCost": 159431101404
+        },
+        {
+          "level": 99,
+          "cost": 15944510145,
+          "totalCost": 175375611549
+        },
+        {
+          "level": 100,
+          "cost": 17538961159,
+          "totalCost": 192914572708
+        }
+      ],
+      "totalCostToMax": 192914572708
+    }
+  ],
+  "notorietyGenerators": [
+    {
+      "id": "smm",
+      "name": "📱 Social Media Manager",
+      "baseCost": 100000,
+      "growthRate": 1.8,
+      "upkeep": 5000,
+      "notorietyPerHour": 1,
+      "maxLevel": 10,
+      "levels": [
+        {
+          "level": 1,
+          "cost": 100000,
+          "totalCost": 100000
+        },
+        {
+          "level": 2,
+          "cost": 180000,
+          "totalCost": 280000
+        },
+        {
+          "level": 3,
+          "cost": 324000,
+          "totalCost": 604000
+        },
+        {
+          "level": 4,
+          "cost": 583200,
+          "totalCost": 1187200
+        },
+        {
+          "level": 5,
+          "cost": 1049760,
+          "totalCost": 2236960
+        },
+        {
+          "level": 6,
+          "cost": 1889568,
+          "totalCost": 4126528
+        },
+        {
+          "level": 7,
+          "cost": 3401222,
+          "totalCost": 7527750
+        },
+        {
+          "level": 8,
+          "cost": 6122200,
+          "totalCost": 13649950
+        },
+        {
+          "level": 9,
+          "cost": 11019960,
+          "totalCost": 24669910
+        },
+        {
+          "level": 10,
+          "cost": 19835929,
+          "totalCost": 44505839
+        }
+      ],
+      "totalCostToMax": 44505839
+    },
+    {
+      "id": "pr_team",
+      "name": "📢 PR Team",
+      "baseCost": 100000000,
+      "growthRate": 2.2,
+      "upkeep": 25000,
+      "notorietyPerHour": 5,
+      "maxLevel": 10,
+      "levels": [
+        {
+          "level": 1,
+          "cost": 100000000,
+          "totalCost": 100000000
+        },
+        {
+          "level": 2,
+          "cost": 220000000,
+          "totalCost": 320000000
+        },
+        {
+          "level": 3,
+          "cost": 484000000,
+          "totalCost": 804000000
+        },
+        {
+          "level": 4,
+          "cost": 1064800000,
+          "totalCost": 1868800000
+        },
+        {
+          "level": 5,
+          "cost": 2342560000,
+          "totalCost": 4211360000
+        },
+        {
+          "level": 6,
+          "cost": 5153632000,
+          "totalCost": 9364992000
+        },
+        {
+          "level": 7,
+          "cost": 11337990400,
+          "totalCost": 20702982400
+        },
+        {
+          "level": 8,
+          "cost": 24943578880,
+          "totalCost": 45646561280
+        },
+        {
+          "level": 9,
+          "cost": 54875873536,
+          "totalCost": 100522434816
+        },
+        {
+          "level": 10,
+          "cost": 120726921779,
+          "totalCost": 221249356595
+        }
+      ],
+      "totalCostToMax": 221249356595
+    },
+    {
+      "id": "key_client",
+      "name": "🔑 Key Client",
+      "baseCost": 10000000000,
+      "growthRate": 2.5,
+      "upkeep": 250000,
+      "notorietyPerHour": 25,
+      "maxLevel": 10,
+      "levels": [
+        {
+          "level": 1,
+          "cost": 10000000000,
+          "totalCost": 10000000000
+        },
+        {
+          "level": 2,
+          "cost": 25000000000,
+          "totalCost": 35000000000
+        },
+        {
+          "level": 3,
+          "cost": 62500000000,
+          "totalCost": 97500000000
+        },
+        {
+          "level": 4,
+          "cost": 156250000000,
+          "totalCost": 253750000000
+        },
+        {
+          "level": 5,
+          "cost": 390625000000,
+          "totalCost": 644375000000
+        },
+        {
+          "level": 6,
+          "cost": 976562500000,
+          "totalCost": 1620937500000
+        },
+        {
+          "level": 7,
+          "cost": 2441406250000,
+          "totalCost": 4062343750000
+        },
+        {
+          "level": 8,
+          "cost": 6103515625000,
+          "totalCost": 10165859375000
+        },
+        {
+          "level": 9,
+          "cost": 15258789062500,
+          "totalCost": 25424648437500
+        },
+        {
+          "level": 10,
+          "cost": 38146972656250,
+          "totalCost": 63571621093750
+        }
+      ],
+      "totalCostToMax": 63571621093750
+    }
+  ],
+  "upgrades": [
+    {
+      "id": "better_camera",
+      "name": "📸 Better Camera",
+      "cap": "infinite",
+      "effect": "Adds to base click power per tier (7 tiers: +1, +2, +3, +5, +8, +15, +25)",
+      "costPerLevel": [
+        500,
+        1500,
+        4500,
+        13500,
+        40500,
+        121500,
+        364500
+      ],
+      "totalCost": 500
+    },
+    {
+      "id": "editing_software",
+      "name": "✂️ Editing Software",
+      "cap": 1,
+      "effect": "Photo Posts produce 2x followers",
+      "costPerLevel": [
+        2500
+      ],
+      "totalCost": 2500
+    },
+    {
+      "id": "viral_strategy",
+      "name": "🔥 Viral Strategy",
+      "cap": 1,
+      "effect": "All production increased by 50%",
+      "costPerLevel": [
+        50000
+      ],
+      "totalCost": 50000
+    },
+    {
+      "id": "ai_enhancements",
+      "name": "🤖 AI Enhancements",
+      "cap": "infinite",
+      "effect": "+5% to click power per level (infinite)",
+      "costPerLevel": [
+        1000000,
+        1350000,
+        1822500,
+        2460375,
+        3321506,
+        4484033,
+        6053445,
+        8172150,
+        11032403,
+        14893745
+      ],
+      "totalCost": 1000000
+    },
+    {
+      "id": "lucky_charm",
+      "name": "💎 Lucky Charm",
+      "cap": "infinite",
+      "effect": "Increases award drop rate per tier (4 tiers: +0.3% each)",
+      "costPerLevel": [
+        1000,
+        15000,
+        225000,
+        3375000
+      ],
+      "totalCost": 1000
+    },
+    {
+      "id": "overnight_success",
+      "name": "🌙 Overnight Success",
+      "cap": "infinite",
+      "effect": "Increases offline gain rate (4 tiers: 50%, 60%, 75%, 100%)",
+      "costPerLevel": [
+        25000,
+        125000,
+        625000,
+        3125000
+      ],
+      "totalCost": 25000
+    },
+    {
+      "id": "cred_cache",
+      "name": "💰 Cred Cache",
+      "cap": "infinite",
+      "effect": "Increases chance for bonus creds on click (6 tiers)",
+      "costPerLevel": [
+        10000,
+        50000,
+        250000,
+        1250000,
+        6250000,
+        31250000
+      ],
+      "totalCost": 10000
+    },
+    {
+      "id": "better_filters",
+      "name": "📸 Better Filters",
+      "cap": "infinite",
+      "effect": "+1% to base click power per level (infinite)",
+      "costPerLevel": [
+        100000,
+        125000,
+        156250,
+        195312,
+        244140,
+        305175,
+        381469,
+        476837,
+        596046,
+        745058
+      ],
+      "totalCost": 100000
+    }
+  ],
   "themes": [
     {
       "id": "dark",
       "name": "Dark",
       "cost": 0,
-      "bonusMultiplier": 1.0
+      "perk": "Cosmetic only"
     },
     {
       "id": "light",
       "name": "Light",
       "cost": 0,
-      "bonusMultiplier": 1.0
+      "perk": "Cosmetic only"
     },
     {
       "id": "night-sky",
       "name": "Night Sky",
       "cost": 5,
-      "bonusMultiplier": 1.1
+      "perk": "+10% production boost"
     },
     {
       "id": "touch-grass",
       "name": "Touch Grass",
       "cost": 10,
-      "bonusMultiplier": 1.08
+      "perk": "+8% production boost"
     },
     {
       "id": "terminal",
       "name": "Terminal",
       "cost": 25,
-      "bonusMultiplier": 1.12
+      "perk": "+12% production boost"
     },
     {
       "id": "cherry-blossom",
       "name": "Cherry Blossom",
       "cost": 50,
-      "bonusMultiplier": 1.07
-    },
-    {
-      "id": "themeVV",
-      "name": "ThemeVV",
-      "cost": 69,
-      "bonusMultiplier": 1.0,
-      "bonusClickPower": 6.9
+      "perk": "+7% production boost"
     },
     {
       "id": "nightshade",
       "name": "Nightshade",
       "cost": 100,
-      "bonusMultiplier": 1.15
+      "perk": "+15% production boost"
     },
     {
       "id": "el-blue",
       "name": "EL Blue",
       "cost": 500,
-      "bonusMultiplier": 1.2
+      "perk": "+20% production boost"
     },
     {
       "id": "gold",
       "name": "Gold",
       "cost": 1000,
-      "bonusMultiplier": 1.25
+      "perk": "+25% production boost"
     }
   ],
   "prestige": [
     {
       "level": 1,
-      "cost": 10000000
+      "cost": 56568542,
+      "prestigePoints": 1
     },
     {
       "level": 2,
-      "cost": 56568542
+      "cost": 155884572,
+      "prestigePoints": 2
     },
     {
       "level": 3,
-      "cost": 155634919
+      "cost": 320000000,
+      "prestigePoints": 3
     },
     {
       "level": 4,
-      "cost": 320000000
+      "cost": 559016994,
+      "prestigePoints": 4
     },
     {
       "level": 5,
-      "cost": 559872559
+      "cost": 881816307,
+      "prestigePoints": 5
     },
     {
       "level": 6,
-      "cost": 885529612
+      "cost": 1296418142,
+      "prestigePoints": 6
     },
     {
       "level": 7,
-      "cost": 1307674368
+      "cost": 1810193359,
+      "prestigePoints": 7
     },
     {
       "level": 8,
-      "cost": 1838459212
+      "cost": 2430000000,
+      "prestigePoints": 8
     },
     {
       "level": 9,
-      "cost": 2490396789
+      "cost": 3162277660,
+      "prestigePoints": 9
     },
     {
       "level": 10,
-      "cost": 3276800000
+      "cost": 4013115996,
+      "prestigePoints": 10
     }
   ]
 }

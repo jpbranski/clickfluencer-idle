@@ -15,41 +15,45 @@
  * - Bonus: +10% to all production per Reputation point
  */
 
-import { GameState, createInitialState } from "./state";
+import { GameState, createInitialState, INITIAL_ACHIEVEMENTS } from "./state";
+import { PRESTIGE_THRESHOLD, PRESTIGE_BASE_COST } from "./balance";
 
 // ============================================================================
 // CONSTANTS
 // ============================================================================
 
-export const PRESTIGE_THRESHOLD = 1e9; // 1 Billion followers
 export const PRESTIGE_EXPONENT = 0.4;
 export const REPUTATION_BONUS_PERCENT = 0.1; // 10% per point
+
+// Export PRESTIGE_THRESHOLD for backward compatibility
+export { PRESTIGE_THRESHOLD };
 
 // ============================================================================
 // PRESTIGE CALCULATIONS
 // ============================================================================
 
 /**
- * Check if player can prestige (has reached threshold)
+ * Calculate cost to purchase next prestige point
+ * Formula: C_p = C_0 × (P+1)^(1/E) = 1e7 × (P+1)^2.5
+ *
+ * Where P is current prestige level
+ *
+ * Examples:
+ *   P=0 (1st prestige): 1.00e7 Creds
+ *   P=1 (2nd prestige): 5.66e7 Creds
+ *   P=2 (3rd prestige): 1.33e8 Creds
+ *   P=5: 3.96e8 Creds
+ *   P=10: 1.78e9 Creds
  */
-export function canPrestige(followers: number): boolean {
-  return followers >= PRESTIGE_THRESHOLD;
+export function prestigeCost(currentPrestige: number): number {
+  return PRESTIGE_BASE_COST * Math.pow(currentPrestige + 1, 1 / PRESTIGE_EXPONENT);
 }
 
 /**
- * Calculate how many Reputation points would be earned from prestiging
- * Formula: floor((followers / 1e9) ^ 0.4)
- *
- * Examples:
- *   1e9 followers => 1 Reputation
- *   1e10 followers => 2 Reputation
- *   1e11 followers => 3 Reputation
+ * Check if player can afford prestige (has enough Creds)
  */
-export function calculateReputationGain(followers: number): number {
-  if (followers < PRESTIGE_THRESHOLD) return 0;
-  return Math.floor(
-    Math.pow(followers / PRESTIGE_THRESHOLD, PRESTIGE_EXPONENT),
-  );
+export function canPrestige(followers: number, currentPrestige: number): boolean {
+  return followers >= prestigeCost(currentPrestige);
 }
 
 /**
@@ -66,40 +70,6 @@ export function calculateReputationBonus(reputation: number): number {
   return 1 + reputation * REPUTATION_BONUS_PERCENT;
 }
 
-/**
- * Calculate how many followers needed to reach next reputation point
- */
-export function getFollowersForNextReputation(
-  currentReputation: number,
-): number {
-  const nextReputation = currentReputation + 1;
-  return Math.ceil(
-    PRESTIGE_THRESHOLD * Math.pow(nextReputation, 1 / PRESTIGE_EXPONENT),
-  );
-}
-
-/**
- * Get progress toward next reputation point (0-1)
- */
-export function getReputationProgress(
-  followers: number,
-  currentReputation: number,
-): number {
-  if (followers < PRESTIGE_THRESHOLD) {
-    return followers / PRESTIGE_THRESHOLD;
-  }
-
-  const currentReputationFollowers =
-    PRESTIGE_THRESHOLD * Math.pow(currentReputation, 1 / PRESTIGE_EXPONENT);
-  const nextReputationFollowers =
-    getFollowersForNextReputation(currentReputation);
-
-  return (
-    (followers - currentReputationFollowers) /
-    (nextReputationFollowers - currentReputationFollowers)
-  );
-}
-
 // ============================================================================
 // PRESTIGE EXECUTION
 // ============================================================================
@@ -113,24 +83,26 @@ export interface PrestigeResult {
 }
 
 /**
- * Execute prestige: reset progress and award reputation
+ * Execute prestige: spend Creds to gain 1 prestige point
  * Returns result with stats about the prestige
  */
 export function executePrestige(state: GameState): PrestigeResult {
-  // Check if can prestige
-  if (!canPrestige(state.followers)) {
+  const cost = prestigeCost(state.reputation);
+
+  // Check if can afford prestige
+  if (!canPrestige(state.followers, state.reputation)) {
     return {
       success: false,
       reputationGained: 0,
       totalReputation: state.reputation,
       followersLost: 0,
-      message: `Need ${PRESTIGE_THRESHOLD.toExponential(0)} followers to prestige`,
+      message: `Need ${cost.toExponential(2)} Creds to prestige`,
     };
   }
 
-  // Calculate reputation gain
-  const reputationGained = calculateReputationGain(state.followers);
-  const followersLost = state.followers;
+  // Prestige costs Creds and grants 1 reputation point
+  const reputationGained = 1;
+  const followersLost = cost;
   const totalReputation = state.reputation + reputationGained;
 
   return {
@@ -138,47 +110,79 @@ export function executePrestige(state: GameState): PrestigeResult {
     reputationGained,
     totalReputation,
     followersLost,
-    message: `Gained ${reputationGained} Reputation!`,
+    message: `Gained ${reputationGained} Prestige Point!`,
   };
 }
 
 /**
  * Reset game state for prestige while preserving certain elements
- * Preserves: reputation, shards, themes, statistics, settings
- * Resets: followers, generators, upgrades, events
+ *
+ * Preserves (v1.0.0):
+ * - Reputation, shards (prestige currencies)
+ * - Themes (cosmetic unlocks)
+ * - Infinite scaling upgrades (AI Enhancements, Better Filters)
+ * - Achievements (cosmetic)
+ * - Statistics (lifetime stats)
+ * - Settings
+ *
+ * Resets:
+ * - Followers (back to 0)
+ * - Generators (back to 0 count)
+ * - Non-infinite upgrades (one-time and tiered)
+ * - Notoriety (amount resets to 0, but structure preserved)
+ * - Active events
  */
-export function resetForPrestige(
+export function applyPrestige(
   state: GameState,
   reputationGained: number,
+  credCost: number,
 ): GameState {
   const initial = createInitialState();
 
+  // Identify infinite scaling upgrades to preserve
+  const infiniteUpgradeIds = ["ai_enhancements", "better_filters"];
+
+  // Preserve infinite upgrades' progress
+  const preservedUpgrades = initial.upgrades.map((upgrade) => {
+    if (infiniteUpgradeIds.includes(upgrade.id)) {
+      const oldUpgrade = state.upgrades.find((u) => u.id === upgrade.id);
+      if (oldUpgrade && oldUpgrade.currentLevel !== undefined) {
+        return {
+          ...upgrade,
+          purchased: oldUpgrade.purchased,
+          currentLevel: oldUpgrade.currentLevel,
+          cost: oldUpgrade.cost, // Preserve cost progression
+        };
+      }
+    }
+    return upgrade;
+  });
+
   return {
-    ...initial,
-    // Preserve prestige currency and cosmetics
+    ...state,
+    // Spend Creds and gain reputation
+    followers: state.followers - credCost,
     reputation: state.reputation + reputationGained,
-    shards: state.shards,
-    themes: state.themes, // Keep unlocked themes
+
+    // Preserve infinite upgrades
+    upgrades: preservedUpgrades,
+
+    // Preserve achievements (if they exist)
+    achievements: state.achievements,
+
+    // Preserve notoriety system (prestige-tier meta resource)
+    notoriety: state.notoriety || 0,
+    notorietyGenerators: state.notorietyGenerators || [],
+    notorietyUpgrades: state.notorietyUpgrades || {},
 
     // Update statistics
     stats: {
-      ...initial.stats,
-      totalClicks: state.stats.totalClicks,
-      totalFollowersEarned: state.stats.totalFollowersEarned,
-      totalGeneratorsPurchased: state.stats.totalGeneratorsPurchased,
-      totalUpgradesPurchased: state.stats.totalUpgradesPurchased,
+      ...state.stats,
       prestigeCount: state.stats.prestigeCount + 1,
-      shardsEarned: state.stats.shardsEarned,
-      playTime: state.stats.playTime,
       lastTickTime: Date.now(),
-      runStartTime: Date.now(),
     },
 
-    // Preserve settings
-    settings: state.settings,
-
     // Update meta
-    version: state.version,
     lastSaveTime: Date.now(),
   };
 }
@@ -188,68 +192,27 @@ export function resetForPrestige(
 // ============================================================================
 
 /**
- * Get a recommendation on whether to prestige now
- * Returns advice based on potential gains
- */
-export function getPrestigeRecommendation(state: GameState): {
-  shouldPrestige: boolean;
-  reason: string;
-} {
-  if (!canPrestige(state.followers)) {
-    const needed = PRESTIGE_THRESHOLD - state.followers;
-    return {
-      shouldPrestige: false,
-      reason: `Need ${needed.toExponential(2)} more followers to prestige`,
-    };
-  }
-
-  const currentRepGain = calculateReputationGain(state.followers);
-  const nextReputationFollowers = getFollowersForNextReputation(currentRepGain);
-  const progress = getReputationProgress(state.followers, currentRepGain);
-
-  // Recommend waiting if close to next reputation point
-  if (progress > 0.75 && state.followers < nextReputationFollowers) {
-    return {
-      shouldPrestige: false,
-      reason: `${(progress * 100).toFixed(0)}% to next Reputation point - consider waiting`,
-    };
-  }
-
-  // Recommend prestiging if far from next point
-  if (progress < 0.25) {
-    return {
-      shouldPrestige: true,
-      reason: `Good time to prestige for ${currentRepGain} Reputation`,
-    };
-  }
-
-  return {
-    shouldPrestige: true,
-    reason: `Ready to prestige for ${currentRepGain} Reputation`,
-  };
-}
-
-/**
  * Calculate effective production multiplier after prestige
  * Shows what your production would be with new reputation
  */
 export function getPostPrestigeMultiplier(state: GameState): number {
-  const futureReputation =
-    state.reputation + calculateReputationGain(state.followers);
+  const futureReputation = state.reputation + 1;
   return calculateReputationBonus(futureReputation);
 }
 
 /**
- * Estimate time to reach prestige threshold
+ * Estimate time to afford next prestige
  * Returns estimated milliseconds, or Infinity if production is too low
  */
 export function estimateTimeToPrestige(
   currentFollowers: number,
+  currentPrestige: number,
   followersPerSecond: number,
 ): number {
-  if (currentFollowers >= PRESTIGE_THRESHOLD) return 0;
+  const cost = prestigeCost(currentPrestige);
+  if (currentFollowers >= cost) return 0;
   if (followersPerSecond <= 0) return Infinity;
 
-  const needed = PRESTIGE_THRESHOLD - currentFollowers;
+  const needed = cost - currentFollowers;
   return (needed / followersPerSecond) * 1000; // Convert to milliseconds
 }

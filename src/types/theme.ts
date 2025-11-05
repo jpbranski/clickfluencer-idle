@@ -8,5 +8,8 @@ export interface Theme {
   unlocked: boolean;
   active: boolean;
   bonusMultiplier: number; // required for gameplay bonuses
-  bonusClickPower?: number; // optional bonus to click power
+  // v1.0.0 additions
+  fontFamily?: string; // Optional custom font family
+  backgroundImage?: string; // Path to background image (e.g., "/themes/default-bg.webp")
+  iconImage?: string; // Path to icon/logo image (e.g., "/themes/default-icon.webp")
 }
