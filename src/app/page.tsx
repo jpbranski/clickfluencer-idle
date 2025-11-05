@@ -48,8 +48,6 @@ export default function HomePage() {
     handleExportSave,
     handleImportSave,
     handleResetGame,
-    handleBuyNotorietyGenerator,
-    handleBuyNotorietyUpgrade,
     offlineProgress,
     dismissOfflineProgress,
   } = useGame();

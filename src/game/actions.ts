@@ -543,10 +543,6 @@ export function tick(state: GameState, deltaTime: number): GameState {
   const notorietyPerSecond = getNotorietyGainPerSecond(state.notorietyGenerators);
   const notorietyGained = notorietyPerSecond * secondsElapsed;
 
-  // Calculate notoriety generated this tick
-  const notorietyPerSecond = getNotorietyGainPerSecond(state);
-  const notorietyGained = notorietyPerSecond * secondsElapsed;
-
   // Update generators unlock status
   const newGenerators = state.generators.map((g) => {
     if (shouldUnlockGenerator(g, state.followers)) {

@@ -53,10 +53,6 @@ import {
 } from "@/game/logic/notorietyLogic";
 import { canPrestige, prestigeCost } from "@/game/prestige";
 import {
-  getNotorietyGainPerSecond,
-  getTotalUpkeep,
-} from "@/game/logic/notorietyLogic";
-import {
   saveGame,
   loadGame,
   autoSaveGame,
@@ -155,8 +151,6 @@ interface GameContextValue {
   handleExportSave: () => void;
   handleImportSave: (data: string) => void;
   handleResetGame: () => void;
-  handleBuyNotorietyGenerator: (generatorId: string) => void;
-  handleBuyNotorietyUpgrade: (upgradeId: string) => void;
 
   currentTheme: string;
   setTheme: (themeId: string) => void;
@@ -543,26 +537,6 @@ export function GameProvider({ children }: GameProviderProps) {
     setOfflineProgress(null);
   }, []);
 
-  const handleBuyNotorietyGenerator = useCallback(
-    (generatorId: string) => {
-      if (!engineRef.current || !state) return;
-      engineRef.current.executeAction((currentState) =>
-        buyNotorietyGenerator(currentState, generatorId)
-      );
-    },
-    [state]
-  );
-
-  const handleBuyNotorietyUpgrade = useCallback(
-    (upgradeId: string) => {
-      if (!engineRef.current || !state) return;
-      engineRef.current.executeAction((currentState) =>
-        buyNotorietyUpgrade(currentState, upgradeId)
-      );
-    },
-    [state]
-  );
-
   // ============================================================================
   // CONTEXT VALUE
   // ============================================================================
@@ -591,8 +565,6 @@ export function GameProvider({ children }: GameProviderProps) {
     handleExportSave,
     handleImportSave,
     handleResetGame,
-    handleBuyNotorietyGenerator,
-    handleBuyNotorietyUpgrade,
     currentTheme,
     setTheme,
     offlineProgress,

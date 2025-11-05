@@ -438,8 +438,6 @@ export function createInitialState(): GameState {
     notoriety: 0,
     generators: INITIAL_GENERATORS.map((g) => ({ ...g })),
     upgrades: INITIAL_UPGRADES.map((u) => ({ ...u })),
-    notorietyGenerators: {},
-    notorietyUpgrades: {},
     activeEvents: [],
     stats: {
       totalClicks: 0,
