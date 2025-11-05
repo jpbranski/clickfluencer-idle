@@ -48,7 +48,6 @@ import {
 } from "@/game/state";
 import {
   getNotorietyGainPerSecond,
-  getNotorietyGainPerHour,
   getTotalUpkeep as getNotorietyUpkeep,
 } from "@/game/logic/notorietyLogic";
 import { canPrestige, prestigeCost } from "@/game/prestige";
@@ -393,8 +392,8 @@ export function GameProvider({ children }: GameProviderProps) {
 
   const clickPower = state ? getClickPower(state) : 0;
   const followersPerSecond = state ? getFollowersPerSecond(state) : 0;
-  const notorietyPerSecond = state ? getNotorietyGainPerSecond(state.notorietyGenerators) : 0;
-  const totalUpkeep = state ? getNotorietyUpkeep(state.notorietyGenerators) : 0;
+  const notorietyPerSecond = state ? getNotorietyGainPerSecond(state) : 0;
+  const totalUpkeep = state ? getNotorietyUpkeep(state) : 0;
   const netFollowersPerSecond = state ? followersPerSecond - totalUpkeep : 0;
   const canPrestigeNow = state ? canPrestige(state.followers, state.reputation) : false;
   const reputationGain = 1; // Always gain 1 prestige point per purchase

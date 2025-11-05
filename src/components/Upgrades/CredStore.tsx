@@ -39,19 +39,19 @@ export function CredStore({
 
       {/* Prestige Section */}
       {canPrestige && (
-        <div className="mb-6 p-6 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg">
+        <div className="mb-6 p-6 rounded-lg bg-gradient-to-r from-orange-700 to-orange-600 text-white shadow-lg">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="text-center sm:text-left">
               <div className="text-2xl font-bold flex items-center justify-center sm:justify-start gap-2 mb-2">
-                ⭐ Prestige Available!
+                <span className="text-yellow-300">⭐</span> Prestige Available!
               </div>
-              <div className="text-sm opacity-90">
+              <div className="text-sm mt-1">
                 Reset your progress to gain{" "}
                 <span className="font-bold">
                   {reputationGain} Reputation
                 </span>
               </div>
-              <div className="text-xs opacity-75 mt-1">
+              <div className="text-xs opacity-90 mt-1">
                 New bonus: ×
                 {(
                   (1 + (reputation + reputationGain) * 0.1) *
@@ -62,7 +62,7 @@ export function CredStore({
             </div>
             <button
               onClick={onPrestige}
-              className="px-6 py-3 bg-white text-orange-600 rounded-lg font-bold hover:bg-gray-100 transition-colors shadow-md"
+              className="px-6 py-3 bg-white text-orange-700 rounded-lg font-bold hover:bg-gray-50 transition-colors shadow-md"
             >
               Prestige Now
             </button>

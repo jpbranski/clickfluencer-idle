@@ -18,7 +18,6 @@ import {
   NOTORIETY_BASE_PER_SEC,
   NOTORIETY_UPKEEP_PER_SEC,
 } from "./balance";
-import { NotorietyState } from "./logic/notorietyLogic";
 export interface Generator {
   id: string;
   name: string;
@@ -128,7 +127,7 @@ export interface GameState {
   generators: Generator[];
 
   // Notoriety Generators (strategic resource with upkeep)
-  notorietyGenerators: NotorietyState;
+  notorietyGenerators: Record<string, number>;
 
   // Upgrades (permanent improvements)
   upgrades: Upgrade[];

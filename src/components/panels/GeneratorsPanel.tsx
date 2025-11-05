@@ -10,13 +10,18 @@
 import { useState } from "react";
 import { Generator } from "@/game/state";
 import { GeneratorCard } from "@/components/GeneratorCard";
-import { getGeneratorCost } from "@/game/state";
+import { NotorietyGeneratorCard } from "@/components/NotorietyGeneratorCard";
+import { getGeneratorCost, canAfford } from "@/game/state";
+import { getNotorietyGeneratorsWithStatus } from "@/game/logic/notorietyLogic";
+import { GameState } from "@/game/state";
 
 interface GeneratorsPanelProps {
   generators: Generator[];
   followers: number;
   followersPerSecond: number;
   onBuyGenerator: (generatorId: string, count?: number) => void;
+  state: GameState;
+  onBuyNotorietyGenerator: (generatorId: string) => void;
 }
 
 export function GeneratorsPanel({
@@ -24,6 +29,8 @@ export function GeneratorsPanel({
   followers,
   followersPerSecond,
   onBuyGenerator,
+  state,
+  onBuyNotorietyGenerator,
 }: GeneratorsPanelProps) {
   const [activeSubTab, setActiveSubTab] = useState<"content" | "notoriety">("content");
 
@@ -85,16 +92,22 @@ export function GeneratorsPanel({
         </div>
       )}
 
-      {/* Notoriety Tab - Empty for now */}
+      {/* Notoriety Tab */}
       {activeSubTab === "notoriety" && (
-        <div className="text-center p-12 bg-surface rounded-lg border border-border">
-          <div className="text-4xl mb-3">😎</div>
-          <div className="text-lg font-semibold text-muted-foreground">
-            Coming Soon!
+        <div className="space-y-3">
+          <div className="mb-4">
+            <p className="text-sm text-muted">
+              Generate Notoriety/second but consume Creds/second as upkeep
+            </p>
           </div>
-          <div className="text-sm text-muted mt-2">
-            Notoriety generators will be added in a future update
-          </div>
+          {getNotorietyGeneratorsWithStatus(state).map((generator) => (
+            <NotorietyGeneratorCard
+              key={generator.id}
+              generator={generator}
+              canAfford={canAfford(followers, generator.cost)}
+              onBuy={() => onBuyNotorietyGenerator(generator.id)}
+            />
+          ))}
         </div>
       )}
     </div>

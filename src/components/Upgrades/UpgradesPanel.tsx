@@ -24,6 +24,8 @@ interface UpgradesPanelProps {
 
   // Notoriety Store props
   notoriety: number;
+  state: any;
+  onBuyNotorietyUpgrade: (id: string) => void;
 }
 
 export function UpgradesPanel({
@@ -35,6 +37,8 @@ export function UpgradesPanel({
   onBuyUpgrade,
   onPrestige,
   notoriety,
+  state,
+  onBuyNotorietyUpgrade,
 }: UpgradesPanelProps) {
   const [subTab, setSubTab] = useState<"creds" | "notoriety">("creds");
 
@@ -78,7 +82,11 @@ export function UpgradesPanel({
       )}
 
       {subTab === "notoriety" && (
-        <NotorietyStore notoriety={notoriety} />
+        <NotorietyStore
+          notoriety={notoriety}
+          state={state}
+          onBuyUpgrade={onBuyNotorietyUpgrade}
+        />
       )}
     </div>
   );
