@@ -35,6 +35,8 @@ import {
   activateTheme,
   prestige,
   updateSetting,
+  buyNotorietyGenerator,
+  buyNotorietyUpgrade,
   ActionResult,
 } from "@/game/actions";
 import {
@@ -111,6 +113,8 @@ interface GameContextValue {
   handleExportSave: () => void;
   handleImportSave: (data: string) => void;
   handleResetGame: () => void;
+  handleBuyNotorietyGenerator: (generatorId: string) => void;
+  handleBuyNotorietyUpgrade: (upgradeId: string) => void;
 
   currentTheme: string;
   setTheme: (themeId: string) => void;
@@ -454,6 +458,26 @@ export function GameProvider({ children }: GameProviderProps) {
     }
   }, []);
 
+  const handleBuyNotorietyGenerator = useCallback(
+    (generatorId: string) => {
+      if (!engineRef.current || !state) return;
+      engineRef.current.executeAction((currentState) =>
+        buyNotorietyGenerator(currentState, generatorId)
+      );
+    },
+    [state]
+  );
+
+  const handleBuyNotorietyUpgrade = useCallback(
+    (upgradeId: string) => {
+      if (!engineRef.current || !state) return;
+      engineRef.current.executeAction((currentState) =>
+        buyNotorietyUpgrade(currentState, upgradeId)
+      );
+    },
+    [state]
+  );
+
   const dismissOfflineProgress = useCallback(() => {
     setOfflineProgress(null);
   }, []);
@@ -480,6 +504,8 @@ export function GameProvider({ children }: GameProviderProps) {
     handleExportSave,
     handleImportSave,
     handleResetGame,
+    handleBuyNotorietyGenerator,
+    handleBuyNotorietyUpgrade,
     currentTheme,
     setTheme,
     offlineProgress,

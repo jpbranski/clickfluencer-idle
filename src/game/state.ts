@@ -61,6 +61,7 @@ export interface Theme {
   unlocked: boolean;
   active: boolean;
   bonusMultiplier: number; // required for gameplay bonuses
+  bonusClickPower?: number; // optional bonus to click power
 }
 
 export interface RandomEvent {
@@ -96,6 +97,7 @@ export interface GameState {
   followers: number;
   shards: number; // Awards (premium currency from random drops)
   reputation: number; // Prestige currency
+  notoriety: number; // Notoriety (prestige-tier resource)
 
   // Generators (content creation systems)
   generators: Generator[];
@@ -111,6 +113,16 @@ export interface GameState {
 
   // Themes
   themes: Theme[];
+
+  // Notoriety System
+  notorietyGenerators: {
+    smm: number;
+    pr_team: number;
+    key_client: number;
+  };
+  notorietyUpgrades: {
+    [key: string]: number; // upgrade id -> level
+  };
 
   // Settings
   settings: {
@@ -179,8 +191,8 @@ export const INITIAL_GENERATORS: Generator[] = [
     id: "agency",
     name: "🏢 Talent Agency",
     count: 0,
-    baseFollowersPerSecond: 1400.0,
-    baseCost: 1400000,
+    baseFollowersPerSecond: 1500.0,
+    baseCost: 750000,
     costMultiplier: 1.1,
     unlocked: false,
   },
@@ -287,6 +299,7 @@ export function createInitialState(): GameState {
     followers: 0,
     shards: 0,
     reputation: 0,
+    notoriety: 0,
     generators: INITIAL_GENERATORS.map((g) => ({ ...g })),
     upgrades: INITIAL_UPGRADES.map((u) => ({ ...u })),
     activeEvents: [],
@@ -301,6 +314,12 @@ export function createInitialState(): GameState {
       lastTickTime: now,
       runStartTime: now,
     },
+    notorietyGenerators: {
+      smm: 0,
+      pr_team: 0,
+      key_client: 0,
+    },
+    notorietyUpgrades: {},
     settings: {
       autoSave: true,
       showNotifications: true,
@@ -356,6 +375,12 @@ export function getClickPower(state: GameState): number {
       basePower += u.effect.value;
     });
 
+  // Apply active theme click power bonus (additive to base power)
+  const activeTheme = state.themes.find((t) => t.active);
+  if (activeTheme && activeTheme.bonusClickPower) {
+    basePower += activeTheme.bonusClickPower;
+  }
+
   let power = basePower;
 
   // Apply click multiplier upgrades
@@ -385,8 +410,7 @@ export function getClickPower(state: GameState): number {
   // Apply reputation bonus (+10% per reputation point)
   power *= 1 + state.reputation * 0.1;
 
-  // Apply active theme bonus (only the active theme)
-  const activeTheme = state.themes.find((t) => t.active);
+  // Apply active theme multiplier bonus (only the active theme)
   if (activeTheme) {
     power *= activeTheme.bonusMultiplier;
   }

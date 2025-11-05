@@ -15,6 +15,7 @@ import { formatNumber } from "@/game/format";
 import { getGeneratorCost, canAfford, canAffordShards } from "@/game/state";
 import { getAwardDropRate, getUpgradeCost } from "@/game/actions";
 import { themes } from '@/data/themes';
+import { getNotorietyGainPerHour } from "@/game/logic/notorietyLogic";
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
@@ -133,6 +134,8 @@ export default function HomePage() {
             awardDropRate={state ? getAwardDropRate(state) : 0.003}
             followersPerSecond={followersPerSecond}
             reputation={state.reputation}
+            notoriety={state.notoriety}
+            notorietyPerHour={getNotorietyGainPerHour(state.notorietyGenerators)}
           />
         </header>
 
@@ -264,7 +267,7 @@ export default function HomePage() {
 
                   {/* Prestige Section */}
                   {canPrestige && (
-                    <div className="mb-6 p-6 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg">
+                    <div className="mb-6 p-6 rounded-lg bg-gradient-to-r from-orange-700 to-orange-600 text-white shadow-lg">
                       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                         <div className="text-center sm:text-left">
                           <div className="text-2xl font-bold flex items-center justify-center sm:justify-start gap-2 mb-2">
@@ -287,7 +290,7 @@ export default function HomePage() {
                         </div>
                         <button
                           onClick={handlePrestige}
-                          className="px-6 py-3 bg-white text-orange-600 rounded-lg font-bold hover:bg-gray-100 transition-colors shadow-md"
+                          className="px-6 py-3 bg-white text-orange-700 rounded-lg font-bold hover:from-orange-800 hover:to-orange-700 hover:bg-gray-100 transition-colors shadow-md focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
                         >
                           Prestige Now
                         </button>

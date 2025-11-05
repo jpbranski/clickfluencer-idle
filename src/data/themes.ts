@@ -69,6 +69,18 @@ export const themes: Theme[] = [
     bonusMultiplier: 1.07, // +7% follower generation
   },
   {
+    id: 'themeVV',
+    name: 'ThemeVV',
+    displayName: 'ThemeVV',
+    description: 'Largely white and black (like a panda), with red accents like a crayon. +6.9% click power.',
+    cost: 69,
+    unlocked: false,
+    preview: 'linear-gradient(to bottom right, #FFFFFF 0%, #000000 50%, #FF2B2B 100%)',
+    active: false,
+    bonusMultiplier: 1.0, // No production bonus
+    bonusClickPower: 6.9, // +6.9 to base click power
+  },
+  {
     id: 'nightshade',
     name: 'Nightshade',
     displayName: 'Nightshade',

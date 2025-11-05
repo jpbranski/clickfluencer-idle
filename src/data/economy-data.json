@@ -1,0 +1,178 @@
+{
+  "generators": {
+    "notoriety": [
+      {
+        "id": "smm",
+        "name": "Social Media Manager",
+        "costs": [100000, 180000, 324000, 583200, 1049760, 1889568, 3401222, 6122200, 11019960, 19835928],
+        "upkeep": 5000,
+        "notorietyPerHour": 1
+      },
+      {
+        "id": "pr_team",
+        "name": "PR Team",
+        "costs": [100000000, 220000000, 484000000, 1064800000, 2342560000, 5153632000, 11337990400, 24943577880, 54875871336, 120726915339],
+        "upkeep": 25000,
+        "notorietyPerHour": 5
+      },
+      {
+        "id": "key_client",
+        "name": "Key Client",
+        "costs": [10000000000, 25000000000, 62500000000, 156250000000, 390625000000, 976562500000, 2441406250000, 6103515625000, 15258789062500, 38146972656250],
+        "upkeep": 250000,
+        "notorietyPerHour": 25
+      }
+    ]
+  },
+  "upgrades": {
+    "notoriety": [
+      {
+        "id": "cache_value",
+        "name": "Cache Value Increase",
+        "cap": 10,
+        "effect": "+5% to Cred Cache payout per level",
+        "costs": [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+      },
+      {
+        "id": "drama_boost",
+        "name": "Drama Multiplier Boost",
+        "cap": 5,
+        "effect": "+0.2% to global Prestige bonus per level",
+        "costs": [25, 62, 156, 390, 976]
+      },
+      {
+        "id": "buy_creds",
+        "name": "Buy Creds",
+        "cap": "Infinity",
+        "effect": "Instantly grants 30 minutes of current Creds/s",
+        "costs": [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+      },
+      {
+        "id": "cred_boost",
+        "name": "Cred Boost",
+        "cap": "Infinity",
+        "effect": "+1% to all passive Creds/s",
+        "costs": [50, 70, 98, 137, 192, 269, 376, 527, 738, 1033]
+      },
+      {
+        "id": "notoriety_boost",
+        "name": "Notoriety Boost",
+        "cap": "Infinity",
+        "effect": "+1% to total Notoriety/hr",
+        "costs": [100, 155, 240, 372, 577, 894, 1386, 2148, 3330, 5161]
+      },
+      {
+        "id": "influencer_endorsement",
+        "name": "Influencer Endorsement",
+        "cap": 3,
+        "effect": "+10%, +25%, +50% Prestige gain bonuses",
+        "costs": [1000, 3000, 9000]
+      }
+    ]
+  },
+  "themes": [
+    {
+      "id": "dark",
+      "name": "Dark",
+      "cost": 0,
+      "bonusMultiplier": 1.0
+    },
+    {
+      "id": "light",
+      "name": "Light",
+      "cost": 0,
+      "bonusMultiplier": 1.0
+    },
+    {
+      "id": "night-sky",
+      "name": "Night Sky",
+      "cost": 5,
+      "bonusMultiplier": 1.1
+    },
+    {
+      "id": "touch-grass",
+      "name": "Touch Grass",
+      "cost": 10,
+      "bonusMultiplier": 1.08
+    },
+    {
+      "id": "terminal",
+      "name": "Terminal",
+      "cost": 25,
+      "bonusMultiplier": 1.12
+    },
+    {
+      "id": "cherry-blossom",
+      "name": "Cherry Blossom",
+      "cost": 50,
+      "bonusMultiplier": 1.07
+    },
+    {
+      "id": "themeVV",
+      "name": "ThemeVV",
+      "cost": 69,
+      "bonusMultiplier": 1.0,
+      "bonusClickPower": 6.9
+    },
+    {
+      "id": "nightshade",
+      "name": "Nightshade",
+      "cost": 100,
+      "bonusMultiplier": 1.15
+    },
+    {
+      "id": "el-blue",
+      "name": "EL Blue",
+      "cost": 500,
+      "bonusMultiplier": 1.2
+    },
+    {
+      "id": "gold",
+      "name": "Gold",
+      "cost": 1000,
+      "bonusMultiplier": 1.25
+    }
+  ],
+  "prestige": [
+    {
+      "level": 1,
+      "cost": 10000000
+    },
+    {
+      "level": 2,
+      "cost": 56568542
+    },
+    {
+      "level": 3,
+      "cost": 155634919
+    },
+    {
+      "level": 4,
+      "cost": 320000000
+    },
+    {
+      "level": 5,
+      "cost": 559872559
+    },
+    {
+      "level": 6,
+      "cost": 885529612
+    },
+    {
+      "level": 7,
+      "cost": 1307674368
+    },
+    {
+      "level": 8,
+      "cost": 1838459212
+    },
+    {
+      "level": 9,
+      "cost": 2490396789
+    },
+    {
+      "level": 10,
+      "cost": 3276800000
+    }
+  ]
+}

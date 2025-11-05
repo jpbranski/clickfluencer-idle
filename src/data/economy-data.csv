@@ -1,0 +1,90 @@
+Type,Category,ID,Name,Level/Tier,Cost,Effect,Upkeep
+Generator,Notoriety,smm,Social Media Manager,1,100000,1 Notoriety/hr,5000
+Generator,Notoriety,smm,Social Media Manager,2,180000,1 Notoriety/hr,5000
+Generator,Notoriety,smm,Social Media Manager,3,324000,1 Notoriety/hr,5000
+Generator,Notoriety,smm,Social Media Manager,4,583200,1 Notoriety/hr,5000
+Generator,Notoriety,smm,Social Media Manager,5,1049760,1 Notoriety/hr,5000
+Generator,Notoriety,smm,Social Media Manager,6,1889568,1 Notoriety/hr,5000
+Generator,Notoriety,smm,Social Media Manager,7,3401222,1 Notoriety/hr,5000
+Generator,Notoriety,smm,Social Media Manager,8,6122200,1 Notoriety/hr,5000
+Generator,Notoriety,smm,Social Media Manager,9,11019960,1 Notoriety/hr,5000
+Generator,Notoriety,smm,Social Media Manager,10,19835928,1 Notoriety/hr,5000
+Generator,Notoriety,pr_team,PR Team,1,100000000,5 Notoriety/hr,25000
+Generator,Notoriety,pr_team,PR Team,2,220000000,5 Notoriety/hr,25000
+Generator,Notoriety,pr_team,PR Team,3,484000000,5 Notoriety/hr,25000
+Generator,Notoriety,pr_team,PR Team,4,1064800000,5 Notoriety/hr,25000
+Generator,Notoriety,pr_team,PR Team,5,2342560000,5 Notoriety/hr,25000
+Generator,Notoriety,pr_team,PR Team,6,5153632000,5 Notoriety/hr,25000
+Generator,Notoriety,pr_team,PR Team,7,11337990400,5 Notoriety/hr,25000
+Generator,Notoriety,pr_team,PR Team,8,24943577880,5 Notoriety/hr,25000
+Generator,Notoriety,pr_team,PR Team,9,54875871336,5 Notoriety/hr,25000
+Generator,Notoriety,pr_team,PR Team,10,120726915339,5 Notoriety/hr,25000
+Generator,Notoriety,key_client,Key Client,1,10000000000,25 Notoriety/hr,250000
+Generator,Notoriety,key_client,Key Client,2,25000000000,25 Notoriety/hr,250000
+Generator,Notoriety,key_client,Key Client,3,62500000000,25 Notoriety/hr,250000
+Generator,Notoriety,key_client,Key Client,4,156250000000,25 Notoriety/hr,250000
+Generator,Notoriety,key_client,Key Client,5,390625000000,25 Notoriety/hr,250000
+Generator,Notoriety,key_client,Key Client,6,976562500000,25 Notoriety/hr,250000
+Generator,Notoriety,key_client,Key Client,7,2441406250000,25 Notoriety/hr,250000
+Generator,Notoriety,key_client,Key Client,8,6103515625000,25 Notoriety/hr,250000
+Generator,Notoriety,key_client,Key Client,9,15258789062500,25 Notoriety/hr,250000
+Generator,Notoriety,key_client,Key Client,10,38146972656250,25 Notoriety/hr,250000
+Upgrade,Notoriety,cache_value,Cache Value Increase,1,0,+5% to Cred Cache payout per level,0
+Upgrade,Notoriety,cache_value,Cache Value Increase,2,10,+5% to Cred Cache payout per level,0
+Upgrade,Notoriety,cache_value,Cache Value Increase,3,20,+5% to Cred Cache payout per level,0
+Upgrade,Notoriety,cache_value,Cache Value Increase,4,30,+5% to Cred Cache payout per level,0
+Upgrade,Notoriety,cache_value,Cache Value Increase,5,40,+5% to Cred Cache payout per level,0
+Upgrade,Notoriety,cache_value,Cache Value Increase,6,50,+5% to Cred Cache payout per level,0
+Upgrade,Notoriety,cache_value,Cache Value Increase,7,60,+5% to Cred Cache payout per level,0
+Upgrade,Notoriety,cache_value,Cache Value Increase,8,70,+5% to Cred Cache payout per level,0
+Upgrade,Notoriety,cache_value,Cache Value Increase,9,80,+5% to Cred Cache payout per level,0
+Upgrade,Notoriety,cache_value,Cache Value Increase,10,90,+5% to Cred Cache payout per level,0
+Upgrade,Notoriety,drama_boost,Drama Multiplier Boost,1,25,+0.2% to global Prestige bonus per level,0
+Upgrade,Notoriety,drama_boost,Drama Multiplier Boost,2,62,+0.2% to global Prestige bonus per level,0
+Upgrade,Notoriety,drama_boost,Drama Multiplier Boost,3,156,+0.2% to global Prestige bonus per level,0
+Upgrade,Notoriety,drama_boost,Drama Multiplier Boost,4,390,+0.2% to global Prestige bonus per level,0
+Upgrade,Notoriety,drama_boost,Drama Multiplier Boost,5,976,+0.2% to global Prestige bonus per level,0
+Upgrade,Notoriety,cred_boost,Cred Boost,1,50,+1% to all passive Creds/s,0
+Upgrade,Notoriety,cred_boost,Cred Boost,2,70,+1% to all passive Creds/s,0
+Upgrade,Notoriety,cred_boost,Cred Boost,3,98,+1% to all passive Creds/s,0
+Upgrade,Notoriety,cred_boost,Cred Boost,4,137,+1% to all passive Creds/s,0
+Upgrade,Notoriety,cred_boost,Cred Boost,5,192,+1% to all passive Creds/s,0
+Upgrade,Notoriety,cred_boost,Cred Boost,6,269,+1% to all passive Creds/s,0
+Upgrade,Notoriety,cred_boost,Cred Boost,7,376,+1% to all passive Creds/s,0
+Upgrade,Notoriety,cred_boost,Cred Boost,8,527,+1% to all passive Creds/s,0
+Upgrade,Notoriety,cred_boost,Cred Boost,9,738,+1% to all passive Creds/s,0
+Upgrade,Notoriety,cred_boost,Cred Boost,10,1033,+1% to all passive Creds/s,0
+Upgrade,Notoriety,notoriety_boost,Notoriety Boost,1,100,+1% to total Notoriety/hr,0
+Upgrade,Notoriety,notoriety_boost,Notoriety Boost,2,155,+1% to total Notoriety/hr,0
+Upgrade,Notoriety,notoriety_boost,Notoriety Boost,3,240,+1% to total Notoriety/hr,0
+Upgrade,Notoriety,notoriety_boost,Notoriety Boost,4,372,+1% to total Notoriety/hr,0
+Upgrade,Notoriety,notoriety_boost,Notoriety Boost,5,577,+1% to total Notoriety/hr,0
+Upgrade,Notoriety,notoriety_boost,Notoriety Boost,6,894,+1% to total Notoriety/hr,0
+Upgrade,Notoriety,notoriety_boost,Notoriety Boost,7,1386,+1% to total Notoriety/hr,0
+Upgrade,Notoriety,notoriety_boost,Notoriety Boost,8,2148,+1% to total Notoriety/hr,0
+Upgrade,Notoriety,notoriety_boost,Notoriety Boost,9,3330,+1% to total Notoriety/hr,0
+Upgrade,Notoriety,notoriety_boost,Notoriety Boost,10,5161,+1% to total Notoriety/hr,0
+Upgrade,Notoriety,influencer_endorsement,Influencer Endorsement,1,1000,+10% Prestige gain,0
+Upgrade,Notoriety,influencer_endorsement,Influencer Endorsement,2,3000,+25% Prestige gain,0
+Upgrade,Notoriety,influencer_endorsement,Influencer Endorsement,3,9000,+50% Prestige gain,0
+Upgrade,Notoriety,buy_creds,Buy Creds,Any,10,Instantly grants 30 minutes of current Creds/s,0
+Theme,Cosmetic,dark,Dark,N/A,0,No bonus,0
+Theme,Cosmetic,light,Light,N/A,0,No bonus,0
+Theme,Cosmetic,night-sky,Night Sky,N/A,5,+10% follower generation,0
+Theme,Cosmetic,touch-grass,Touch Grass,N/A,10,+8% follower generation,0
+Theme,Cosmetic,terminal,Terminal,N/A,25,+12% follower generation,0
+Theme,Cosmetic,cherry-blossom,Cherry Blossom,N/A,50,+7% follower generation,0
+Theme,Cosmetic,themeVV,ThemeVV,N/A,69,+6.9 click power,0
+Theme,Cosmetic,nightshade,Nightshade,N/A,100,+15% follower generation,0
+Theme,Cosmetic,el-blue,EL Blue,N/A,500,+20% follower generation,0
+Theme,Cosmetic,gold,Gold,N/A,1000,+25% follower generation,0
+Prestige,System,prestige,Prestige,1,10000000,Reputation +1,0
+Prestige,System,prestige,Prestige,2,56568542,Reputation +2,0
+Prestige,System,prestige,Prestige,3,155634919,Reputation +3,0
+Prestige,System,prestige,Prestige,4,320000000,Reputation +4,0
+Prestige,System,prestige,Prestige,5,559872559,Reputation +5,0
+Prestige,System,prestige,Prestige,6,885529612,Reputation +6,0
+Prestige,System,prestige,Prestige,7,1307674368,Reputation +7,0
+Prestige,System,prestige,Prestige,8,1838459212,Reputation +8,0
+Prestige,System,prestige,Prestige,9,2490396789,Reputation +9,0
+Prestige,System,prestige,Prestige,10,3276800000,Reputation +10,0

@@ -8,4 +8,5 @@ export interface Theme {
   unlocked: boolean;
   active: boolean;
   bonusMultiplier: number; // required for gameplay bonuses
+  bonusClickPower?: number; // optional bonus to click power
 }
