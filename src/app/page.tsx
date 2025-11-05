@@ -170,6 +170,8 @@ export default function HomePage() {
       followers={state.followers}
       followersPerSecond={followersPerSecond}
       onBuyGenerator={handleBuyGenerator}
+      state={state}
+      onBuyNotorietyGenerator={handleBuyNotorietyGenerator}
     />
   );
 
@@ -184,6 +186,8 @@ export default function HomePage() {
       onBuyUpgrade={handleBuyUpgrade}
       onPrestige={handlePrestige}
       notoriety={state.notoriety || 0}
+      state={state}
+      onBuyNotorietyUpgrade={handleBuyNotorietyUpgrade}
     />
   );
 

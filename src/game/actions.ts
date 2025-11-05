@@ -37,19 +37,13 @@ import {
 } from "./state";
 import { executePrestige, applyPrestige } from "./prestige";
 import {
-  getUpgradeById as getNotorietyUpgradeById,
-  getUpgradeCost as getNotorietyUpgradeCost,
-  canAffordUpgrade as canAffordNotorietyUpgrade,
-  applyUpgradeEffect,
-  NOTORIETY_UPGRADES,
-} from "./upgrades/notorietyUpgrades";
-import { NOTORIETY_GENERATORS } from "./generators/notorietyGenerators";
-import {
-  calculateGeneratorCost,
-  canPurchaseGenerator,
+  getNotorietyGeneratorCost,
+  getNotorietyUpgradeCost,
   getNotorietyGainPerSecond,
-  getTotalUpkeep as getNotorietyUpkeep,
+  getTotalUpkeep,
+  getCacheValueBonus,
 } from "./logic/notorietyLogic";
+import { NOTORIETY_GENERATORS, NOTORIETY_UPGRADES } from "@/data/notoriety";
 
 // ============================================================================
 // CONSTANTS
@@ -533,14 +527,14 @@ export function tick(state: GameState, deltaTime: number): GameState {
   const followersPerSecond = getFollowersPerSecond(state);
 
   // Calculate upkeep cost from notoriety generators
-  const upkeepPerSecond = getNotorietyUpkeep(state.notorietyGenerators);
+  const upkeepPerSecond = getTotalUpkeep(state);
 
   // Net followers after upkeep
   const netFollowersPerSecond = followersPerSecond - upkeepPerSecond;
   const followersGained = netFollowersPerSecond * secondsElapsed;
 
   // Calculate notoriety gain this tick
-  const notorietyPerSecond = getNotorietyGainPerSecond(state.notorietyGenerators);
+  const notorietyPerSecond = getNotorietyGainPerSecond(state);
   const notorietyGained = notorietyPerSecond * secondsElapsed;
 
   // Update generators unlock status
@@ -624,32 +618,14 @@ export function buyNotorietyGenerator(
     };
   }
 
-  const currentLevel = state.notorietyGenerators[generatorId as keyof typeof state.notorietyGenerators] || 0;
-
-  if (currentLevel >= generator.maxLevel) {
-    return {
-      success: false,
-      state,
-      message: "Max level reached",
-    };
-  }
-
-  const cost = calculateGeneratorCost(generator, currentLevel);
-  const followersPerSecond = getFollowersPerSecond(state);
+  const currentLevel = state.notorietyGenerators[generatorId] || 0;
+  const cost = getNotorietyGeneratorCost(generator, currentLevel);
 
   if (!canAfford(state.followers, cost)) {
     return {
       success: false,
       state,
       message: "Not enough Creds",
-    };
-  }
-
-  if (!canPurchaseGenerator(state, generator, state.notorietyGenerators, followersPerSecond)) {
-    return {
-      success: false,
-      state,
-      message: "Your Creds/s would drop below 1!",
     };
   }
 
@@ -699,7 +675,7 @@ export function buyNotorietyUpgrade(
     };
   }
 
-  const cost = upgrade.costFormula(currentLevel);
+  const cost = getNotorietyUpgradeCost(upgrade, currentLevel);
 
   if (state.notoriety < cost) {
     return {
