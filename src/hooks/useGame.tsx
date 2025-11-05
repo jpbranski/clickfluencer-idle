@@ -36,6 +36,7 @@ import {
   prestige,
   updateSetting,
   buyNotorietyGenerator,
+  buyNotorietyUpgrade,
   ActionResult,
 } from "@/game/actions";
 import {
@@ -91,6 +92,33 @@ function mergeUpgrades<T extends { id: string }>(savedUpgrades?: T[]): T[] {
     } as T;
   });
 }
+
+// Ensure notoriety generators exist in the save data
+function ensureNotorietyGenerators(
+  saved?: Record<string, number>
+): Record<string, number> {
+  return {
+    smm: 0,
+    pr_team: 0,
+    key_client: 0,
+    ...saved,
+  };
+}
+
+// Ensure notoriety upgrades exist in the save data
+function ensureNotorietyUpgrades(
+  saved?: Record<string, number>
+): Record<string, number> {
+  return {
+    cache_value: 0,
+    drama_boost: 0,
+    buy_creds: 0,
+    cred_boost: 0,
+    notoriety_boost: 0,
+    influencer_endorsement: 0,
+    ...saved,
+  };
+}
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -113,6 +141,7 @@ interface GameContextValue {
   handleBuyGenerator: (generatorId: string, count?: number) => void;
   handleBuyNotorietyGenerator: (generatorId: string) => void;
   handleBuyUpgrade: (upgradeId: string) => void;
+  handleBuyNotorietyUpgrade: (upgradeId: string) => void;
   handlePurchaseTheme: (themeId: string) => void;
   handleActivateTheme: (themeId: string) => void;
   handlePrestige: () => void;
@@ -429,6 +458,16 @@ export function GameProvider({ children }: GameProviderProps) {
     [state, setTheme]
   );
 
+  const handleBuyNotorietyUpgrade = useCallback(
+    (upgradeId: string) => {
+      if (!engineRef.current || !state) return;
+      engineRef.current.executeAction((currentState) =>
+        buyNotorietyUpgrade(currentState, upgradeId)
+      );
+    },
+    [state]
+  );
+
   const handlePrestige = useCallback(() => {
     if (!engineRef.current || !state) return;
     engineRef.current.executeAction((currentState) => prestige(currentState));
@@ -510,6 +549,7 @@ export function GameProvider({ children }: GameProviderProps) {
     handleBuyGenerator,
     handleBuyNotorietyGenerator,
     handleBuyUpgrade,
+    handleBuyNotorietyUpgrade,
     handlePurchaseTheme,
     handleActivateTheme,
     handlePrestige,

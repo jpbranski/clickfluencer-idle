@@ -40,6 +40,7 @@ export default function HomePage() {
     handleBuyGenerator,
     handleBuyNotorietyGenerator,
     handleBuyUpgrade,
+    handleBuyNotorietyUpgrade,
     handlePurchaseTheme,
     handleActivateTheme,
     handlePrestige,

@@ -34,6 +34,7 @@ import {
   canAffordShards,
   getClickEventMultiplier,
   getCredCacheRate,
+  getCredCachePayoutMultiplier,
   getNotorietyGeneratorCost,
   getNotorietyPerSecond,
   getTotalUpkeep,
@@ -41,6 +42,12 @@ import {
   shouldUnlockNotorietyGenerator,
 } from "./state";
 import { executePrestige, applyPrestige } from "./prestige";
+import {
+  getUpgradeById as getNotorietyUpgradeById,
+  getUpgradeCost as getNotorietyUpgradeCost,
+  canAffordUpgrade as canAffordNotorietyUpgrade,
+  applyUpgradeEffect,
+} from "./upgrades/notorietyUpgrades";
 
 // ============================================================================
 // CONSTANTS
@@ -122,7 +129,10 @@ export function clickPost(state: GameState): ClickResult {
   if (credCacheTriggered) {
     // Award 1-5% of current total creds
     const percentage = 0.01 + Math.random() * 0.04; // Random between 1% and 5%
-    credCacheAmount = Math.floor(state.followers * percentage);
+    const baseAmount = Math.floor(state.followers * percentage);
+    // Apply Notoriety Cache Value boost
+    const cacheMultiplier = getCredCachePayoutMultiplier(state);
+    credCacheAmount = Math.floor(baseAmount * cacheMultiplier);
   }
 
   const newState: GameState = {
@@ -564,6 +574,74 @@ export function removeExpiredEvents(state: GameState): GameState {
   return {
     ...state,
     activeEvents,
+  };
+}
+
+
+// ============================================================================
+// NOTORIETY UPGRADE ACTIONS
+// ============================================================================
+
+/**
+ * Purchase a notoriety upgrade
+ * - Deducts notoriety equal to cost
+ * - Increments upgrade level
+ * - Applies upgrade effect
+ */
+export function buyNotorietyUpgrade(
+  state: GameState,
+  upgradeId: string
+): ActionResult {
+  const upgrade = getNotorietyUpgradeById(upgradeId);
+
+  if (!upgrade) {
+    return {
+      success: false,
+      state,
+      message: "Upgrade not found",
+    };
+  }
+
+  const currentLevel = state.notorietyUpgrades[upgradeId] || 0;
+  const currentNotoriety = state.notoriety || 0;
+
+  // Check max level
+  if (currentLevel >= upgrade.cap) {
+    return {
+      success: false,
+      state,
+      message: "Already at max level",
+    };
+  }
+
+  // Check if can afford
+  if (!canAffordNotorietyUpgrade(currentNotoriety, upgrade, currentLevel)) {
+    return {
+      success: false,
+      state,
+      message: "Not enough notoriety",
+    };
+  }
+
+  const cost = getNotorietyUpgradeCost(upgrade, currentLevel);
+
+  // Apply upgrade effect and get state changes
+  const effectChanges = applyUpgradeEffect(state, upgrade);
+
+  const newState: GameState = {
+    ...state,
+    ...effectChanges,
+    notoriety: currentNotoriety - cost,
+    notorietyUpgrades: {
+      ...state.notorietyUpgrades,
+      [upgradeId]: currentLevel + 1,
+    },
+  };
+
+  return {
+    success: true,
+    state: newState,
+    message: `Purchased ${upgrade.name}`,
   };
 }
 
