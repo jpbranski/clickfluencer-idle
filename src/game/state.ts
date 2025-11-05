@@ -96,12 +96,17 @@ export interface GameState {
   followers: number;
   shards: number; // Awards (premium currency from random drops)
   reputation: number; // Prestige currency
+  notoriety: number; // Notoriety currency (persists through prestige)
 
   // Generators (content creation systems)
   generators: Generator[];
 
   // Upgrades (permanent improvements)
   upgrades: Upgrade[];
+
+  // Notoriety System
+  notorietyGenerators: Record<string, number>; // generatorId -> count
+  notorietyUpgrades: Record<string, number>; // upgradeId -> level
 
   // Active Events
   activeEvents: RandomEvent[];
@@ -287,8 +292,11 @@ export function createInitialState(): GameState {
     followers: 0,
     shards: 0,
     reputation: 0,
+    notoriety: 0,
     generators: INITIAL_GENERATORS.map((g) => ({ ...g })),
     upgrades: INITIAL_UPGRADES.map((u) => ({ ...u })),
+    notorietyGenerators: {},
+    notorietyUpgrades: {},
     activeEvents: [],
     stats: {
       totalClicks: 0,
@@ -396,7 +404,7 @@ export function getClickPower(state: GameState): number {
 
 /**
  * Calculate total followers per second from all generators
- * Factors in: base generator output + upgrades + events + reputation + themes
+ * Factors in: base generator output + upgrades + events + reputation + themes + notoriety bonuses
  */
 export function getFollowersPerSecond(state: GameState): number {
   let total = 0;
@@ -453,6 +461,18 @@ export function getFollowersPerSecond(state: GameState): number {
       total *= event.effect.multiplier;
     }
   });
+
+  // Apply Cred Boost from notoriety upgrades
+  const credBoostLevel = state.notorietyUpgrades?.['cred_boost'] || 0;
+  if (credBoostLevel > 0) {
+    total *= Math.pow(1.01, credBoostLevel); // 1% per level
+  }
+
+  // Apply Drama Boost from notoriety upgrades
+  const dramaBoostLevel = state.notorietyUpgrades?.['drama_boost'] || 0;
+  if (dramaBoostLevel > 0) {
+    total *= 1 + dramaBoostLevel * 0.002; // 0.2% per level
+  }
 
   return total;
 }

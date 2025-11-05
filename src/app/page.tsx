@@ -11,15 +11,21 @@ import { SettingsDialog } from "@/components/SettingsDialog";
 import { EventToasts } from "@/components/EventToasts";
 import { OfflineEarningsModal } from "@/components/OfflineEarningsModal";
 import { ShareButtons } from "@/components/ShareButtons";
+import { NotorietyGeneratorCard } from "@/components/NotorietyGeneratorCard";
+import { NotorietyUpgradeCard } from "@/components/NotorietyUpgradeCard";
 import { formatNumber } from "@/game/format";
 import { getGeneratorCost, canAfford, canAffordShards } from "@/game/state";
 import { getAwardDropRate, getUpgradeCost } from "@/game/actions";
 import { themes } from '@/data/themes';
+import {
+  getNotorietyGeneratorsWithStatus,
+  getNotorietyUpgradesWithStatus,
+} from "@/game/logic/notorietyLogic";
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState<
-    "generators" | "upgrades" | "themes"
+    "generators" | "upgrades" | "notoriety" | "themes"
   >("generators");
   const [showSettings, setShowSettings] = useState(false);
 
@@ -28,6 +34,8 @@ export default function HomePage() {
     isLoading,
     clickPower,
     followersPerSecond,
+    notorietyPerSecond,
+    upkeep,
     canPrestige,
     reputationGain,
     handleBuyGenerator,
@@ -39,6 +47,8 @@ export default function HomePage() {
     handleExportSave,
     handleImportSave,
     handleResetGame,
+    handleBuyNotorietyGenerator,
+    handleBuyNotorietyUpgrade,
     offlineProgress,
     dismissOfflineProgress,
   } = useGame();
@@ -133,6 +143,8 @@ export default function HomePage() {
             awardDropRate={state ? getAwardDropRate(state) : 0.003}
             followersPerSecond={followersPerSecond}
             reputation={state.reputation}
+            notoriety={state.notoriety}
+            notorietyPerSecond={notorietyPerSecond}
           />
         </header>
 
@@ -207,6 +219,16 @@ export default function HomePage() {
                 ⚡ Upgrades
               </button>
               <button
+                onClick={() => setActiveTab("notoriety")}
+                className={`flex-1 px-4 py-3 rounded-lg font-semibold transition-colors ${
+                  activeTab === "notoriety"
+                    ? "bg-accent text-accent-foreground"
+                    : "hover:bg-surface text-foreground"
+                }`}
+              >
+                🔥 Notoriety
+              </button>
+              <button
                 onClick={() => setActiveTab("themes")}
                 className={`flex-1 px-4 py-3 rounded-lg font-semibold transition-colors ${
                   activeTab === "themes"
@@ -264,19 +286,19 @@ export default function HomePage() {
 
                   {/* Prestige Section */}
                   {canPrestige && (
-                    <div className="mb-6 p-6 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg">
+                    <div className="mb-6 p-6 rounded-lg bg-gradient-to-r from-orange-700 to-orange-600 text-white shadow-lg">
                       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                         <div className="text-center sm:text-left">
                           <div className="text-2xl font-bold flex items-center justify-center sm:justify-start gap-2 mb-2">
-                            ⭐ Prestige Available!
+                            <span className="text-yellow-300">⭐</span> Prestige Available!
                           </div>
-                          <div className="text-sm opacity-90">
+                          <div className="text-sm mt-1">
                             Reset your progress to gain{" "}
                             <span className="font-bold">
                               {reputationGain} Reputation
                             </span>
                           </div>
-                          <div className="text-xs opacity-75 mt-1">
+                          <div className="text-xs opacity-90 mt-1">
                             New bonus: ×
                             {(
                               (1 + (state.reputation + reputationGain) * 0.1) *
@@ -287,7 +309,7 @@ export default function HomePage() {
                         </div>
                         <button
                           onClick={handlePrestige}
-                          className="px-6 py-3 bg-white text-orange-600 rounded-lg font-bold hover:bg-gray-100 transition-colors shadow-md"
+                          className="px-6 py-3 bg-white text-orange-700 rounded-lg font-bold hover:bg-gray-50 transition-colors shadow-md"
                         >
                           Prestige Now
                         </button>
@@ -335,6 +357,82 @@ export default function HomePage() {
                       </div>
                     </div>
                   )}
+                </div>
+              )}
+
+              {/* Notoriety Tab */}
+              {activeTab === "notoriety" && (
+                <div>
+                  <h2 className="text-2xl font-bold mb-4 text-foreground">
+                    Notoriety System
+                  </h2>
+                  <p className="text-sm text-muted mb-6">
+                    Build notoriety to unlock powerful permanent upgrades. Notoriety and infinite upgrades persist through prestige!
+                  </p>
+
+                  {/* Upkeep Warning */}
+                  {upkeep > 0 && (
+                    <div className="mb-6 p-4 rounded-lg bg-orange-500/20 border border-orange-500/50">
+                      <div className="flex items-center gap-2 text-sm">
+                        <span className="text-xl">⚠️</span>
+                        <div>
+                          <div className="font-semibold text-orange-200">
+                            Total Upkeep: {formatNumber(upkeep)} Creds/s
+                          </div>
+                          <div className="text-xs text-orange-300 mt-1">
+                            Your notoriety generators consume Creds, reducing your production (never below 1 Cred/s)
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Notoriety Generators */}
+                  <div className="mb-8">
+                    <h3 className="text-xl font-bold mb-3 text-foreground">
+                      Notoriety Generators
+                    </h3>
+                    <p className="text-xs text-muted mb-4">
+                      Generate Notoriety/second but consume Creds/second as upkeep
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {getNotorietyGeneratorsWithStatus(state).map((generator) => (
+                        <NotorietyGeneratorCard
+                          key={generator.id}
+                          generator={generator}
+                          canAfford={canAfford(state.followers, generator.cost)}
+                          onBuy={() => handleBuyNotorietyGenerator(generator.id)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Notoriety Upgrades */}
+                  <div>
+                    <h3 className="text-xl font-bold mb-3 text-foreground">
+                      Notoriety Upgrades
+                    </h3>
+                    <p className="text-xs text-muted mb-4">
+                      Spend Notoriety on upgrades. Infinite upgrades (∞) persist through prestige!
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {getNotorietyUpgradesWithStatus(state)
+                        .sort((a, b) => {
+                          // Infinite upgrades first
+                          if (a.isInfinite && !b.isInfinite) return -1;
+                          if (!a.isInfinite && b.isInfinite) return 1;
+                          // Unpurchased before maxed
+                          return Number(a.isMaxed) - Number(b.isMaxed);
+                        })
+                        .map((upgrade) => (
+                          <NotorietyUpgradeCard
+                            key={upgrade.id}
+                            upgrade={upgrade}
+                            onPurchase={() => handleBuyNotorietyUpgrade(upgrade.id)}
+                          />
+                        ))}
+                    </div>
+                  </div>
                 </div>
               )}
 

@@ -16,6 +16,8 @@
  */
 
 import { GameState, createInitialState } from "./state";
+import { getInfluencerEndorsementMultiplier } from "./logic/notorietyLogic";
+import { NOTORIETY_UPGRADES } from "@/data/notoriety";
 
 // ============================================================================
 // CONSTANTS
@@ -128,8 +130,13 @@ export function executePrestige(state: GameState): PrestigeResult {
     };
   }
 
-  // Calculate reputation gain
-  const reputationGained = calculateReputationGain(state.followers);
+  // Calculate base reputation gain
+  let reputationGained = calculateReputationGain(state.followers);
+
+  // Apply Influencer Endorsement multiplier from notoriety upgrades
+  const endorsementMultiplier = getInfluencerEndorsementMultiplier(state);
+  reputationGained = Math.floor(reputationGained * endorsementMultiplier);
+
   const followersLost = state.followers;
   const totalReputation = state.reputation + reputationGained;
 
@@ -144,8 +151,8 @@ export function executePrestige(state: GameState): PrestigeResult {
 
 /**
  * Reset game state for prestige while preserving certain elements
- * Preserves: reputation, shards, themes, statistics, settings
- * Resets: followers, generators, upgrades, events
+ * Preserves: reputation, shards, themes, statistics, settings, notoriety, infinite notoriety upgrades
+ * Resets: followers, generators, upgrades, events, notoriety generators, capped notoriety upgrades
  */
 export function resetForPrestige(
   state: GameState,
@@ -153,12 +160,28 @@ export function resetForPrestige(
 ): GameState {
   const initial = createInitialState();
 
+  // Preserve only infinite notoriety upgrades (cred_boost, notoriety_boost)
+  const preservedNotorietyUpgrades: Record<string, number> = {};
+  for (const upgrade of NOTORIETY_UPGRADES) {
+    if (upgrade.cap === Infinity) {
+      const level = state.notorietyUpgrades[upgrade.id];
+      if (level && level > 0) {
+        preservedNotorietyUpgrades[upgrade.id] = level;
+      }
+    }
+  }
+
   return {
     ...initial,
     // Preserve prestige currency and cosmetics
     reputation: state.reputation + reputationGained,
     shards: state.shards,
     themes: state.themes, // Keep unlocked themes
+
+    // Preserve notoriety system (currency and infinite upgrades)
+    notoriety: state.notoriety,
+    notorietyGenerators: {}, // Reset generators
+    notorietyUpgrades: preservedNotorietyUpgrades, // Keep only infinite upgrades
 
     // Update statistics
     stats: {

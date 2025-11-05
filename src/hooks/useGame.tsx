@@ -35,6 +35,8 @@ import {
   activateTheme,
   prestige,
   updateSetting,
+  buyNotorietyGenerator,
+  buyNotorietyUpgrade,
   ActionResult,
 } from "@/game/actions";
 import {
@@ -45,6 +47,10 @@ import {
   canAffordShards,
 } from "@/game/state";
 import { canPrestige, calculateReputationGain } from "@/game/prestige";
+import {
+  getNotorietyGainPerSecond,
+  getTotalUpkeep,
+} from "@/game/logic/notorietyLogic";
 import {
   saveGame,
   loadGame,
@@ -98,6 +104,8 @@ interface GameContextValue {
 
   clickPower: number;
   followersPerSecond: number;
+  notorietyPerSecond: number;
+  upkeep: number;
   canPrestige: boolean;
   reputationGain: number;
 
@@ -111,6 +119,8 @@ interface GameContextValue {
   handleExportSave: () => void;
   handleImportSave: (data: string) => void;
   handleResetGame: () => void;
+  handleBuyNotorietyGenerator: (generatorId: string) => void;
+  handleBuyNotorietyUpgrade: (upgradeId: string) => void;
 
   currentTheme: string;
   setTheme: (themeId: string) => void;
@@ -338,6 +348,8 @@ export function GameProvider({ children }: GameProviderProps) {
 
   const clickPower = state ? getClickPower(state) : 0;
   const followersPerSecond = state ? getFollowersPerSecond(state) : 0;
+  const notorietyPerSecond = state ? getNotorietyGainPerSecond(state) : 0;
+  const upkeep = state ? getTotalUpkeep(state) : 0;
   const canPrestigeNow = state ? canPrestige(state.followers) : false;
   const reputationGain = state ? calculateReputationGain(state.followers) : 0;
 
@@ -458,6 +470,26 @@ export function GameProvider({ children }: GameProviderProps) {
     setOfflineProgress(null);
   }, []);
 
+  const handleBuyNotorietyGenerator = useCallback(
+    (generatorId: string) => {
+      if (!engineRef.current || !state) return;
+      engineRef.current.executeAction((currentState) =>
+        buyNotorietyGenerator(currentState, generatorId)
+      );
+    },
+    [state]
+  );
+
+  const handleBuyNotorietyUpgrade = useCallback(
+    (upgradeId: string) => {
+      if (!engineRef.current || !state) return;
+      engineRef.current.executeAction((currentState) =>
+        buyNotorietyUpgrade(currentState, upgradeId)
+      );
+    },
+    [state]
+  );
+
   // ============================================================================
   // CONTEXT VALUE
   // ============================================================================
@@ -468,6 +500,8 @@ export function GameProvider({ children }: GameProviderProps) {
     error,
     clickPower,
     followersPerSecond,
+    notorietyPerSecond,
+    upkeep,
     canPrestige: canPrestigeNow,
     reputationGain,
     handleClick,
@@ -480,6 +514,8 @@ export function GameProvider({ children }: GameProviderProps) {
     handleExportSave,
     handleImportSave,
     handleResetGame,
+    handleBuyNotorietyGenerator,
+    handleBuyNotorietyUpgrade,
     currentTheme,
     setTheme,
     offlineProgress,

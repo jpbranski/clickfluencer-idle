@@ -26,6 +26,18 @@ export async function loadGame(): Promise<
       return { success: false };
     }
     const parsed = JSON.parse(raw) as GameState;
+
+    // Migration: Add notoriety fields if missing (for backward compatibility)
+    if (parsed.notoriety === undefined) {
+      parsed.notoriety = 0;
+    }
+    if (parsed.notorietyGenerators === undefined) {
+      parsed.notorietyGenerators = {};
+    }
+    if (parsed.notorietyUpgrades === undefined) {
+      parsed.notorietyUpgrades = {};
+    }
+
     console.log("[loadGame] Successfully loaded save", parsed);
     return { success: true, data: parsed };
   } catch (e) {
