@@ -223,12 +223,15 @@ export function GameProvider({ children }: GameProviderProps) {
         }
 
         // ✅ Initialize notoriety and notoriety generators if missing (for backward compatibility)
-        if (!initialState.notoriety) {
+        if (typeof initialState.notoriety !== 'number') {
           initialState.notoriety = 0;
         }
         if (!initialState.notorietyGenerators) {
           const { INITIAL_NOTORIETY_GENERATORS } = await import("@/game/state");
           initialState.notorietyGenerators = INITIAL_NOTORIETY_GENERATORS.map((ng) => ({ ...ng }));
+        }
+        if (!initialState.notorietyUpgrades) {
+          initialState.notorietyUpgrades = ensureNotorietyUpgrades();
         }
 
         if (!mounted) return;

@@ -127,7 +127,7 @@ export default function HomePage() {
       awardDropRate={state ? getAwardDropRate(state) : 0.003}
       followersPerSecond={followersPerSecond}
       reputation={state.reputation}
-      notoriety={state.notoriety}
+      notoriety={state.notoriety ?? 0}
       notorietyPerSecond={notorietyPerSecond}
       totalUpkeep={totalUpkeep}
       netFollowersPerSecond={netFollowersPerSecond}
