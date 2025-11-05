@@ -36,7 +36,6 @@ import {
   prestige,
   updateSetting,
   buyNotorietyGenerator,
-  buyNotorietyUpgrade,
   ActionResult,
 } from "@/game/actions";
 import {
@@ -45,8 +44,11 @@ import {
   getGeneratorCost,
   canAfford,
   canAffordShards,
+  getNotorietyPerSecond,
+  getTotalUpkeep,
+  getNetFollowersPerSecond,
 } from "@/game/state";
-import { canPrestige, calculateReputationGain } from "@/game/prestige";
+import { canPrestige, prestigeCost } from "@/game/prestige";
 import {
   saveGame,
   loadGame,
@@ -127,11 +129,16 @@ interface GameContextValue {
 
   clickPower: number;
   followersPerSecond: number;
+  notorietyPerSecond: number;
+  totalUpkeep: number;
+  netFollowersPerSecond: number;
   canPrestige: boolean;
   reputationGain: number;
+  prestigeCost: number;
 
   handleClick: () => void;
   handleBuyGenerator: (generatorId: string, count?: number) => void;
+  handleBuyNotorietyGenerator: (generatorId: string) => void;
   handleBuyUpgrade: (upgradeId: string) => void;
   handleBuyNotorietyGenerator: (generatorId: string) => void;
   handleBuyNotorietyUpgrade: (upgradeId: string) => void;
@@ -215,19 +222,13 @@ export function GameProvider({ children }: GameProviderProps) {
           initialState.upgrades = mergeUpgrades();
         }
 
-        // ✅ Ensure notoriety generators exist
-        initialState.notorietyGenerators = ensureNotorietyGenerators(
-          initialState.notorietyGenerators
-        );
-
-        // ✅ Ensure notoriety upgrades exist
-        initialState.notorietyUpgrades = ensureNotorietyUpgrades(
-          initialState.notorietyUpgrades
-        );
-
-        // ✅ Ensure notoriety field exists
-        if (initialState.notoriety === undefined) {
+        // ✅ Initialize notoriety and notoriety generators if missing (for backward compatibility)
+        if (!initialState.notoriety) {
           initialState.notoriety = 0;
+        }
+        if (!initialState.notorietyGenerators) {
+          const { INITIAL_NOTORIETY_GENERATORS } = await import("@/game/state");
+          initialState.notorietyGenerators = INITIAL_NOTORIETY_GENERATORS.map((ng) => ({ ...ng }));
         }
 
         if (!mounted) return;
@@ -384,10 +385,12 @@ export function GameProvider({ children }: GameProviderProps) {
 
   const clickPower = state ? getClickPower(state) : 0;
   const followersPerSecond = state ? getFollowersPerSecond(state) : 0;
-  const canPrestigeNow = state ? canPrestige(state.followers) : false;
-  const reputationGain = state
-    ? calculateReputationGain(state.followers, state.notorietyUpgrades)
-    : 0;
+  const notorietyPerSecond = state ? getNotorietyPerSecond(state) : 0;
+  const totalUpkeep = state ? getTotalUpkeep(state) : 0;
+  const netFollowersPerSecond = state ? getNetFollowersPerSecond(state) : 0;
+  const canPrestigeNow = state ? canPrestige(state.followers, state.reputation) : false;
+  const reputationGain = 1; // Always gain 1 prestige point per purchase
+  const prestigeCostValue = state ? prestigeCost(state.reputation) : 0;
 
   // ============================================================================
   // ACTIONS
@@ -409,6 +412,16 @@ export function GameProvider({ children }: GameProviderProps) {
         }
         return result;
       });
+    },
+    [state]
+  );
+
+  const handleBuyNotorietyGenerator = useCallback(
+    (generatorId: string) => {
+      if (!engineRef.current || !state) return;
+      engineRef.current.executeAction((currentState) =>
+        buyNotorietyGenerator(currentState, generatorId)
+      );
     },
     [state]
   );
@@ -536,10 +549,15 @@ export function GameProvider({ children }: GameProviderProps) {
     error,
     clickPower,
     followersPerSecond,
+    notorietyPerSecond,
+    totalUpkeep,
+    netFollowersPerSecond,
     canPrestige: canPrestigeNow,
     reputationGain,
+    prestigeCost: prestigeCostValue,
     handleClick,
     handleBuyGenerator,
+    handleBuyNotorietyGenerator,
     handleBuyUpgrade,
     handleBuyNotorietyGenerator,
     handleBuyNotorietyUpgrade,

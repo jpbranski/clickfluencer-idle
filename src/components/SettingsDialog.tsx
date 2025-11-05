@@ -26,6 +26,7 @@ interface SettingsDialogProps {
   onExport: () => void;
   onImport: (data: string) => void;
   onReset: () => void;
+  onMainMenu?: () => void;
 }
 
 export function SettingsDialog({
@@ -36,6 +37,7 @@ export function SettingsDialog({
   onExport,
   onImport,
   onReset,
+  onMainMenu,
 }: SettingsDialogProps) {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
@@ -146,7 +148,7 @@ export function SettingsDialog({
               />
               <SettingToggle
                 label="Offline Progress"
-                description="Earn followers while game is closed (up to 8 hours)"
+                description="Stores progress for up to 72 hours while you're away"
                 checked={settings.offlineProgressEnabled}
                 onChange={(checked) =>
                   onSettingChange("offlineProgressEnabled", checked)
@@ -167,12 +169,14 @@ export function SettingsDialog({
                   onSettingChange("showNotifications", checked)
                 }
               />
+              {/* TODO: Sound Effects - Commented out (no audio planned)
               <SettingToggle
                 label="Sound Effects"
                 description="Play audio feedback for actions"
                 checked={settings.soundEnabled}
                 onChange={(checked) => onSettingChange("soundEnabled", checked)}
               />
+              */}
               <div className="p-3 rounded-lg bg-accent/10 border border-accent/20">
                 <div className="flex items-start gap-2 text-xs text-muted">
                   <span className="text-accent">ℹ️</span>
@@ -184,6 +188,50 @@ export function SettingsDialog({
               </div>
             </div>
           </section>
+
+          {/* TODO: Support the Developer - Commented out for now
+          <section>
+            <h3 className="text-lg font-bold mb-4">Support the Developer</h3>
+            <div className="space-y-3">
+              <a
+                href="https://buymeacoffee.com/jpbranski"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  block w-full px-4 py-3 rounded-lg text-center
+                  bg-[#FFDD00] hover:bg-[#FFDD00]/90 text-[#000000]
+                  font-semibold text-sm
+                  transition-colors duration-150 active:scale-95
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFDD00]
+                  motion-reduce:transition-none
+                "
+              >
+                ☕ Buy Me a Coffee
+              </a>
+              <div className="text-xs text-center text-muted">
+                Enjoying the game? Consider supporting development!
+              </div>
+            </div>
+          </section>
+          */}
+
+          {/* Navigation */}
+          {onMainMenu && (
+            <section>
+              <h3 className="text-lg font-bold mb-4">Navigation</h3>
+              <div className="space-y-3">
+                <button
+                  onClick={onMainMenu}
+                  className="w-full px-4 py-3 rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground font-semibold text-sm transition-colors duration-150 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent motion-reduce:transition-none"
+                >
+                  🏠 Main Menu
+                </button>
+                <div className="text-xs text-center text-muted">
+                  Return to save slot selection
+                </div>
+              </div>
+            </section>
+          )}
 
           {/* Data Management */}
           <section>
