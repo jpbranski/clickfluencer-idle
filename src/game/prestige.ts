@@ -16,6 +16,10 @@
  */
 
 import { GameState, createInitialState } from "./state";
+import {
+  getDramaBoostMultiplier,
+  getInfluencerEndorsementMultiplier,
+} from "./upgrades/notorietyUpgrades";
 
 // ============================================================================
 // CONSTANTS
@@ -38,18 +42,33 @@ export function canPrestige(followers: number): boolean {
 
 /**
  * Calculate how many Reputation points would be earned from prestiging
- * Formula: floor((followers / 1e9) ^ 0.4)
+ * Formula: floor((followers / 1e9) ^ 0.4) * notorietyMultipliers
+ * Notoriety upgrades can boost prestige gain:
+ * - Drama Boost: +0.2% per level
+ * - Influencer Endorsement: +10%/+25%/+50% at levels 1/2/3
  *
  * Examples:
  *   1e9 followers => 1 Reputation
  *   1e10 followers => 2 Reputation
  *   1e11 followers => 3 Reputation
  */
-export function calculateReputationGain(followers: number): number {
+export function calculateReputationGain(
+  followers: number,
+  notorietyUpgrades?: Record<string, number>
+): number {
   if (followers < PRESTIGE_THRESHOLD) return 0;
-  return Math.floor(
+
+  const baseReputation = Math.floor(
     Math.pow(followers / PRESTIGE_THRESHOLD, PRESTIGE_EXPONENT),
   );
+
+  // Apply notoriety upgrade bonuses if available
+  if (!notorietyUpgrades) return baseReputation;
+
+  const dramaBoost = getDramaBoostMultiplier(notorietyUpgrades);
+  const endorsementBoost = getInfluencerEndorsementMultiplier(notorietyUpgrades);
+
+  return Math.floor(baseReputation * dramaBoost * endorsementBoost);
 }
 
 /**
@@ -128,8 +147,11 @@ export function executePrestige(state: GameState): PrestigeResult {
     };
   }
 
-  // Calculate reputation gain
-  const reputationGained = calculateReputationGain(state.followers);
+  // Calculate reputation gain (with notoriety bonuses)
+  const reputationGained = calculateReputationGain(
+    state.followers,
+    state.notorietyUpgrades
+  );
   const followersLost = state.followers;
   const totalReputation = state.reputation + reputationGained;
 
@@ -144,7 +166,7 @@ export function executePrestige(state: GameState): PrestigeResult {
 
 /**
  * Reset game state for prestige while preserving certain elements
- * Preserves: reputation, shards, themes, statistics, settings
+ * Preserves: reputation, shards, themes, statistics, settings, notoriety, notoriety generators, notoriety upgrades
  * Resets: followers, generators, upgrades, events
  */
 export function resetForPrestige(
@@ -159,6 +181,11 @@ export function resetForPrestige(
     reputation: state.reputation + reputationGained,
     shards: state.shards,
     themes: state.themes, // Keep unlocked themes
+
+    // Preserve notoriety system (prestige-tier meta resource)
+    notoriety: state.notoriety,
+    notorietyGenerators: state.notorietyGenerators,
+    notorietyUpgrades: state.notorietyUpgrades,
 
     // Update statistics
     stats: {
@@ -203,7 +230,10 @@ export function getPrestigeRecommendation(state: GameState): {
     };
   }
 
-  const currentRepGain = calculateReputationGain(state.followers);
+  const currentRepGain = calculateReputationGain(
+    state.followers,
+    state.notorietyUpgrades
+  );
   const nextReputationFollowers = getFollowersForNextReputation(currentRepGain);
   const progress = getReputationProgress(state.followers, currentRepGain);
 
@@ -235,7 +265,8 @@ export function getPrestigeRecommendation(state: GameState): {
  */
 export function getPostPrestigeMultiplier(state: GameState): number {
   const futureReputation =
-    state.reputation + calculateReputationGain(state.followers);
+    state.reputation +
+    calculateReputationGain(state.followers, state.notorietyUpgrades);
   return calculateReputationBonus(futureReputation);
 }
 

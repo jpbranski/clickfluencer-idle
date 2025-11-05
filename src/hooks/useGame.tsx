@@ -35,6 +35,8 @@ import {
   activateTheme,
   prestige,
   updateSetting,
+  buyNotorietyGenerator,
+  buyNotorietyUpgrade,
   ActionResult,
 } from "@/game/actions";
 import {
@@ -87,6 +89,33 @@ function mergeUpgrades<T extends { id: string }>(savedUpgrades?: T[]): T[] {
     } as T;
   });
 }
+
+// Ensure notoriety generators exist in the save data
+function ensureNotorietyGenerators(
+  saved?: Record<string, number>
+): Record<string, number> {
+  return {
+    smm: 0,
+    pr_team: 0,
+    key_client: 0,
+    ...saved,
+  };
+}
+
+// Ensure notoriety upgrades exist in the save data
+function ensureNotorietyUpgrades(
+  saved?: Record<string, number>
+): Record<string, number> {
+  return {
+    cache_value: 0,
+    drama_boost: 0,
+    buy_creds: 0,
+    cred_boost: 0,
+    notoriety_boost: 0,
+    influencer_endorsement: 0,
+    ...saved,
+  };
+}
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -104,6 +133,8 @@ interface GameContextValue {
   handleClick: () => void;
   handleBuyGenerator: (generatorId: string, count?: number) => void;
   handleBuyUpgrade: (upgradeId: string) => void;
+  handleBuyNotorietyGenerator: (generatorId: string) => void;
+  handleBuyNotorietyUpgrade: (upgradeId: string) => void;
   handlePurchaseTheme: (themeId: string) => void;
   handleActivateTheme: (themeId: string) => void;
   handlePrestige: () => void;
@@ -182,6 +213,21 @@ export function GameProvider({ children }: GameProviderProps) {
           initialState.upgrades = mergeUpgrades(initialState.upgrades);
         } else {
           initialState.upgrades = mergeUpgrades();
+        }
+
+        // ✅ Ensure notoriety generators exist
+        initialState.notorietyGenerators = ensureNotorietyGenerators(
+          initialState.notorietyGenerators
+        );
+
+        // ✅ Ensure notoriety upgrades exist
+        initialState.notorietyUpgrades = ensureNotorietyUpgrades(
+          initialState.notorietyUpgrades
+        );
+
+        // ✅ Ensure notoriety field exists
+        if (initialState.notoriety === undefined) {
+          initialState.notoriety = 0;
         }
 
         if (!mounted) return;
@@ -339,7 +385,9 @@ export function GameProvider({ children }: GameProviderProps) {
   const clickPower = state ? getClickPower(state) : 0;
   const followersPerSecond = state ? getFollowersPerSecond(state) : 0;
   const canPrestigeNow = state ? canPrestige(state.followers) : false;
-  const reputationGain = state ? calculateReputationGain(state.followers) : 0;
+  const reputationGain = state
+    ? calculateReputationGain(state.followers, state.notorietyUpgrades)
+    : 0;
 
   // ============================================================================
   // ACTIONS
@@ -395,6 +443,26 @@ export function GameProvider({ children }: GameProviderProps) {
       });
     },
     [state, setTheme]
+  );
+
+  const handleBuyNotorietyGenerator = useCallback(
+    (generatorId: string) => {
+      if (!engineRef.current || !state) return;
+      engineRef.current.executeAction((currentState) =>
+        buyNotorietyGenerator(currentState, generatorId)
+      );
+    },
+    [state]
+  );
+
+  const handleBuyNotorietyUpgrade = useCallback(
+    (upgradeId: string) => {
+      if (!engineRef.current || !state) return;
+      engineRef.current.executeAction((currentState) =>
+        buyNotorietyUpgrade(currentState, upgradeId)
+      );
+    },
+    [state]
   );
 
   const handlePrestige = useCallback(() => {
@@ -473,6 +541,8 @@ export function GameProvider({ children }: GameProviderProps) {
     handleClick,
     handleBuyGenerator,
     handleBuyUpgrade,
+    handleBuyNotorietyGenerator,
+    handleBuyNotorietyUpgrade,
     handlePurchaseTheme,
     handleActivateTheme,
     handlePrestige,

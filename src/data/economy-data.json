@@ -1,0 +1,917 @@
+{
+  "generators": [
+    {
+      "id": "photo",
+      "baseCost": 10,
+      "growthRate": 1.15,
+      "levels": [
+        {
+          "level": 0,
+          "cost": 10
+        },
+        {
+          "level": 1,
+          "cost": 11
+        },
+        {
+          "level": 2,
+          "cost": 13
+        },
+        {
+          "level": 3,
+          "cost": 15
+        },
+        {
+          "level": 4,
+          "cost": 17
+        },
+        {
+          "level": 5,
+          "cost": 20
+        },
+        {
+          "level": 6,
+          "cost": 23
+        },
+        {
+          "level": 7,
+          "cost": 26
+        },
+        {
+          "level": 8,
+          "cost": 30
+        },
+        {
+          "level": 9,
+          "cost": 35
+        },
+        {
+          "level": 10,
+          "cost": 40
+        },
+        {
+          "level": 11,
+          "cost": 46
+        },
+        {
+          "level": 12,
+          "cost": 53
+        },
+        {
+          "level": 13,
+          "cost": 61
+        },
+        {
+          "level": 14,
+          "cost": 70
+        },
+        {
+          "level": 15,
+          "cost": 81
+        },
+        {
+          "level": 16,
+          "cost": 93
+        },
+        {
+          "level": 17,
+          "cost": 107
+        },
+        {
+          "level": 18,
+          "cost": 123
+        },
+        {
+          "level": 19,
+          "cost": 142
+        }
+      ]
+    },
+    {
+      "id": "video",
+      "baseCost": 100,
+      "growthRate": 1.14,
+      "levels": [
+        {
+          "level": 0,
+          "cost": 100
+        },
+        {
+          "level": 1,
+          "cost": 113
+        },
+        {
+          "level": 2,
+          "cost": 129
+        },
+        {
+          "level": 3,
+          "cost": 148
+        },
+        {
+          "level": 4,
+          "cost": 168
+        },
+        {
+          "level": 5,
+          "cost": 192
+        },
+        {
+          "level": 6,
+          "cost": 219
+        },
+        {
+          "level": 7,
+          "cost": 250
+        },
+        {
+          "level": 8,
+          "cost": 285
+        },
+        {
+          "level": 9,
+          "cost": 325
+        },
+        {
+          "level": 10,
+          "cost": 370
+        },
+        {
+          "level": 11,
+          "cost": 422
+        },
+        {
+          "level": 12,
+          "cost": 481
+        },
+        {
+          "level": 13,
+          "cost": 549
+        },
+        {
+          "level": 14,
+          "cost": 626
+        },
+        {
+          "level": 15,
+          "cost": 713
+        },
+        {
+          "level": 16,
+          "cost": 813
+        },
+        {
+          "level": 17,
+          "cost": 927
+        },
+        {
+          "level": 18,
+          "cost": 1057
+        },
+        {
+          "level": 19,
+          "cost": 1205
+        }
+      ]
+    },
+    {
+      "id": "stream",
+      "baseCost": 1100,
+      "growthRate": 1.13,
+      "levels": [
+        {
+          "level": 0,
+          "cost": 1100
+        },
+        {
+          "level": 1,
+          "cost": 1242
+        },
+        {
+          "level": 2,
+          "cost": 1404
+        },
+        {
+          "level": 3,
+          "cost": 1587
+        },
+        {
+          "level": 4,
+          "cost": 1793
+        },
+        {
+          "level": 5,
+          "cost": 2026
+        },
+        {
+          "level": 6,
+          "cost": 2290
+        },
+        {
+          "level": 7,
+          "cost": 2587
+        },
+        {
+          "level": 8,
+          "cost": 2924
+        },
+        {
+          "level": 9,
+          "cost": 3304
+        },
+        {
+          "level": 10,
+          "cost": 3734
+        },
+        {
+          "level": 11,
+          "cost": 4219
+        },
+        {
+          "level": 12,
+          "cost": 4767
+        },
+        {
+          "level": 13,
+          "cost": 5387
+        },
+        {
+          "level": 14,
+          "cost": 6088
+        },
+        {
+          "level": 15,
+          "cost": 6879
+        },
+        {
+          "level": 16,
+          "cost": 7774
+        },
+        {
+          "level": 17,
+          "cost": 8784
+        },
+        {
+          "level": 18,
+          "cost": 9926
+        },
+        {
+          "level": 19,
+          "cost": 11217
+        }
+      ]
+    },
+    {
+      "id": "collab",
+      "baseCost": 12000,
+      "growthRate": 1.12,
+      "levels": [
+        {
+          "level": 0,
+          "cost": 12000
+        },
+        {
+          "level": 1,
+          "cost": 13440
+        },
+        {
+          "level": 2,
+          "cost": 15052
+        },
+        {
+          "level": 3,
+          "cost": 16859
+        },
+        {
+          "level": 4,
+          "cost": 18882
+        },
+        {
+          "level": 5,
+          "cost": 21148
+        },
+        {
+          "level": 6,
+          "cost": 23685
+        },
+        {
+          "level": 7,
+          "cost": 26528
+        },
+        {
+          "level": 8,
+          "cost": 29711
+        },
+        {
+          "level": 9,
+          "cost": 33276
+        },
+        {
+          "level": 10,
+          "cost": 37270
+        },
+        {
+          "level": 11,
+          "cost": 41742
+        },
+        {
+          "level": 12,
+          "cost": 46751
+        },
+        {
+          "level": 13,
+          "cost": 52361
+        },
+        {
+          "level": 14,
+          "cost": 58645
+        },
+        {
+          "level": 15,
+          "cost": 65682
+        },
+        {
+          "level": 16,
+          "cost": 73564
+        },
+        {
+          "level": 17,
+          "cost": 82392
+        },
+        {
+          "level": 18,
+          "cost": 92279
+        },
+        {
+          "level": 19,
+          "cost": 103353
+        }
+      ]
+    },
+    {
+      "id": "brand",
+      "baseCost": 130000,
+      "growthRate": 1.11,
+      "levels": [
+        {
+          "level": 0,
+          "cost": 130000
+        },
+        {
+          "level": 1,
+          "cost": 144300
+        },
+        {
+          "level": 2,
+          "cost": 160173
+        },
+        {
+          "level": 3,
+          "cost": 177792
+        },
+        {
+          "level": 4,
+          "cost": 197349
+        },
+        {
+          "level": 5,
+          "cost": 219057
+        },
+        {
+          "level": 6,
+          "cost": 243153
+        },
+        {
+          "level": 7,
+          "cost": 269900
+        },
+        {
+          "level": 8,
+          "cost": 299589
+        },
+        {
+          "level": 9,
+          "cost": 332544
+        },
+        {
+          "level": 10,
+          "cost": 369124
+        },
+        {
+          "level": 11,
+          "cost": 409728
+        },
+        {
+          "level": 12,
+          "cost": 454798
+        },
+        {
+          "level": 13,
+          "cost": 504826
+        },
+        {
+          "level": 14,
+          "cost": 560357
+        },
+        {
+          "level": 15,
+          "cost": 621996
+        },
+        {
+          "level": 16,
+          "cost": 690416
+        },
+        {
+          "level": 17,
+          "cost": 766362
+        },
+        {
+          "level": 18,
+          "cost": 850661
+        },
+        {
+          "level": 19,
+          "cost": 944234
+        }
+      ]
+    },
+    {
+      "id": "agency",
+      "baseCost": 1400000,
+      "growthRate": 1.1,
+      "levels": [
+        {
+          "level": 0,
+          "cost": 1400000
+        },
+        {
+          "level": 1,
+          "cost": 1540000
+        },
+        {
+          "level": 2,
+          "cost": 1694000
+        },
+        {
+          "level": 3,
+          "cost": 1863400
+        },
+        {
+          "level": 4,
+          "cost": 2049740
+        },
+        {
+          "level": 5,
+          "cost": 2254714
+        },
+        {
+          "level": 6,
+          "cost": 2480185
+        },
+        {
+          "level": 7,
+          "cost": 2728203
+        },
+        {
+          "level": 8,
+          "cost": 3001024
+        },
+        {
+          "level": 9,
+          "cost": 3301126
+        },
+        {
+          "level": 10,
+          "cost": 3631239
+        },
+        {
+          "level": 11,
+          "cost": 3994363
+        },
+        {
+          "level": 12,
+          "cost": 4393799
+        },
+        {
+          "level": 13,
+          "cost": 4833179
+        },
+        {
+          "level": 14,
+          "cost": 5316497
+        },
+        {
+          "level": 15,
+          "cost": 5848147
+        },
+        {
+          "level": 16,
+          "cost": 6432962
+        },
+        {
+          "level": 17,
+          "cost": 7076258
+        },
+        {
+          "level": 18,
+          "cost": 7783884
+        },
+        {
+          "level": 19,
+          "cost": 8562272
+        }
+      ]
+    }
+  ],
+  "notorietyGenerators": [
+    {
+      "id": "smm",
+      "baseCost": 100000,
+      "growthRate": 1.8,
+      "upkeep": 5000,
+      "levels": [
+        {
+          "level": 1,
+          "cost": 100000
+        },
+        {
+          "level": 2,
+          "cost": 180000
+        },
+        {
+          "level": 3,
+          "cost": 324000
+        },
+        {
+          "level": 4,
+          "cost": 583200
+        },
+        {
+          "level": 5,
+          "cost": 1049760
+        },
+        {
+          "level": 6,
+          "cost": 1889568
+        },
+        {
+          "level": 7,
+          "cost": 3401222
+        },
+        {
+          "level": 8,
+          "cost": 6122200
+        },
+        {
+          "level": 9,
+          "cost": 11019960
+        },
+        {
+          "level": 10,
+          "cost": 19835929
+        }
+      ]
+    },
+    {
+      "id": "pr_team",
+      "baseCost": 100000000,
+      "growthRate": 2.2,
+      "upkeep": 25000,
+      "levels": [
+        {
+          "level": 1,
+          "cost": 100000000
+        },
+        {
+          "level": 2,
+          "cost": 220000000
+        },
+        {
+          "level": 3,
+          "cost": 484000000
+        },
+        {
+          "level": 4,
+          "cost": 1064800000
+        },
+        {
+          "level": 5,
+          "cost": 2342560000
+        },
+        {
+          "level": 6,
+          "cost": 5153632000
+        },
+        {
+          "level": 7,
+          "cost": 11337990400
+        },
+        {
+          "level": 8,
+          "cost": 24943578880
+        },
+        {
+          "level": 9,
+          "cost": 54875873536
+        },
+        {
+          "level": 10,
+          "cost": 120726921779
+        }
+      ]
+    },
+    {
+      "id": "key_client",
+      "baseCost": 10000000000,
+      "growthRate": 2.5,
+      "upkeep": 250000,
+      "levels": [
+        {
+          "level": 1,
+          "cost": 10000000000
+        },
+        {
+          "level": 2,
+          "cost": 25000000000
+        },
+        {
+          "level": 3,
+          "cost": 62500000000
+        },
+        {
+          "level": 4,
+          "cost": 156250000000
+        },
+        {
+          "level": 5,
+          "cost": 390625000000
+        },
+        {
+          "level": 6,
+          "cost": 976562500000
+        },
+        {
+          "level": 7,
+          "cost": 2441406250000
+        },
+        {
+          "level": 8,
+          "cost": 6103515625000
+        },
+        {
+          "level": 9,
+          "cost": 15258789062500
+        },
+        {
+          "level": 10,
+          "cost": 38146972656250
+        }
+      ]
+    }
+  ],
+  "upgrades": [
+    {
+      "id": "better_camera",
+      "cap": 7,
+      "costs": [
+        500,
+        1500,
+        4500,
+        13500,
+        40500,
+        121500,
+        364500
+      ],
+      "effect": "Adds to base click power per tier (7 tiers: +1, +2, +3, +5, +8, +15, +25)"
+    },
+    {
+      "id": "editing_software",
+      "cap": "infinite",
+      "costs": [
+        2500
+      ],
+      "effect": "Photo Posts produce 2x followers"
+    },
+    {
+      "id": "viral_strategy",
+      "cap": "infinite",
+      "costs": [
+        50000
+      ],
+      "effect": "All production increased by 50%"
+    },
+    {
+      "id": "ai_enhancements",
+      "cap": "infinite",
+      "costs": [
+        1000000,
+        1350000,
+        1822500,
+        2460375,
+        3321506,
+        4484033,
+        6053445,
+        8172150,
+        11032403,
+        14893745
+      ],
+      "effect": "+5% to click power per level (infinite)"
+    },
+    {
+      "id": "lucky_charm",
+      "cap": 4,
+      "costs": [
+        1000,
+        15000,
+        225000,
+        3375000
+      ],
+      "effect": "Increases award drop rate per tier (4 tiers: +0.3% each)"
+    },
+    {
+      "id": "overnight_success",
+      "cap": 4,
+      "costs": [
+        25000,
+        125000,
+        625000,
+        3125000
+      ],
+      "effect": "Increases offline gain rate (4 tiers: 50%, 60%, 75%, 100%)"
+    },
+    {
+      "id": "cred_cache",
+      "cap": 6,
+      "costs": [
+        10000,
+        50000,
+        250000,
+        1250000,
+        6250000,
+        31250000
+      ],
+      "effect": "Increases chance for bonus creds on click (6 tiers)"
+    },
+    {
+      "id": "better_filters",
+      "cap": "infinite",
+      "costs": [
+        100000,
+        125000,
+        156250,
+        195312,
+        244140,
+        305175,
+        381469,
+        476837,
+        596046,
+        745058
+      ],
+      "effect": "+1% to base click power per level (infinite)"
+    }
+  ],
+  "notorietyUpgrades": [
+    {
+      "id": "cache_value",
+      "cap": 10,
+      "costs": [
+        0,
+        10,
+        20,
+        30,
+        40,
+        50,
+        60,
+        70,
+        80,
+        90
+      ],
+      "effect": "+5% to Cred Cache payout per level"
+    },
+    {
+      "id": "drama_boost",
+      "cap": 5,
+      "costs": [
+        25,
+        62,
+        156,
+        390,
+        976
+      ],
+      "effect": "+0.2% to global Prestige bonus per level"
+    },
+    {
+      "id": "buy_creds",
+      "cap": "infinite",
+      "costs": [
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "effect": "Instantly grants 30 minutes of current followers/s"
+    },
+    {
+      "id": "cred_boost",
+      "cap": "infinite",
+      "costs": [
+        50,
+        70,
+        97,
+        137,
+        192,
+        268,
+        376,
+        527,
+        737,
+        1033
+      ],
+      "effect": "+1% to all passive followers/s"
+    },
+    {
+      "id": "notoriety_boost",
+      "cap": "infinite",
+      "costs": [
+        100,
+        155,
+        240,
+        372,
+        577,
+        894,
+        1386,
+        2149,
+        3331,
+        5163
+      ],
+      "effect": "+1% to total Notoriety/hr"
+    },
+    {
+      "id": "influencer_endorsement",
+      "cap": 3,
+      "costs": [
+        1000,
+        3000,
+        9000
+      ],
+      "effect": "+10%, +25%, +50% Prestige gain bonuses"
+    }
+  ],
+  "prestige": [
+    {
+      "level": 1,
+      "cost": 1000000000,
+      "points": 1
+    },
+    {
+      "level": 2,
+      "cost": 5656854250,
+      "points": 2
+    },
+    {
+      "level": 3,
+      "cost": 15588457269,
+      "points": 3
+    },
+    {
+      "level": 4,
+      "cost": 32000000000,
+      "points": 4
+    },
+    {
+      "level": 5,
+      "cost": 55901699438,
+      "points": 5
+    },
+    {
+      "level": 6,
+      "cost": 88181630741,
+      "points": 6
+    },
+    {
+      "level": 7,
+      "cost": 129641814243,
+      "points": 7
+    },
+    {
+      "level": 8,
+      "cost": 181019335984,
+      "points": 8
+    },
+    {
+      "level": 9,
+      "cost": 243000000000,
+      "points": 9
+    },
+    {
+      "level": 10,
+      "cost": 316227766017,
+      "points": 10
+    }
+  ]
+}

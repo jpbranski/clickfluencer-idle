@@ -1,0 +1,167 @@
+Type,Name,ID,Level,Cost,GrowthRate,Effect,Upkeep,Notoriety/hr,Notes
+Generator,📸 Photo Post,photo,1,10,1.15,+0.1/s,-,-,
+Generator,📸 Photo Post,photo,2,11,1.15,+0.1/s,-,-,
+Generator,📸 Photo Post,photo,3,13,1.15,+0.1/s,-,-,
+Generator,📸 Photo Post,photo,4,15,1.15,+0.1/s,-,-,
+Generator,📸 Photo Post,photo,5,17,1.15,+0.1/s,-,-,
+Generator,📸 Photo Post,photo,6,20,1.15,+0.1/s,-,-,
+Generator,📸 Photo Post,photo,7,23,1.15,+0.1/s,-,-,
+Generator,📸 Photo Post,photo,8,26,1.15,+0.1/s,-,-,
+Generator,📸 Photo Post,photo,9,30,1.15,+0.1/s,-,-,
+Generator,📸 Photo Post,photo,10,35,1.15,+0.1/s,-,-,
+Generator,🎥 Video Content,video,1,100,1.14,+1/s,-,-,
+Generator,🎥 Video Content,video,2,113,1.14,+1/s,-,-,
+Generator,🎥 Video Content,video,3,129,1.14,+1/s,-,-,
+Generator,🎥 Video Content,video,4,148,1.14,+1/s,-,-,
+Generator,🎥 Video Content,video,5,168,1.14,+1/s,-,-,
+Generator,🎥 Video Content,video,6,192,1.14,+1/s,-,-,
+Generator,🎥 Video Content,video,7,219,1.14,+1/s,-,-,
+Generator,🎥 Video Content,video,8,250,1.14,+1/s,-,-,
+Generator,🎥 Video Content,video,9,285,1.14,+1/s,-,-,
+Generator,🎥 Video Content,video,10,325,1.14,+1/s,-,-,
+Generator,📹 Live Stream,stream,1,1100,1.13,+8/s,-,-,
+Generator,📹 Live Stream,stream,2,1242,1.13,+8/s,-,-,
+Generator,📹 Live Stream,stream,3,1404,1.13,+8/s,-,-,
+Generator,📹 Live Stream,stream,4,1587,1.13,+8/s,-,-,
+Generator,📹 Live Stream,stream,5,1793,1.13,+8/s,-,-,
+Generator,📹 Live Stream,stream,6,2026,1.13,+8/s,-,-,
+Generator,📹 Live Stream,stream,7,2290,1.13,+8/s,-,-,
+Generator,📹 Live Stream,stream,8,2587,1.13,+8/s,-,-,
+Generator,📹 Live Stream,stream,9,2924,1.13,+8/s,-,-,
+Generator,📹 Live Stream,stream,10,3304,1.13,+8/s,-,-,
+Generator,🤝 Collaboration,collab,1,12000,1.12,+47/s,-,-,
+Generator,🤝 Collaboration,collab,2,13440,1.12,+47/s,-,-,
+Generator,🤝 Collaboration,collab,3,15052,1.12,+47/s,-,-,
+Generator,🤝 Collaboration,collab,4,16859,1.12,+47/s,-,-,
+Generator,🤝 Collaboration,collab,5,18882,1.12,+47/s,-,-,
+Generator,🤝 Collaboration,collab,6,21148,1.12,+47/s,-,-,
+Generator,🤝 Collaboration,collab,7,23685,1.12,+47/s,-,-,
+Generator,🤝 Collaboration,collab,8,26528,1.12,+47/s,-,-,
+Generator,🤝 Collaboration,collab,9,29711,1.12,+47/s,-,-,
+Generator,🤝 Collaboration,collab,10,33276,1.12,+47/s,-,-,
+Generator,💼 Brand Deal,brand,1,130000,1.11,+260/s,-,-,
+Generator,💼 Brand Deal,brand,2,144300,1.11,+260/s,-,-,
+Generator,💼 Brand Deal,brand,3,160173,1.11,+260/s,-,-,
+Generator,💼 Brand Deal,brand,4,177792,1.11,+260/s,-,-,
+Generator,💼 Brand Deal,brand,5,197349,1.11,+260/s,-,-,
+Generator,💼 Brand Deal,brand,6,219057,1.11,+260/s,-,-,
+Generator,💼 Brand Deal,brand,7,243153,1.11,+260/s,-,-,
+Generator,💼 Brand Deal,brand,8,269900,1.11,+260/s,-,-,
+Generator,💼 Brand Deal,brand,9,299589,1.11,+260/s,-,-,
+Generator,💼 Brand Deal,brand,10,332544,1.11,+260/s,-,-,
+Generator,🏢 Talent Agency,agency,1,1400000,1.1,+1400/s,-,-,
+Generator,🏢 Talent Agency,agency,2,1540000,1.1,+1400/s,-,-,
+Generator,🏢 Talent Agency,agency,3,1694000,1.1,+1400/s,-,-,
+Generator,🏢 Talent Agency,agency,4,1863400,1.1,+1400/s,-,-,
+Generator,🏢 Talent Agency,agency,5,2049740,1.1,+1400/s,-,-,
+Generator,🏢 Talent Agency,agency,6,2254714,1.1,+1400/s,-,-,
+Generator,🏢 Talent Agency,agency,7,2480185,1.1,+1400/s,-,-,
+Generator,🏢 Talent Agency,agency,8,2728203,1.1,+1400/s,-,-,
+Generator,🏢 Talent Agency,agency,9,3001024,1.1,+1400/s,-,-,
+Generator,🏢 Talent Agency,agency,10,3301126,1.1,+1400/s,-,-,
+Notoriety Generator,Social Media Manager,smm,1,100000,1.8,+1/hr,5000,1,Max Level: 10
+Notoriety Generator,Social Media Manager,smm,2,180000,1.8,+1/hr,5000,1,Max Level: 10
+Notoriety Generator,Social Media Manager,smm,3,324000,1.8,+1/hr,5000,1,Max Level: 10
+Notoriety Generator,Social Media Manager,smm,4,583200,1.8,+1/hr,5000,1,Max Level: 10
+Notoriety Generator,Social Media Manager,smm,5,1049760,1.8,+1/hr,5000,1,Max Level: 10
+Notoriety Generator,Social Media Manager,smm,6,1889568,1.8,+1/hr,5000,1,Max Level: 10
+Notoriety Generator,Social Media Manager,smm,7,3401222,1.8,+1/hr,5000,1,Max Level: 10
+Notoriety Generator,Social Media Manager,smm,8,6122200,1.8,+1/hr,5000,1,Max Level: 10
+Notoriety Generator,Social Media Manager,smm,9,11019960,1.8,+1/hr,5000,1,Max Level: 10
+Notoriety Generator,Social Media Manager,smm,10,19835929,1.8,+1/hr,5000,1,Max Level: 10
+Notoriety Generator,PR Team,pr_team,1,100000000,2.2,+5/hr,25000,5,Max Level: 10
+Notoriety Generator,PR Team,pr_team,2,220000000,2.2,+5/hr,25000,5,Max Level: 10
+Notoriety Generator,PR Team,pr_team,3,484000000,2.2,+5/hr,25000,5,Max Level: 10
+Notoriety Generator,PR Team,pr_team,4,1064800000,2.2,+5/hr,25000,5,Max Level: 10
+Notoriety Generator,PR Team,pr_team,5,2342560000,2.2,+5/hr,25000,5,Max Level: 10
+Notoriety Generator,PR Team,pr_team,6,5153632000,2.2,+5/hr,25000,5,Max Level: 10
+Notoriety Generator,PR Team,pr_team,7,11337990400,2.2,+5/hr,25000,5,Max Level: 10
+Notoriety Generator,PR Team,pr_team,8,24943578880,2.2,+5/hr,25000,5,Max Level: 10
+Notoriety Generator,PR Team,pr_team,9,54875873536,2.2,+5/hr,25000,5,Max Level: 10
+Notoriety Generator,PR Team,pr_team,10,120726921779,2.2,+5/hr,25000,5,Max Level: 10
+Notoriety Generator,Key Client,key_client,1,10000000000,2.5,+25/hr,250000,25,Max Level: 10
+Notoriety Generator,Key Client,key_client,2,25000000000,2.5,+25/hr,250000,25,Max Level: 10
+Notoriety Generator,Key Client,key_client,3,62500000000,2.5,+25/hr,250000,25,Max Level: 10
+Notoriety Generator,Key Client,key_client,4,156250000000,2.5,+25/hr,250000,25,Max Level: 10
+Notoriety Generator,Key Client,key_client,5,390625000000,2.5,+25/hr,250000,25,Max Level: 10
+Notoriety Generator,Key Client,key_client,6,976562500000,2.5,+25/hr,250000,25,Max Level: 10
+Notoriety Generator,Key Client,key_client,7,2441406250000,2.5,+25/hr,250000,25,Max Level: 10
+Notoriety Generator,Key Client,key_client,8,6103515625000,2.5,+25/hr,250000,25,Max Level: 10
+Notoriety Generator,Key Client,key_client,9,15258789062500,2.5,+25/hr,250000,25,Max Level: 10
+Notoriety Generator,Key Client,key_client,10,38146972656250,2.5,+25/hr,250000,25,Max Level: 10
+Upgrade,📸 Better Camera,better_camera,1,500,3,Adds to base click power per tier (7 tiers: +1, +2, +3, +5, +8, +15, +25),-,-,Tier 1/7
+Upgrade,📸 Better Camera,better_camera,2,1500,3,Adds to base click power per tier (7 tiers: +1, +2, +3, +5, +8, +15, +25),-,-,Tier 2/7
+Upgrade,📸 Better Camera,better_camera,3,4500,3,Adds to base click power per tier (7 tiers: +1, +2, +3, +5, +8, +15, +25),-,-,Tier 3/7
+Upgrade,📸 Better Camera,better_camera,4,13500,3,Adds to base click power per tier (7 tiers: +1, +2, +3, +5, +8, +15, +25),-,-,Tier 4/7
+Upgrade,📸 Better Camera,better_camera,5,40500,3,Adds to base click power per tier (7 tiers: +1, +2, +3, +5, +8, +15, +25),-,-,Tier 5/7
+Upgrade,📸 Better Camera,better_camera,6,121500,3,Adds to base click power per tier (7 tiers: +1, +2, +3, +5, +8, +15, +25),-,-,Tier 6/7
+Upgrade,📸 Better Camera,better_camera,7,364500,3,Adds to base click power per tier (7 tiers: +1, +2, +3, +5, +8, +15, +25),-,-,Tier 7/7
+Upgrade,✂️ Editing Software,editing_software,1,2500,-,Photo Posts produce 2x followers,-,-,One-time
+Upgrade,🔥 Viral Strategy,viral_strategy,1,50000,-,All production increased by 50%,-,-,One-time
+Upgrade,🤖 AI Enhancements,ai_enhancements,1,1000000,1.35,+5% to click power per level (infinite),-,-,Infinite
+Upgrade,🤖 AI Enhancements,ai_enhancements,2,1350000,1.35,+5% to click power per level (infinite),-,-,Infinite
+Upgrade,🤖 AI Enhancements,ai_enhancements,3,1822500,1.35,+5% to click power per level (infinite),-,-,Infinite
+Upgrade,🤖 AI Enhancements,ai_enhancements,4,2460375,1.35,+5% to click power per level (infinite),-,-,Infinite
+Upgrade,🤖 AI Enhancements,ai_enhancements,5,3321506,1.35,+5% to click power per level (infinite),-,-,Infinite
+Upgrade,💎 Lucky Charm,lucky_charm,1,1000,15,Increases award drop rate per tier (4 tiers: +0.3% each),-,-,Tier 1/4
+Upgrade,💎 Lucky Charm,lucky_charm,2,15000,15,Increases award drop rate per tier (4 tiers: +0.3% each),-,-,Tier 2/4
+Upgrade,💎 Lucky Charm,lucky_charm,3,225000,15,Increases award drop rate per tier (4 tiers: +0.3% each),-,-,Tier 3/4
+Upgrade,💎 Lucky Charm,lucky_charm,4,3375000,15,Increases award drop rate per tier (4 tiers: +0.3% each),-,-,Tier 4/4
+Upgrade,🌙 Overnight Success,overnight_success,1,25000,5,Increases offline gain rate (4 tiers: 50%, 60%, 75%, 100%),-,-,Tier 1/4
+Upgrade,🌙 Overnight Success,overnight_success,2,125000,5,Increases offline gain rate (4 tiers: 50%, 60%, 75%, 100%),-,-,Tier 2/4
+Upgrade,🌙 Overnight Success,overnight_success,3,625000,5,Increases offline gain rate (4 tiers: 50%, 60%, 75%, 100%),-,-,Tier 3/4
+Upgrade,🌙 Overnight Success,overnight_success,4,3125000,5,Increases offline gain rate (4 tiers: 50%, 60%, 75%, 100%),-,-,Tier 4/4
+Upgrade,💰 Cred Cache,cred_cache,1,10000,5,Increases chance for bonus creds on click (6 tiers),-,-,Tier 1/6
+Upgrade,💰 Cred Cache,cred_cache,2,50000,5,Increases chance for bonus creds on click (6 tiers),-,-,Tier 2/6
+Upgrade,💰 Cred Cache,cred_cache,3,250000,5,Increases chance for bonus creds on click (6 tiers),-,-,Tier 3/6
+Upgrade,💰 Cred Cache,cred_cache,4,1250000,5,Increases chance for bonus creds on click (6 tiers),-,-,Tier 4/6
+Upgrade,💰 Cred Cache,cred_cache,5,6250000,5,Increases chance for bonus creds on click (6 tiers),-,-,Tier 5/6
+Upgrade,💰 Cred Cache,cred_cache,6,31250000,5,Increases chance for bonus creds on click (6 tiers),-,-,Tier 6/6
+Upgrade,📸 Better Filters,better_filters,1,100000,1.25,+1% to base click power per level (infinite),-,-,Infinite
+Upgrade,📸 Better Filters,better_filters,2,125000,1.25,+1% to base click power per level (infinite),-,-,Infinite
+Upgrade,📸 Better Filters,better_filters,3,156250,1.25,+1% to base click power per level (infinite),-,-,Infinite
+Upgrade,📸 Better Filters,better_filters,4,195312,1.25,+1% to base click power per level (infinite),-,-,Infinite
+Upgrade,📸 Better Filters,better_filters,5,244140,1.25,+1% to base click power per level (infinite),-,-,Infinite
+Notoriety Upgrade,Cache Value Increase,cache_value,1,0,-,+5% to Cred Cache payout per level,-,-,Cap: 10
+Notoriety Upgrade,Cache Value Increase,cache_value,2,10,-,+5% to Cred Cache payout per level,-,-,Cap: 10
+Notoriety Upgrade,Cache Value Increase,cache_value,3,20,-,+5% to Cred Cache payout per level,-,-,Cap: 10
+Notoriety Upgrade,Cache Value Increase,cache_value,4,30,-,+5% to Cred Cache payout per level,-,-,Cap: 10
+Notoriety Upgrade,Cache Value Increase,cache_value,5,40,-,+5% to Cred Cache payout per level,-,-,Cap: 10
+Notoriety Upgrade,Cache Value Increase,cache_value,6,50,-,+5% to Cred Cache payout per level,-,-,Cap: 10
+Notoriety Upgrade,Cache Value Increase,cache_value,7,60,-,+5% to Cred Cache payout per level,-,-,Cap: 10
+Notoriety Upgrade,Cache Value Increase,cache_value,8,70,-,+5% to Cred Cache payout per level,-,-,Cap: 10
+Notoriety Upgrade,Cache Value Increase,cache_value,9,80,-,+5% to Cred Cache payout per level,-,-,Cap: 10
+Notoriety Upgrade,Cache Value Increase,cache_value,10,90,-,+5% to Cred Cache payout per level,-,-,Cap: 10
+Notoriety Upgrade,Drama Multiplier Boost,drama_boost,1,25,-,+0.2% to global Prestige bonus per level,-,-,Cap: 5
+Notoriety Upgrade,Drama Multiplier Boost,drama_boost,2,62,-,+0.2% to global Prestige bonus per level,-,-,Cap: 5
+Notoriety Upgrade,Drama Multiplier Boost,drama_boost,3,156,-,+0.2% to global Prestige bonus per level,-,-,Cap: 5
+Notoriety Upgrade,Drama Multiplier Boost,drama_boost,4,390,-,+0.2% to global Prestige bonus per level,-,-,Cap: 5
+Notoriety Upgrade,Drama Multiplier Boost,drama_boost,5,976,-,+0.2% to global Prestige bonus per level,-,-,Cap: 5
+Notoriety Upgrade,Buy Creds,buy_creds,1,10,-,Instantly grants 30 minutes of current followers/s,-,-,Infinite
+Notoriety Upgrade,Buy Creds,buy_creds,2,10,-,Instantly grants 30 minutes of current followers/s,-,-,Infinite
+Notoriety Upgrade,Buy Creds,buy_creds,3,10,-,Instantly grants 30 minutes of current followers/s,-,-,Infinite
+Notoriety Upgrade,Buy Creds,buy_creds,4,10,-,Instantly grants 30 minutes of current followers/s,-,-,Infinite
+Notoriety Upgrade,Buy Creds,buy_creds,5,10,-,Instantly grants 30 minutes of current followers/s,-,-,Infinite
+Notoriety Upgrade,Cred Boost,cred_boost,1,50,-,+1% to all passive followers/s,-,-,Infinite
+Notoriety Upgrade,Cred Boost,cred_boost,2,70,-,+1% to all passive followers/s,-,-,Infinite
+Notoriety Upgrade,Cred Boost,cred_boost,3,97,-,+1% to all passive followers/s,-,-,Infinite
+Notoriety Upgrade,Cred Boost,cred_boost,4,137,-,+1% to all passive followers/s,-,-,Infinite
+Notoriety Upgrade,Cred Boost,cred_boost,5,192,-,+1% to all passive followers/s,-,-,Infinite
+Notoriety Upgrade,Notoriety Boost,notoriety_boost,1,100,-,+1% to total Notoriety/hr,-,-,Infinite
+Notoriety Upgrade,Notoriety Boost,notoriety_boost,2,155,-,+1% to total Notoriety/hr,-,-,Infinite
+Notoriety Upgrade,Notoriety Boost,notoriety_boost,3,240,-,+1% to total Notoriety/hr,-,-,Infinite
+Notoriety Upgrade,Notoriety Boost,notoriety_boost,4,372,-,+1% to total Notoriety/hr,-,-,Infinite
+Notoriety Upgrade,Notoriety Boost,notoriety_boost,5,577,-,+1% to total Notoriety/hr,-,-,Infinite
+Notoriety Upgrade,Influencer Endorsement,influencer_endorsement,1,1000,-,+10%, +25%, +50% Prestige gain bonuses,-,-,Cap: 3
+Notoriety Upgrade,Influencer Endorsement,influencer_endorsement,2,3000,-,+10%, +25%, +50% Prestige gain bonuses,-,-,Cap: 3
+Notoriety Upgrade,Influencer Endorsement,influencer_endorsement,3,9000,-,+10%, +25%, +50% Prestige gain bonuses,-,-,Cap: 3
+Prestige,Prestige Level 1,prestige,1,1000000000,0.4,+1 Reputation,-,-,+10% production per point
+Prestige,Prestige Level 2,prestige,2,5656854250,0.4,+2 Reputation,-,-,+10% production per point
+Prestige,Prestige Level 3,prestige,3,15588457269,0.4,+3 Reputation,-,-,+10% production per point
+Prestige,Prestige Level 4,prestige,4,32000000000,0.4,+4 Reputation,-,-,+10% production per point
+Prestige,Prestige Level 5,prestige,5,55901699438,0.4,+5 Reputation,-,-,+10% production per point
+Prestige,Prestige Level 6,prestige,6,88181630741,0.4,+6 Reputation,-,-,+10% production per point
+Prestige,Prestige Level 7,prestige,7,129641814243,0.4,+7 Reputation,-,-,+10% production per point
+Prestige,Prestige Level 8,prestige,8,181019335984,0.4,+8 Reputation,-,-,+10% production per point
+Prestige,Prestige Level 9,prestige,9,243000000000,0.4,+9 Reputation,-,-,+10% production per point
+Prestige,Prestige Level 10,prestige,10,316227766017,0.4,+10 Reputation,-,-,+10% production per point

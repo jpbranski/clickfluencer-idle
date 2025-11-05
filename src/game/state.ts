@@ -96,12 +96,19 @@ export interface GameState {
   followers: number;
   shards: number; // Awards (premium currency from random drops)
   reputation: number; // Prestige currency
+  notoriety: number; // Notoriety (prestige-tier meta resource)
 
   // Generators (content creation systems)
   generators: Generator[];
 
+  // Notoriety Generators (produce notoriety, cost upkeep)
+  notorietyGenerators: Record<string, number>; // { smm: 2, pr_team: 1, key_client: 0 }
+
   // Upgrades (permanent improvements)
   upgrades: Upgrade[];
+
+  // Notoriety Upgrades (permanent notoriety-based improvements)
+  notorietyUpgrades: Record<string, number>; // { cache_value: 3, cred_boost: 1 }
 
   // Active Events
   activeEvents: RandomEvent[];
@@ -119,6 +126,9 @@ export interface GameState {
     soundEnabled: boolean;
     offlineProgressEnabled: boolean;
   };
+
+  // Cached Values (computed each tick for efficiency)
+  followersPerSecond?: number;
 
   // Meta
   version: string;
@@ -287,8 +297,22 @@ export function createInitialState(): GameState {
     followers: 0,
     shards: 0,
     reputation: 0,
+    notoriety: 0,
     generators: INITIAL_GENERATORS.map((g) => ({ ...g })),
+    notorietyGenerators: {
+      smm: 0,
+      pr_team: 0,
+      key_client: 0,
+    },
     upgrades: INITIAL_UPGRADES.map((u) => ({ ...u })),
+    notorietyUpgrades: {
+      cache_value: 0,
+      drama_boost: 0,
+      buy_creds: 0,
+      cred_boost: 0,
+      notoriety_boost: 0,
+      influencer_endorsement: 0,
+    },
     activeEvents: [],
     stats: {
       totalClicks: 0,
@@ -307,6 +331,7 @@ export function createInitialState(): GameState {
       soundEnabled: true,
       offlineProgressEnabled: true,
     },
+    followersPerSecond: 0,
     version: "v0.2.0 Early Access",
     lastSaveTime: now,
     themes: baseThemes.map((t) => ({
@@ -396,7 +421,7 @@ export function getClickPower(state: GameState): number {
 
 /**
  * Calculate total followers per second from all generators
- * Factors in: base generator output + upgrades + events + reputation + themes
+ * Factors in: base generator output + upgrades + events + reputation + themes + notoriety bonuses
  */
 export function getFollowersPerSecond(state: GameState): number {
   let total = 0;
@@ -453,6 +478,14 @@ export function getFollowersPerSecond(state: GameState): number {
       total *= event.effect.multiplier;
     }
   });
+
+  // Apply Notoriety Cred Boost (from notoriety upgrades)
+  if (state.notorietyUpgrades) {
+    const credBoostLevel = state.notorietyUpgrades.cred_boost || 0;
+    if (credBoostLevel > 0) {
+      total *= 1 + credBoostLevel * 0.01; // +1% per level
+    }
+  }
 
   return total;
 }
@@ -522,6 +555,7 @@ export function getOfflineEfficiency(state: GameState): number {
 /**
  * Calculate Cred Cache drop rate based on upgrade tier
  * Base: 0 (no drops), Tier 1-6: 1/1000 → 1/900 → 1/800 → 1/700 → 1/600 → 1/500
+ * Also applies Notoriety Cache Value boost
  */
 export function getCredCacheRate(state: GameState): number {
   const credCache = state.upgrades.find((u) => u.id === "cred_cache");
@@ -533,4 +567,18 @@ export function getCredCacheRate(state: GameState): number {
   const rateByTier = [0, 1/1000, 1/900, 1/800, 1/700, 1/600, 1/500];
   const tier = credCache.tier;
   return rateByTier[tier] || 0;
+}
+
+/**
+ * Calculate Cred Cache payout multiplier based on Notoriety Cache Value upgrade
+ * This multiplies the payout amount when Cred Cache drops occur
+ */
+export function getCredCachePayoutMultiplier(state: GameState): number {
+  if (!state.notorietyUpgrades) return 1;
+
+  const cacheValueLevel = state.notorietyUpgrades.cache_value || 0;
+  if (cacheValueLevel === 0) return 1;
+
+  // +5% per level
+  return 1 + cacheValueLevel * 0.05;
 }
