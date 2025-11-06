@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 import changelog from "@/data/changelog.json";
+import Head from "next/head";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "News & Updates - Clickfluencer Idle",
@@ -18,6 +20,9 @@ export default function NewsPage() {
 
   return (
     <main className="min-h-screen bg-background">
+      <Head>
+        <Link rel="canonical" href="https://www.clickfluenceridle.com/news" />
+      </Head>
       <div className="container mx-auto px-4 py-12 max-w-4xl">
         <h1 className="text-4xl font-bold text-accent mb-6">News & Updates</h1>
 

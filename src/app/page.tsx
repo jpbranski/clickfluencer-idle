@@ -19,6 +19,8 @@ import { formatNumber } from "@/game/format";
 import { getGeneratorCost, canAfford } from "@/game/state";
 import { getAwardDropRate } from "@/game/actions";
 import { loadSaveSystem } from "@/lib/storage/slotStorage";
+import Head from "next/head";
+import Link from "next/link";
 
 export default function HomePage() {
   const router = useRouter();
@@ -209,6 +211,9 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-background mt-12 mb-16 pb-20 sm:pb-0">
+      <Head>
+        <Link rel="canonical" href="https://www.clickfluenceridle.com/" />
+      </Head>
       {/* Event Toasts */}
       <EventToasts events={state.activeEvents} />
 

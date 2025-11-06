@@ -1,4 +1,6 @@
 import { Metadata } from "next";
+import Head from "next/head";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Guide - Clickfluencer Idle",
@@ -8,6 +10,9 @@ export const metadata: Metadata = {
 export default function GuidePage() {
   return (
     <main className="min-h-screen bg-background">
+      <Head>
+        <Link rel="canonical" href="https://www.clickfluenceridle.com/guide" />
+      </Head>
       <div className="container mx-auto px-4 py-12">
         <article className="max-w-3xl mx-auto prose prose-invert">
           <h1 className="text-4xl font-bold text-accent mb-6">Clickfluencer Idle – Getting Started</h1>
