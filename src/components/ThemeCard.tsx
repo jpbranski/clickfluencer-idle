@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import type { Theme } from '@/types/theme';
 
 interface ThemeCardProps {
@@ -11,7 +12,7 @@ interface ThemeCardProps {
   currentShards: number;
 }
 
-export function ThemeCard({
+export const ThemeCard = memo(function ThemeCard({
   theme,
   canAfford,
   isActive,
@@ -84,4 +85,11 @@ export function ThemeCard({
       )}
     </div>
   );
-}
+}, (prevProps, nextProps) => {
+  // Custom comparison - only re-render if relevant props changed
+  return (
+    prevProps.theme.unlocked === nextProps.theme.unlocked &&
+    prevProps.isActive === nextProps.isActive &&
+    prevProps.canAfford === nextProps.canAfford
+  );
+});

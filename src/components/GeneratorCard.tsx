@@ -9,8 +9,11 @@
  * - Production rate
  * - Cost to purchase
  * - Buy button (single or bulk)
+ *
+ * Optimized with React.memo to prevent unnecessary re-renders
  */
 
+import { memo } from "react";
 import {
   formatNumber,
   formatRate,
@@ -29,7 +32,7 @@ interface GeneratorCardProps {
   currentFollowers: number;
 }
 
-export function GeneratorCard({
+export const GeneratorCard = memo(function GeneratorCard({
   generator,
   canAfford,
   onBuy,
@@ -184,4 +187,13 @@ export function GeneratorCard({
       )}
     </div>
   );
-}
+}, (prevProps, nextProps) => {
+  // Custom comparison - only re-render if relevant props actually changed
+  return (
+    prevProps.generator.count === nextProps.generator.count &&
+    prevProps.generator.cost === nextProps.generator.cost &&
+    prevProps.generator.unlocked === nextProps.generator.unlocked &&
+    prevProps.canAfford === nextProps.canAfford &&
+    prevProps.currentFollowers === nextProps.currentFollowers
+  );
+});

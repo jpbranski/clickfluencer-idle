@@ -1,9 +1,31 @@
-// src/lib/storage.ts
+/**
+ * storage.ts - Storage API Wrapper
+ *
+ * Wraps the advanced storage system (IndexedDB + localStorage fallback)
+ * while maintaining backward compatibility with the original simple API.
+ *
+ * Features provided by advanced storage:
+ * - IndexedDB with localStorage fallback
+ * - Checksum verification
+ * - Rolling 3-backup system
+ * - Corruption detection and recovery
+ * - Base64 encoding
+ * - Version migration support
+ */
+
 import type { GameState } from "@/game/state";
+import {
+  save,
+  load,
+  exportSave as advancedExportSave,
+  importSave as advancedImportSave,
+} from "./storage/storage";
+import { storageLogger as logger } from "./logger";
 
 /**
  * Get environment-specific save key
  * Test environment (test.clickfluenceridle.com) uses separate storage
+ * Note: This is now handled by the advanced storage system's SAVE_KEY constant
  */
 function getSaveKey(): string {
   const baseKey = "clickfluencer-save-v1";
@@ -23,71 +45,92 @@ function getSaveKey(): string {
   return baseKey;
 }
 
+/**
+ * Save game state
+ */
 export async function saveGame(state: GameState) {
   try {
-    const json = JSON.stringify(state);
-    const saveKey = getSaveKey();
-    localStorage.setItem(saveKey, json);
-    // console.log("[saveGame] Successfully saved to localStorage with key:", saveKey);
-    return { success: true as const };
+    const result = await save<GameState>(state);
+    if (result.success) {
+      logger.debug("Game saved successfully");
+      return { success: true as const };
+    } else {
+      logger.error("Save failed:", result.error);
+      return { success: false as const, error: result.error };
+    }
   } catch (e) {
-    console.error("[saveGame] error", e);
+    logger.error("saveGame error:", e);
     return { success: false as const, error: String(e) };
   }
 }
 
+/**
+ * Load game state
+ */
 export async function loadGame(): Promise<
   | { success: true; data: GameState; restoredFromBackup?: boolean }
   | { success: false; restoredFromBackup?: boolean }
 > {
   try {
-    const saveKey = getSaveKey();
-    const raw = localStorage.getItem(saveKey);
-    if (!raw) {
-      console.log("[loadGame] No save found with key:", saveKey);
+    const result = await load<GameState>();
+    if (result.success && result.data) {
+      logger.debug("Game loaded successfully");
+      return {
+        success: true,
+        data: result.data,
+        restoredFromBackup: result.restoredFromBackup
+      };
+    } else {
+      logger.debug("No save found");
       return { success: false };
     }
-    const parsed = JSON.parse(raw) as GameState;
-    console.log("[loadGame] Successfully loaded save from key:", saveKey);
-    return { success: true, data: parsed };
   } catch (e) {
-    console.warn("[loadGame] corrupted save, clearing", e);
-    const saveKey = getSaveKey();
-    localStorage.removeItem(saveKey);
+    logger.warn("loadGame corrupted save, clearing:", e);
     return { success: false, restoredFromBackup: false };
   }
 }
 
+/**
+ * Auto-save game state (debounced saves)
+ */
 export async function autoSaveGame(state: GameState) {
   try {
-    const saveKey = getSaveKey();
-    localStorage.setItem(saveKey, JSON.stringify(state));
-    // console.log("[autoSave] Saved at", new Date().toLocaleTimeString(), "with key:", saveKey);
+    await save<GameState>(state);
+    logger.debug("Auto-saved game");
   } catch (e) {
-    console.warn("[autoSave] failed", e);
+    logger.warn("autoSave failed:", e);
   }
 }
 
+/**
+ * Export save as JSON string (for manual backup)
+ */
 export async function exportSave() {
   try {
-    const saveKey = getSaveKey();
-    const raw = localStorage.getItem(saveKey);
-    console.log("[exportSave] Exporting save from key:", saveKey);
-    return raw ?? "";
+    const data = await advancedExportSave<GameState>();
+    logger.debug("Save exported");
+    return data ?? "";
   } catch {
     return "";
   }
 }
 
+/**
+ * Import save from JSON string (for manual restore)
+ */
 export async function importSave(json: string) {
   try {
     JSON.parse(json); // sanity check
-    const saveKey = getSaveKey();
-    localStorage.setItem(saveKey, json);
-    console.log("[importSave] Successfully imported save to key:", saveKey);
-    return { success: true as const };
+    const result = await advancedImportSave<GameState>(json);
+    if (result.success) {
+      logger.info("Save imported successfully");
+      return { success: true as const };
+    } else {
+      logger.error("Import failed:", result.error);
+      return { success: false as const, error: result.error };
+    }
   } catch (e) {
-    console.error("[importSave] error", e);
+    logger.error("importSave error:", e);
     return { success: false as const, error: String(e) };
   }
 }
