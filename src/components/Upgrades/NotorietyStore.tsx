@@ -17,7 +17,7 @@ interface NotorietyStoreProps {
   onBuyUpgrade: (upgradeId: string) => void;
 }
 
-export function NotorietyStore({ notoriety, state, onBuyUpgrade }: NotorietyStoreProps) {
+export function NotorietyStore({ notoriety: _notoriety, state, onBuyUpgrade }: NotorietyStoreProps) {
   const upgrades = getNotorietyUpgradesWithStatus(state);
 
   return (

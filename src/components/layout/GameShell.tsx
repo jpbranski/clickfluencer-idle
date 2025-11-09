@@ -10,7 +10,6 @@
 import { ReactNode, useState } from "react";
 import { SidebarColumn } from "./SidebarColumn";
 import { BottomNav } from "./BottomNav";
-import { SlideUpSheet } from "./SlideUpSheet";
 
 interface GameShellProps {
   children: ReactNode;
@@ -38,7 +37,7 @@ export function GameShell({
   onShowSettings,
 }: GameShellProps) {
   const [activeTab, setActiveTab] = useState<"generators" | "upgrades" | "themes" | "achievements" | "settings">("generators");
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [_sheetOpen, _setSheetOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">

@@ -9,7 +9,7 @@
  * - Balance constants for week-long progression
  */
 
-import { Generator, Upgrade, Theme } from "@/game/state";
+import { Generator, Upgrade } from "@/game/state";
 import { RandomEventDefinition } from "@/game/engine";
 
 // ============================================================================

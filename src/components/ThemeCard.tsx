@@ -18,7 +18,7 @@ export const ThemeCard = memo(function ThemeCard({
   isActive,
   onPurchase,
   onActivate,
-  currentShards,
+  currentShards: _currentShards,
 }: ThemeCardProps) {
   // No need for useThemeManager - useGame handles both game state and visual theme
   const handleActivate = () => {
