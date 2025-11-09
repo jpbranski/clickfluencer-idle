@@ -28,7 +28,7 @@ export async function saveGame(state: GameState) {
     const json = JSON.stringify(state);
     const saveKey = getSaveKey();
     localStorage.setItem(saveKey, json);
-    console.log("[saveGame] Successfully saved to localStorage with key:", saveKey);
+    // console.log("[saveGame] Successfully saved to localStorage with key:", saveKey);
     return { success: true as const };
   } catch (e) {
     console.error("[saveGame] error", e);
@@ -62,7 +62,7 @@ export async function autoSaveGame(state: GameState) {
   try {
     const saveKey = getSaveKey();
     localStorage.setItem(saveKey, JSON.stringify(state));
-    console.log("[autoSave] Saved at", new Date().toLocaleTimeString(), "with key:", saveKey);
+    // console.log("[autoSave] Saved at", new Date().toLocaleTimeString(), "with key:", saveKey);
   } catch (e) {
     console.warn("[autoSave] failed", e);
   }

@@ -56,5 +56,23 @@
       "Random events rebalanced to occur roughly every 10 minutes",
       "Improved ×10 purchase feedback and disabled state"
     ]
+  },
+  {
+    "version": "0.2.1",
+    "slug": "v0-2-1-polish-and-prestige-prep",
+    "date": "2025-11-09",
+    "title": "v0.2.1 — Polish, Presentation, and Prestige Prep",
+    "description": "This patch focuses on presentation, UX clarity, and improving the first impression for both new and returning players. With a brand-new hero splash, marquee news bar, and deeper page structure, Clickfluencer Idle now feels more like a living web app than ever. Creds logic also received a crucial update—your displayed rate now accurately reflects notoriety upkeep costs, helping you make smarter economic decisions on your influencer journey.",
+    "changes": [
+      "Added a live marquee news bar under the navigation with pause-on-hover behavior and clickable links to individual news posts",
+      "Overhauled the News system — now presented as a chronological stream with dedicated detail pages for each version",
+      "Added unique slugs for news entries and structured changelogs with titles, dates, and developer notes for easier browsing",
+      "Revised the Guide and About pages with expanded sections, cleaner formatting, and improved flow between key content areas",
+      "Introduced a themed \"splash\" hero section on the home page, complete with guide and update call-to-action buttons and a smooth scroll-to-game transition",
+      "Adjusted core economy display — the Creds +X.Y/s indicator now reflects notoriety upkeep, showing your true net gain per second",
+      "Improved page structure consistency and alignment across all routes (Home, Guide, About, News)",
+      "Minor polish to font rendering and color transitions for better legibility across themes",
+      "Set groundwork for future expansion systems and prestige reworks coming in v0.3.0"
+    ]
   }
 ]

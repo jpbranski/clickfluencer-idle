@@ -97,11 +97,16 @@ export function CurrencyBar({
                 ? formatNumberCompact(followers)
                 : formatNumber(followers, 2)}
             </div>
-            {followersPerSecond > 0 && (
-              <div className="text-xs text-success font-mono">
-                +{formatNumber(followersPerSecond, 1)}/s
+            {displayFollowersPerSecond !== 0 && (
+              <div
+                className={`text-xs font-mono ${displayFollowersPerSecond >= 0 ? "text-success" : "text-warning"
+                  }`}
+              >
+                {displayFollowersPerSecond >= 0 ? "+" : ""}
+                {formatNumber(displayFollowersPerSecond, 1)}/s
               </div>
             )}
+
           </div>
         </div>
 
