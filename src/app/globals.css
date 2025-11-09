@@ -210,7 +210,7 @@
 .animate-marquee {
   display: inline-block;
   min-width: 100%;
-  animation: marquee 30s linear infinite;
+  animation: marquee 45s linear infinite;
   will-change: transform;
 }
 

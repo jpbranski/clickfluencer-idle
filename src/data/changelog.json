@@ -1,8 +1,10 @@
 [
   {
     "version": "0.1.0",
+    "slug": "v0-1-0-initial-release",
     "date": "2025-11-01",
     "title": "Initial Release - Early Access",
+    "description": "Our first public release! Clickfluencer Idle arrives with core gameplay systems, multiple generators, and responsive UI design to kickstart your influencer empire.",
     "changes": [
       "Launch of Clickfluencer Idle",
       "Core clicking mechanics with satisfying feedback",
@@ -18,8 +20,10 @@
   },
   {
     "version": "0.1.1",
+    "slug": "v0-1-1-ui-gameplay-upgrades",
     "date": "2025-11-02",
     "title": "UI & Gameplay Upgrades",
+    "description": "Our first minor patch! In this patch, we focused on improving the user interface and adding new gameplay upgrades to enhance your experience.",
     "changes": [
       "Added Prestige display to the currency bar at all levels, showing at the start of the bar in both desktop and mobile views",
       "Added dismiss (X) button to event toasts — can be closed visually without interrupting the running event",
@@ -29,16 +33,18 @@
       "Overnight Success cost scaling increased to ×5, starting at 25,000 creds",
       "Cred Cache scaling increased to ×5 per tier, up to 31,250,000 for tier 6",
       "Infinite upgrades (AI Enhancements, Better Filters) now appear at the top of the shop list",
-      "Removed Light theme’s bonus multiplier and updated its description to reflect neutral balance",
+      "Removed Light theme's bonus multiplier and updated its description to reflect neutral balance",
       "Quick Stats simplified — now only shows Total Clicks and Score; Prestige level moved to currency bar",
       "Version updated to v0.2.0 Early Access for live branch claude/ui-upgrades-and-fixes-011CUiaKNaUaZCiPk3amDLrU",
       "Build verified successfully with no errors or data resets"
     ]
   },
   {
-    "version": "1.0.0",
-    "date": "2025-11-02",
+    "version": "0.2.0",
+    "slug": "v0-2-0-layout-overhaul-achievements",
+    "date": "2025-11-09",
     "title": "v1.0.0 — Start Page, Layout Overhaul, Achievements, and Notoriety Stores",
+    "description": "Major update introducing a new unified layout, achievements system, and revamped upgrade stores to enhance gameplay and user experience.",
     "changes": [
       "Implemented new unified layout with desktop sidebar and mobile slide-up bottom nav",
       "Achievements tab added next to Themes with placeholder trophies (per save slot)",
