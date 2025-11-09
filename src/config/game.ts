@@ -136,8 +136,8 @@ export const GENERATOR_DEFINITIONS: Omit<Generator, "count">[] = [
   {
     id: "agency",
     name: "🏢 Talent Agency",
-    baseFollowersPerSecond: 1400.0,
-    baseCost: 1400000,
+    baseFollowersPerSecond: 1500.0,
+    baseCost: 750000,
     costMultiplier: 1.1,
     unlocked: false,
   },

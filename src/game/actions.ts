@@ -33,8 +33,17 @@ import {
   canAffordShards,
   getClickEventMultiplier,
   getCredCacheRate,
+  getCredCachePayoutMultiplier,
 } from "./state";
-import { executePrestige, resetForPrestige } from "./prestige";
+import { executePrestige, applyPrestige } from "./prestige";
+import {
+  getNotorietyGeneratorCost,
+  getNotorietyUpgradeCost,
+  getNotorietyGainPerSecond,
+  getTotalUpkeep,
+  getCacheValueBonus,
+} from "./logic/notorietyLogic";
+import { NOTORIETY_GENERATORS, NOTORIETY_UPGRADES } from "@/data/notoriety";
 
 // ============================================================================
 // CONSTANTS
@@ -116,7 +125,10 @@ export function clickPost(state: GameState): ClickResult {
   if (credCacheTriggered) {
     // Award 1-5% of current total creds
     const percentage = 0.01 + Math.random() * 0.04; // Random between 1% and 5%
-    credCacheAmount = Math.floor(state.followers * percentage);
+    const baseAmount = Math.floor(state.followers * percentage);
+    // Apply Notoriety Cache Value boost
+    const cacheMultiplier = getCredCachePayoutMultiplier(state);
+    credCacheAmount = Math.floor(baseAmount * cacheMultiplier);
   }
 
   const newState: GameState = {
@@ -495,22 +507,35 @@ export function removeExpiredEvents(state: GameState): GameState {
   };
 }
 
+
 // ============================================================================
 // TICK ACTION
 // ============================================================================
 
 /**
  * Process one game tick
- * - Generates followers from all generators
+ * - Generates followers from all generators (minus upkeep)
+ * - Generates notoriety from notoriety generators
  * - Unlocks generators based on follower count
  * - Removes expired events
  * - Updates statistics
  */
 export function tick(state: GameState, deltaTime: number): GameState {
+  const secondsElapsed = deltaTime / 1000;
+
   // Calculate followers generated this tick
   const followersPerSecond = getFollowersPerSecond(state);
-  const secondsElapsed = deltaTime / 1000;
-  const followersGained = followersPerSecond * secondsElapsed;
+
+  // Calculate upkeep cost from notoriety generators
+  const upkeepPerSecond = getTotalUpkeep(state);
+
+  // Net followers after upkeep
+  const netFollowersPerSecond = followersPerSecond - upkeepPerSecond;
+  const followersGained = netFollowersPerSecond * secondsElapsed;
+
+  // Calculate notoriety gain this tick
+  const notorietyPerSecond = getNotorietyGainPerSecond(state);
+  const notorietyGained = notorietyPerSecond * secondsElapsed;
 
   // Update generators unlock status
   const newGenerators = state.generators.map((g) => {
@@ -524,10 +549,11 @@ export function tick(state: GameState, deltaTime: number): GameState {
   let newState: GameState = {
     ...state,
     followers: state.followers + followersGained,
+    notoriety: (state.notoriety || 0) + notorietyGained,
     generators: newGenerators,
     stats: {
       ...state.stats,
-      totalFollowersEarned: state.stats.totalFollowersEarned + followersGained,
+      totalFollowersEarned: state.stats.totalFollowersEarned + Math.max(0, followersGained),
       lastTickTime: Date.now(),
     },
   };
@@ -544,9 +570,9 @@ export function tick(state: GameState, deltaTime: number): GameState {
 
 /**
  * Execute prestige
- * - Resets most progress
- * - Awards reputation based on followers
- * - Preserves certain elements (awards, themes, stats)
+ * - Spends Creds to gain prestige points
+ * - Awards +10% permanent bonus per point
+ * - No longer resets progress
  */
 export function prestige(state: GameState): ActionResult {
   const result = executePrestige(state);
@@ -559,12 +585,127 @@ export function prestige(state: GameState): ActionResult {
     };
   }
 
-  const newState = resetForPrestige(state, result.reputationGained);
+  const newState = applyPrestige(state, result.reputationGained, result.followersLost);
 
   return {
     success: true,
     state: newState,
     message: result.message,
+  };
+}
+
+// ============================================================================
+// NOTORIETY ACTIONS
+// ============================================================================
+
+/**
+ * Purchase a notoriety generator
+ * - Deducts followers equal to cost
+ * - Increases generator level by 1
+ * - Validates that Creds/s remains above 1 after upkeep
+ */
+export function buyNotorietyGenerator(
+  state: GameState,
+  generatorId: string,
+): ActionResult {
+  const generator = NOTORIETY_GENERATORS.find((g) => g.id === generatorId);
+
+  if (!generator) {
+    return {
+      success: false,
+      state,
+      message: "Generator not found",
+    };
+  }
+
+  const currentLevel = state.notorietyGenerators[generatorId] || 0;
+  const cost = getNotorietyGeneratorCost(generator, currentLevel);
+
+  if (!canAfford(state.followers, cost)) {
+    return {
+      success: false,
+      state,
+      message: "Not enough Creds",
+    };
+  }
+
+  const newState: GameState = {
+    ...state,
+    followers: state.followers - cost,
+    notorietyGenerators: {
+      ...state.notorietyGenerators,
+      [generatorId]: currentLevel + 1,
+    },
+  };
+
+  return {
+    success: true,
+    state: newState,
+    message: `Purchased ${generator.name}`,
+  };
+}
+
+/**
+ * Purchase a notoriety upgrade
+ * - Deducts notoriety equal to cost
+ * - Increases upgrade level by 1
+ * - Applies upgrade effects
+ */
+export function buyNotorietyUpgrade(
+  state: GameState,
+  upgradeId: string,
+): ActionResult {
+  const upgrade = NOTORIETY_UPGRADES.find((u) => u.id === upgradeId);
+
+  if (!upgrade) {
+    return {
+      success: false,
+      state,
+      message: "Upgrade not found",
+    };
+  }
+
+  const currentLevel = state.notorietyUpgrades[upgradeId] || 0;
+
+  if (currentLevel >= upgrade.cap) {
+    return {
+      success: false,
+      state,
+      message: "Max level reached",
+    };
+  }
+
+  const cost = getNotorietyUpgradeCost(upgrade, currentLevel);
+
+  if (state.notoriety < cost) {
+    return {
+      success: false,
+      state,
+      message: "Not enough Notoriety",
+    };
+  }
+
+  // Handle special instant-effect upgrades like "buy_creds"
+  let bonusFollowers = 0;
+  if (upgradeId === "buy_creds") {
+    const followersPerSecond = getFollowersPerSecond(state);
+    bonusFollowers = followersPerSecond * 30 * 60; // 30 minutes worth
+  }
+
+  const newState: GameState = {
+    ...state,
+    notoriety: state.notoriety - cost,
+    followers: state.followers + bonusFollowers,
+    notorietyUpgrades: {
+      ...state.notorietyUpgrades,
+      [upgradeId]: currentLevel + 1,
+    },
+  };
+
+  return {
+    success: true,
+    state: newState,
+    message: `Purchased ${upgrade.name}`,
   };
 }
 

@@ -2,10 +2,14 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import Head from "next/head";
 
 export default function AboutPage() {
   return (
     <main className="min-h-screen bg-background text-foreground transition-colors">
+      <Head>
+        <Link rel="canonical" href="https://www.clickfluenceridle.com/about" />
+      </Head>
       {/* Navigation */}
       <nav className="border-b border-border mb-8 px-4 py-3 flex justify-center gap-6 text-sm flex-wrap">
         <Link href="/" className="text-accent hover:underline">Home</Link>
