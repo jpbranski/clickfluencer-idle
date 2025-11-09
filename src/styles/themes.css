@@ -130,6 +130,24 @@
 }
 
 /* =========================================================
+   THEMEVV
+   Minimalist black & white with red accent (panda/crayon)
+   ========================================================= */
+[data-theme='themevv'] {
+  --background: #ffffff;
+  --surface: #f2f2f2;
+  --foreground: #0d0d0d;
+  --muted: #666666;
+  --accent: #ff2b2b; /* vivid crayon red */
+  --accent-foreground: #ffffff;
+  --border: #cccccc;
+  --card: #fafafa;
+  --success: #3fb950;
+  --error: #ff3333;
+  --warning: #ff8c00;
+}
+
+/* =========================================================
    NIGHTSHADE
    Belladonna-inspired dark violet & green undertones
    ========================================================= */

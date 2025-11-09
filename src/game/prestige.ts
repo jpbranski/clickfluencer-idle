@@ -117,20 +117,20 @@ export function executePrestige(state: GameState): PrestigeResult {
 /**
  * Reset game state for prestige while preserving certain elements
  *
- * Preserves (v1.0.0):
+ * Preserves:
  * - Reputation, shards (prestige currencies)
  * - Themes (cosmetic unlocks)
  * - Infinite scaling upgrades (AI Enhancements, Better Filters)
  * - Achievements (cosmetic)
- * - Statistics (lifetime stats)
  * - Settings
+ * - Statistics (lifetime)
  *
  * Resets:
- * - Followers (back to 0)
- * - Generators (back to 0 count)
- * - Non-infinite upgrades (one-time and tiered)
- * - Notoriety (amount resets to 0, but structure preserved)
- * - Active events
+ * - Followers (Creds) and Notoriety → 0
+ * - Generators → 0 count
+ * - Non-infinite upgrades → reset
+ * - Notoriety generators → 0
+ * - Active events → cleared
  */
 export function applyPrestige(
   state: GameState,
@@ -149,42 +149,51 @@ export function applyPrestige(
       if (oldUpgrade && oldUpgrade.currentLevel !== undefined) {
         return {
           ...upgrade,
-          purchased: oldUpgrade.purchased,
+          purchased: false, // 🔧 keep it buyable
           currentLevel: oldUpgrade.currentLevel,
-          cost: oldUpgrade.cost, // Preserve cost progression
+          cost: oldUpgrade.cost,
         };
       }
+
     }
     return upgrade;
   });
 
-  return {
-    ...state,
-    // Spend Creds and gain reputation
-    followers: state.followers - credCost,
+  // Preserve themes, achievements, and settings
+  const preservedThemes = state.themes;
+  const preservedAchievements = state.achievements;
+  const preservedSettings = state.settings;
+
+  // Rebuild fresh notoriety + generator system
+  const resetNotorietyGenerators = {
+    smm: 0,
+    pr_team: 0,
+    key_client: 0,
+  };
+
+  // Construct clean new state
+  const newState: GameState = {
+    ...initial,
     reputation: state.reputation + reputationGained,
-
-    // Preserve infinite upgrades
+    followers: 0, // 🔥 Fully reset creds
+    notoriety: 0, // 🔥 Fully reset notoriety
+    shards: state.shards, // Keep awards
     upgrades: preservedUpgrades,
-
-    // Preserve achievements (if they exist)
-    achievements: state.achievements,
-
-    // Preserve notoriety system (currency persists, generators reset)
-    notoriety: state.notoriety || 0,
-    notorietyGenerators: { smm: 0, pr_team: 0, key_client: 0 }, // Reset generators
-    notorietyUpgrades: state.notorietyUpgrades || {}, // Preserve all upgrades
-
-    // Update statistics
+    themes: preservedThemes,
+    achievements: preservedAchievements,
+    notorietyGenerators: resetNotorietyGenerators,
+    notorietyUpgrades: {}, // Optional: keep or clear
+    settings: preservedSettings,
+    activeEvents: [],
     stats: {
       ...state.stats,
-      prestigeCount: state.stats.prestigeCount + 1,
+      prestigeCount: (state.stats.prestigeCount || 0) + 1,
       lastTickTime: Date.now(),
     },
-
-    // Update meta
     lastSaveTime: Date.now(),
   };
+
+  return newState;
 }
 
 // ============================================================================

@@ -342,10 +342,17 @@ export function buyUpgrade(state: GameState, upgradeId: string): ActionResult {
           purchased: nextTier >= u.maxTier, // mark as purchased when maxed
         };
       }
-      // Handle infinite upgrades
-      else if (u.currentLevel !== undefined) {
-        return { ...u, purchased: true, currentLevel: u.currentLevel + 1 };
+
+      // Handle infinite upgrades properly
+      else if (u.currentLevel !== undefined && u.costMultiplier) {
+        const nextLevel = (u.currentLevel || 0) + 1;
+        return {
+          ...u,
+          currentLevel: nextLevel,
+          purchased: false, // 🔧 stays buyable forever
+        };
       }
+
       // Handle regular one-time upgrades
       else {
         return { ...u, purchased: true };
@@ -353,6 +360,7 @@ export function buyUpgrade(state: GameState, upgradeId: string): ActionResult {
     }
     return u;
   });
+
 
   const newState: GameState = {
     ...state,

@@ -81,7 +81,7 @@ export const themes: Theme[] = [
     iconImage: '/themes/default-icon.webp',
   },
   {
-    id: 'themeVV',
+    id: 'themevv',
     name: 'ThemeVV',
     displayName: 'ThemeVV',
     description: 'Largely white and black (like a panda), with red accents like a crayon. +6.9% click power.',

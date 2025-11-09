@@ -74,5 +74,17 @@
       "Minor polish to font rendering and color transitions for better legibility across themes",
       "Set groundwork for future expansion systems and prestige reworks coming in v0.3.0"
     ]
+  },
+  {
+    "version": "0.2.2",
+    "slug": "v0-2-2-theme-and-prestige-fixes",
+    "date": "2025-11-09",
+    "title": "v0.2.2 — ThemeVV and Prestige Fix",
+    "description": "A quick fix addressing a minor issue with the ThemeVV identifier to ensure proper functionality and consistency within the game. Further updates to ensure prestige system resets currency correctly.",
+    "changes": [
+      "Corrected the ThemeVV theme ID from 'themeVV' to 'themevv' to maintain consistency with naming conventions and ensure proper theme application",
+      "Fixed an issue where prestige resets were not correctly resetting the player's currency, ensuring a proper restart of the economic progression upon prestiging",
+      "Infinite upgrades are no longer finite."
+    ]
   }
 ]
