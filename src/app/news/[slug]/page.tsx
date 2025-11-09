@@ -21,11 +21,14 @@ export default async function ChangelogPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const entry = (changelog as ChangelogEntry[]).find(
-    (item) => item.slug === slug
-  );
+  const entries = changelog as ChangelogEntry[];
+  const index = entries.findIndex((item) => item.slug === slug);
 
-  if (!entry) return notFound();
+  if (index === -1) return notFound();
+
+  const entry = entries[index];
+  const previous = index < entries.length - 1 ? entries[index + 1] : null; // older
+  const next = index > 0 ? entries[index - 1] : null; // newer
 
   return (
     <main className="min-h-screen bg-background">
@@ -63,6 +66,31 @@ export default async function ChangelogPage({
             </li>
           ))}
         </ul>
+
+        {/* 🧭 Prev / Next Navigation */}
+        <div className="flex justify-between mt-12 border-t border-border pt-6 text-sm">
+          {previous ? (
+            <Link
+              href={`/news/${previous.slug}`}
+              className="text-accent hover:underline"
+            >
+              ← {previous.title}
+            </Link>
+          ) : (
+            <span />
+          )}
+
+          {next ? (
+            <Link
+              href={`/news/${next.slug}`}
+              className="text-accent hover:underline"
+            >
+              {next.title} →
+            </Link>
+          ) : (
+            <span />
+          )}
+        </div>
       </div>
     </main>
   );

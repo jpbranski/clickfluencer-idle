@@ -43,7 +43,7 @@
     "version": "0.2.0",
     "slug": "v0-2-0-layout-overhaul-achievements",
     "date": "2025-11-09",
-    "title": "v1.0.0 — Start Page, Layout Overhaul, Achievements, and Notoriety Stores",
+    "title": "v0.2.0 — Start Page, Layout Overhaul, Achievements, and Notoriety Stores",
     "description": "Major update introducing a new unified layout, achievements system, and revamped upgrade stores to enhance gameplay and user experience.",
     "changes": [
       "Implemented new unified layout with desktop sidebar and mobile slide-up bottom nav",
