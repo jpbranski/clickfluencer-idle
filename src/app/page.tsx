@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useGame } from "@/hooks/useGame";
 import PostButton from "@/components/PostButton";
@@ -21,7 +20,6 @@ import Head from "next/head";
 import Link from "next/link";
 
 export default function HomePage() {
-  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const gameRef = useRef<HTMLDivElement>(null);
@@ -29,7 +27,6 @@ export default function HomePage() {
   const {
     state,
     isLoading,
-    clickPower,
     followersPerSecond,
     notorietyPerSecond,
     totalUpkeep,

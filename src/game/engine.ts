@@ -23,6 +23,7 @@
 import { GameState, createInitialState, getFollowersPerSecond, getOfflineEfficiency } from "./state";
 import { tick, applyEvent, ActionResult } from "./actions";
 import { calculateReputationBonus } from "./prestige";
+import { engineLogger as logger } from "@/lib/logger";
 
 // ============================================================================
 // CONSTANTS
@@ -455,7 +456,7 @@ export class GameEngine {
       try {
         listener(eventType, data);
       } catch (error) {
-        console.error(`Error in event listener for ${eventType}:`, error);
+        logger.error(`Error in event listener for ${eventType}:`, error);
       }
     });
   }
@@ -468,7 +469,7 @@ export class GameEngine {
       try {
         listener(this.state);
       } catch (error) {
-        console.error("Error in state change listener:", error);
+        logger.error("Error in state change listener:", error);
       }
     });
   }

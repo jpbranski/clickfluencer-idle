@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { formatNumber } from "@/game/format";
 import { NotorietyGenerator } from "@/data/notoriety";
 
@@ -9,7 +10,7 @@ interface NotorietyGeneratorCardProps {
   onBuy: () => void;
 }
 
-export function NotorietyGeneratorCard({
+export const NotorietyGeneratorCard = memo(function NotorietyGeneratorCard({
   generator,
   canAfford,
   onBuy,
@@ -99,4 +100,4 @@ export function NotorietyGeneratorCard({
       </button>
     </div>
   );
-}
+});

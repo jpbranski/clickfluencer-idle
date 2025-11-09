@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { formatNumber } from "@/game/format";
 import { NotorietyUpgrade } from "@/data/notoriety";
 
@@ -14,7 +15,7 @@ interface NotorietyUpgradeCardProps {
   onPurchase: () => void;
 }
 
-export function NotorietyUpgradeCard({
+export const NotorietyUpgradeCard = memo(function NotorietyUpgradeCard({
   upgrade,
   onPurchase,
 }: NotorietyUpgradeCardProps) {
@@ -127,4 +128,4 @@ export function NotorietyUpgradeCard({
       )}
     </div>
   );
-}
+});

@@ -55,7 +55,7 @@ interface AchievementCardProps {
 }
 
 function AchievementCard({ achievement }: AchievementCardProps) {
-  const { id, name, description, unlocked, icon } = achievement;
+  const { name, description, unlocked, icon } = achievement;
 
   return (
     <div

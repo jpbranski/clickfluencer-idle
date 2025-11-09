@@ -4,10 +4,48 @@
  * This module provides formatting functions for displaying large numbers
  * and time durations in human-readable formats.
  *
+ * Features:
+ * - LRU cache for frequently formatted numbers (improves performance)
+ * - Automatic cache eviction when limit reached
+ *
  * Connected to:
  * - All UI components: Used for displaying followers, costs, time
  * - engine.ts: Formats offline progress messages
  */
+
+// ============================================================================
+// FORMATTING CACHE
+// ============================================================================
+
+const FORMAT_CACHE_MAX_SIZE = 1000;
+const formatCache = new Map<string, string>();
+
+/**
+ * Add formatted value to cache with LRU eviction
+ */
+function cacheFormattedValue(key: string, value: string): void {
+  // If cache is full, remove oldest entry (first entry in Map)
+  if (formatCache.size >= FORMAT_CACHE_MAX_SIZE) {
+    const firstKey = formatCache.keys().next().value;
+    if (firstKey !== undefined) {
+      formatCache.delete(firstKey);
+    }
+  }
+  formatCache.set(key, value);
+}
+
+/**
+ * Get cached formatted value
+ */
+function getCachedValue(key: string): string | undefined {
+  const cached = formatCache.get(key);
+  if (cached) {
+    // Move to end (LRU)
+    formatCache.delete(key);
+    formatCache.set(key, cached);
+  }
+  return cached;
+}
 
 // ============================================================================
 // NUMBER FORMATTING
@@ -38,22 +76,43 @@ const NUMBER_SUFFIXES = [
  *   formatNumber(1500) => "1.50K"
  *   formatNumber(2500000) => "2.50M"
  *   formatNumber(1000000000) => "1.00B"
+ *
+ * Optimized with LRU cache for frequently formatted numbers
  */
 export function formatNumber(num: number, decimals: number = 2): string {
-  if (num < 0) return "-" + formatNumber(-num, decimals);
-  if (num < 1000)
-    return num.toFixed(decimals === 0 ? 0 : Math.min(decimals, 2));
+  // Generate cache key
+  const cacheKey = `${num}:${decimals}`;
 
-  // Find the appropriate suffix
-  for (let i = NUMBER_SUFFIXES.length - 1; i >= 0; i--) {
-    const { value, suffix } = NUMBER_SUFFIXES[i];
-    if (num >= value) {
-      const formatted = (num / value).toFixed(decimals);
-      return formatted + suffix;
-    }
+  // Check cache first
+  const cached = getCachedValue(cacheKey);
+  if (cached !== undefined) {
+    return cached;
   }
 
-  return num.toFixed(decimals);
+  // Calculate formatted value
+  let result: string;
+
+  if (num < 0) {
+    result = "-" + formatNumber(-num, decimals);
+  } else if (num < 1000) {
+    result = num.toFixed(decimals === 0 ? 0 : Math.min(decimals, 2));
+  } else {
+    // Find the appropriate suffix
+    let formatted = num.toFixed(decimals);
+    for (let i = NUMBER_SUFFIXES.length - 1; i >= 0; i--) {
+      const { value, suffix } = NUMBER_SUFFIXES[i];
+      if (num >= value) {
+        formatted = (num / value).toFixed(decimals) + suffix;
+        break;
+      }
+    }
+    result = formatted;
+  }
+
+  // Cache the result
+  cacheFormattedValue(cacheKey, result);
+
+  return result;
 }
 
 /**

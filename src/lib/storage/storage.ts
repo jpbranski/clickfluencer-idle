@@ -40,6 +40,7 @@ import {
 } from "./localStorage";
 
 import { generateChecksum, verifyChecksum, generateId } from "../crypto/hash";
+import { storageLogger as logger } from "../logger";
 
 // ============================================================================
 // CONSTANTS
@@ -94,7 +95,7 @@ function detectDriver(): StorageDriver {
   }
 
   if (isLocalStorageAvailable()) {
-    console.warn("IndexedDB unavailable, using localStorage fallback");
+    logger.warn("IndexedDB unavailable, using localStorage fallback");
     preferredDriver = "localstorage";
     return "localstorage";
   }
@@ -185,7 +186,7 @@ function applyMigration<T>(
   fromVersion: number,
   toVersion: number,
 ): SaveData<T> {
-  console.log(`Migrating save data from v${fromVersion} to v${toVersion}`);
+  logger.info(`Migrating save data from v${fromVersion} to v${toVersion}`);
 
   // Add migration logic here for each version bump
   // Example:
@@ -238,7 +239,7 @@ async function restoreFromBackup(): Promise<StoredData | null> {
       const isValid = await verifyChecksum(backup.value, backup.checksum);
 
       if (isValid) {
-        console.log("Successfully restored from backup");
+        logger.info("Successfully restored from backup");
         return {
           key: backup.key,
           value: backup.value,
@@ -247,7 +248,7 @@ async function restoreFromBackup(): Promise<StoredData | null> {
         };
       }
     } catch (error) {
-      console.error("Backup verification failed:", error);
+      logger.error("Backup verification failed:", error);
     }
   }
 
@@ -300,10 +301,7 @@ export async function save<T>(data: T): Promise<SaveResult> {
         return { success: true };
       } catch (error) {
         // Fallback to localStorage on error
-        console.error(
-          "IndexedDB save failed, falling back to localStorage:",
-          error,
-        );
+        logger.error("IndexedDB save failed, falling back to localStorage:", error);
         saveToLocalStorage(SAVE_KEY, encoded, checksum);
         return { success: true, usedFallback: true };
       }
@@ -312,7 +310,7 @@ export async function save<T>(data: T): Promise<SaveResult> {
       return { success: true };
     }
   } catch (error) {
-    console.error("Save failed:", error);
+    logger.error("Save failed:", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",
@@ -340,10 +338,10 @@ export async function load<T>(): Promise<LoadResult<T>> {
       try {
         stored = await loadFromIndexedDB(SAVE_KEY);
       } catch (error) {
-        console.error("IndexedDB load failed, trying localStorage:", error);
+        logger.error("IndexedDB load failed, trying localStorage:", error);
         stored = loadFromLocalStorage(SAVE_KEY);
         if (stored) {
-          console.log("Loaded from localStorage fallback");
+          logger.info("Loaded from localStorage fallback");
         }
       }
     } else {
@@ -361,7 +359,7 @@ export async function load<T>(): Promise<LoadResult<T>> {
     const isValid = await verifyChecksum(stored.value, stored.checksum);
 
     if (!isValid) {
-      console.warn("Save corrupted, restoring backup.");
+      logger.warn("Save corrupted, restoring backup");
 
       // Attempt to restore from backup
       const backup = await restoreFromBackup();
@@ -389,7 +387,7 @@ export async function load<T>(): Promise<LoadResult<T>> {
       restoredFromBackup: !isValid,
     };
   } catch (error) {
-    console.error("Load failed:", error);
+    logger.error("Load failed:", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",

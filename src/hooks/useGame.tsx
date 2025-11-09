@@ -60,6 +60,7 @@ import {
 } from "@/lib/storage";
 import { GAMEPLAY } from "@/app-config";
 import { themes as baseThemes } from "@/data/themes";
+import { uiLogger as logger } from "@/lib/logger";
 
 // ============================================================================
 // UTILITIES
@@ -194,17 +195,17 @@ export function GameProvider({ children }: GameProviderProps) {
     async function initialize() {
       try {
         const result = await loadGame();
-        console.log("[useGame] loadGame result ->", result);
+        logger.debug("loadGame result:", result);
 
         let initialState: GameState;
         if (result.success && result.data) {
-          console.log("[useGame] Loading saved state");
+          logger.debug("Loading saved state");
           initialState = result.data;
           if (result.restoredFromBackup) {
-            console.warn("Restored from backup due to corrupted save");
+            logger.warn("Restored from backup due to corrupted save");
           }
         } else {
-          console.log("[useGame] No save found, creating initial state");
+          logger.debug("No save found, creating initial state");
           const { createInitialState } = await import("@/game/state");
           initialState = createInitialState();
         }
@@ -509,7 +510,7 @@ export function GameProvider({ children }: GameProviderProps) {
         URL.revokeObjectURL(url);
       }
     } catch (err) {
-      console.error("Failed to export save:", err);
+      logger.error("Failed to export save:", err);
     }
   }, [state]);
 
@@ -519,7 +520,7 @@ export function GameProvider({ children }: GameProviderProps) {
       const result = await importSave(data);
       if (result.success) window.location.reload();
     } catch (err) {
-      console.error("Failed to import save:", err);
+      logger.error("Failed to import save:", err);
     }
   }, []);
 
@@ -528,7 +529,7 @@ export function GameProvider({ children }: GameProviderProps) {
       localStorage.clear();
       window.location.reload();
     } catch (err) {
-      console.error("Failed to reset game:", err);
+      logger.error("Failed to reset game:", err);
     }
   }, []);
 

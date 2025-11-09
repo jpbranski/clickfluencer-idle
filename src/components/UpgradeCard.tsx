@@ -9,8 +9,11 @@
  * - Cost
  * - Purchase button
  * - Purchased state
+ *
+ * Optimized with React.memo to prevent unnecessary re-renders
  */
 
+import { memo } from "react";
 import { formatNumber, formatMultiplier } from "@/game/format";
 import { Upgrade } from "@/game/state";
 
@@ -21,7 +24,7 @@ interface UpgradeCardProps {
   onPurchase: () => void;
 }
 
-export function UpgradeCard({
+export const UpgradeCard = memo(function UpgradeCard({
   upgrade,
   currentCost,
   canAfford,
@@ -177,4 +180,13 @@ export function UpgradeCard({
       )}
     </div>
   );
-}
+}, (prevProps, nextProps) => {
+  // Custom comparison - only re-render if relevant props changed
+  return (
+    prevProps.upgrade.purchased === nextProps.upgrade.purchased &&
+    prevProps.upgrade.currentLevel === nextProps.upgrade.currentLevel &&
+    prevProps.upgrade.tier === nextProps.upgrade.tier &&
+    prevProps.currentCost === nextProps.currentCost &&
+    prevProps.canAfford === nextProps.canAfford
+  );
+});
