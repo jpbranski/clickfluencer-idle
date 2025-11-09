@@ -40,7 +40,6 @@
     "date": "2025-11-02",
     "title": "v1.0.0 — Start Page, Layout Overhaul, Achievements, and Notoriety Stores",
     "changes": [
-      "Added three save slots with new /start landing page (legacy saves migrate to Slot 1)",
       "Implemented new unified layout with desktop sidebar and mobile slide-up bottom nav",
       "Achievements tab added next to Themes with placeholder trophies (per save slot)",
       "Split Upgrades tab into Cred Store and Notoriety Store sections",

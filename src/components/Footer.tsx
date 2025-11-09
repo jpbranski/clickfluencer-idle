@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import packageJson from "@/../package.json"; // import directly from root
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const version = packageJson.version;
 
   const links = [
     { label: "Home", href: "/" },
@@ -22,7 +24,10 @@ export function Footer() {
     <footer className="w-full mt-12 bg-surface border-t border-border text-foreground transition-colors">
       <div className="container mx-auto px-4 py-8">
         {/* Navigation Links */}
-        <nav className="flex flex-wrap justify-center gap-3 text-sm" aria-label="Footer navigation">
+        <nav
+          className="flex flex-wrap justify-center gap-3 text-sm"
+          aria-label="Footer navigation"
+        >
           {links.map((link, index) => (
             <span key={link.href} className="flex items-center gap-3">
               <Link
@@ -32,7 +37,9 @@ export function Footer() {
                 {link.label}
               </Link>
               {index < links.length - 1 && (
-                <span className="text-muted" aria-hidden="true">•</span>
+                <span className="text-muted" aria-hidden="true">
+                  •
+                </span>
               )}
             </span>
           ))}
@@ -50,7 +57,7 @@ export function Footer() {
               className="inline-block w-2 h-2 rounded-full bg-accent animate-pulse"
               aria-label="status indicator"
             />
-            <span>v0.1.1 Early Access</span>
+            <span>v{version} Early Access</span>
           </div>
         </div>
       </div>
