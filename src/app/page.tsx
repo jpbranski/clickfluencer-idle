@@ -18,7 +18,6 @@ import { AchievementsPanel } from "@/components/Achievements/AchievementsPanel";
 import { formatNumber } from "@/game/format";
 import { getGeneratorCost, canAfford } from "@/game/state";
 import { getAwardDropRate } from "@/game/actions";
-import { loadSaveSystem } from "@/lib/storage/slotStorage";
 import Head from "next/head";
 import Link from "next/link";
 
@@ -26,7 +25,6 @@ export default function HomePage() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [checkingSlot, setCheckingSlot] = useState(true);
 
   const {
     state,
@@ -54,34 +52,11 @@ export default function HomePage() {
     dismissOfflineProgress,
   } = useGame();
 
-  // Check if active slot exists, redirect to /start if not
-  useEffect(() => {
-    const checkActiveSlot = async () => {
-      try {
-        const saveSystem = await loadSaveSystem();
-        const activeSlot = saveSystem.slots[saveSystem.activeSlotId];
-
-        // If no active slot exists (empty slot), redirect to /start
-        if (!activeSlot) {
-          router.push("/start");
-          return;
-        }
-
-        setCheckingSlot(false);
-      } catch (error) {
-        console.error("Error checking active slot:", error);
-        setCheckingSlot(false);
-      }
-    };
-
-    checkActiveSlot();
-  }, [router]);
-
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted || isLoading || checkingSlot || !state) {
+  if (!mounted || isLoading || !state) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
@@ -238,7 +213,6 @@ export default function HomePage() {
         onExport={handleExportSave}
         onImport={handleImportSave}
         onReset={handleResetGame}
-        onMainMenu={() => router.push("/start")}
       />
 
       {/* New Game Shell Layout */}

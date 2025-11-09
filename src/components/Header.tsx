@@ -18,7 +18,7 @@ export function Header() {
   return (
     <header className="w-full bg-surface text-foreground border-b border-border shadow-sm fixed top-0 left-0 z-50 transition-colors">
       <div className="container mx-auto flex items-center justify-between px-4 py-3">
-        <Link href="/start" className="text-xl font-bold text-accent hover:opacity-80 transition-opacity">
+        <Link href="/" className="text-xl font-bold text-accent hover:opacity-80 transition-opacity">
           Clickfluencer Idle
         </Link>
 
