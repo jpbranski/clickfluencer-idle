@@ -14,8 +14,8 @@ export {
   load,
   exists,
   deleteSave,
-  exportSave as exportSaveLegacy,
-  importSave as importSaveLegacy,
+  exportSave,
+  importSave,
   getStorageDriver,
   setStorageDriver,
   SAVE_KEY,
@@ -54,63 +54,19 @@ export {
 
 import { save, load, deleteSave, exists } from "./storage";
 import { GameState } from "../../game/state";
-import { loadSaveSystem, saveSaveSystem, saveToSlot, loadSlot } from "./slotStorage";
 
 /**
  * Save game state (typed convenience wrapper)
- * Now uses the slot storage system
  */
 export async function saveGame(state: GameState) {
-  try {
-    // Load the save system to get the active slot
-    const saveSystem = await loadSaveSystem();
-
-    // Update the active slot with the new game state
-    const updatedSaveSystem = saveToSlot(saveSystem, saveSystem.activeSlotId, state);
-
-    // Save the updated save system
-    await saveSaveSystem(updatedSaveSystem);
-
-    return { success: true };
-  } catch (error) {
-    console.error("Failed to save game:", error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
-  }
+  return save<GameState>(state);
 }
 
 /**
  * Load game state (typed convenience wrapper)
- * Now uses the slot storage system
  */
 export async function loadGame() {
-  try {
-    // Load the save system
-    const saveSystem = await loadSaveSystem();
-
-    // Load the game state from the active slot
-    const gameState = loadSlot(saveSystem, saveSystem.activeSlotId);
-
-    if (gameState) {
-      return {
-        success: true,
-        data: gameState,
-      };
-    } else {
-      return {
-        success: false,
-        error: "No save data found in active slot",
-      };
-    }
-  } catch (error) {
-    console.error("Failed to load game:", error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
-  }
+  return load<GameState>();
 }
 
 /**
@@ -159,59 +115,4 @@ export async function forceSaveGame(state: GameState) {
   }
 
   return saveGame(state);
-}
-
-/**
- * Export current active slot as JSON string
- */
-export async function exportSave(): Promise<string | null> {
-  try {
-    const saveSystem = await loadSaveSystem();
-    const activeSlot = saveSystem.slots[saveSystem.activeSlotId];
-
-    if (!activeSlot) {
-      console.error("No active slot found");
-      return null;
-    }
-
-    return JSON.stringify(activeSlot, null, 2);
-  } catch (error) {
-    console.error("Failed to export save:", error);
-    return null;
-  }
-}
-
-/**
- * Import save data to current active slot
- */
-export async function importSave(jsonString: string) {
-  try {
-    const importedSlot = JSON.parse(jsonString);
-
-    // Validate that it has the expected structure
-    if (!importedSlot.game || !importedSlot.id) {
-      throw new Error("Invalid save format");
-    }
-
-    // Load the save system
-    const saveSystem = await loadSaveSystem();
-
-    // Update the active slot with the imported game state
-    const updatedSaveSystem = saveToSlot(
-      saveSystem,
-      saveSystem.activeSlotId,
-      importedSlot.game
-    );
-
-    // Save the updated save system
-    await saveSaveSystem(updatedSaveSystem);
-
-    return { success: true };
-  } catch (error) {
-    console.error("Failed to import save:", error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Invalid save data",
-    };
-  }
 }
