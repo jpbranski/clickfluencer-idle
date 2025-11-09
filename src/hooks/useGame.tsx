@@ -179,7 +179,6 @@ export function GameProvider({ children }: GameProviderProps) {
   const [offlineProgress, setOfflineProgress] =
     useState<OfflineProgress | null>(null);
   const [currentTheme, setCurrentTheme] = useState("dark");
-  const [activeSlotId, setActiveSlotId] = useState<1 | 2 | 3 | null>(null);
 
   const engineRef = useRef<GameEngine | null>(null);
   const autoSaveIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -188,70 +187,56 @@ export function GameProvider({ children }: GameProviderProps) {
   // INITIALIZATION
   // ============================================================================
 
-  // Helper function to load game state and setup engine
-  const loadAndInitialize = useCallback(async () => {
-    const result = await loadGame();
-    console.log("[useGame] loadGame result ->", result);
-
-    let initialState: GameState;
-    if (result.success && result.data) {
-      console.log("[useGame] Loading saved state");
-      initialState = result.data;
-      if (result.restoredFromBackup) {
-        console.warn("Restored from backup due to corrupted save");
-      }
-    } else {
-      console.log("[useGame] No save found, creating initial state");
-      const { createInitialState } = await import("@/game/state");
-      initialState = createInitialState();
-    }
-
-    // ✅ Merge theme data (adds new themes automatically)
-    if (initialState?.themes) {
-      initialState.themes = mergeThemes(initialState.themes);
-    } else {
-      initialState.themes = mergeThemes();
-    }
-
-    // ✅ Merge upgrade data (adds new upgrades automatically)
-    if (initialState?.upgrades) {
-      initialState.upgrades = mergeUpgrades(initialState.upgrades);
-    } else {
-      initialState.upgrades = mergeUpgrades();
-    }
-
-    // ✅ Initialize notoriety and notoriety generators if missing (for backward compatibility)
-    if (typeof initialState.notoriety !== 'number') {
-      initialState.notoriety = 0;
-    }
-    if (!initialState.notorietyGenerators) {
-      initialState.notorietyGenerators = {
-        smm: 0,
-        pr_team: 0,
-        key_client: 0,
-      };
-    }
-    if (!initialState.notorietyUpgrades) {
-      initialState.notorietyUpgrades = ensureNotorietyUpgrades();
-    }
-
-    return initialState;
-  }, []);
-
   useEffect(() => {
     let mounted = true;
     let cleanup: (() => void) | undefined;
 
     async function initialize() {
       try {
-        const { loadSaveSystem } = await import("@/lib/storage/slotStorage");
-        const saveSystem = await loadSaveSystem();
-        const currentActiveSlotId = saveSystem.activeSlotId;
+        const result = await loadGame();
+        console.log("[useGame] loadGame result ->", result);
 
-        // Store the active slot ID
-        setActiveSlotId(currentActiveSlotId);
+        let initialState: GameState;
+        if (result.success && result.data) {
+          console.log("[useGame] Loading saved state");
+          initialState = result.data;
+          if (result.restoredFromBackup) {
+            console.warn("Restored from backup due to corrupted save");
+          }
+        } else {
+          console.log("[useGame] No save found, creating initial state");
+          const { createInitialState } = await import("@/game/state");
+          initialState = createInitialState();
+        }
 
-        const initialState = await loadAndInitialize();
+        // ✅ Merge theme data (adds new themes automatically)
+        if (initialState?.themes) {
+          initialState.themes = mergeThemes(initialState.themes);
+        } else {
+          initialState.themes = mergeThemes();
+        }
+
+        // ✅ Merge upgrade data (adds new upgrades automatically)
+        if (initialState?.upgrades) {
+          initialState.upgrades = mergeUpgrades(initialState.upgrades);
+        } else {
+          initialState.upgrades = mergeUpgrades();
+        }
+
+        // ✅ Initialize notoriety and notoriety generators if missing (for backward compatibility)
+        if (typeof initialState.notoriety !== 'number') {
+          initialState.notoriety = 0;
+        }
+        if (!initialState.notorietyGenerators) {
+          initialState.notorietyGenerators = {
+            smm: 0,
+            pr_team: 0,
+            key_client: 0,
+          };
+        }
+        if (!initialState.notorietyUpgrades) {
+          initialState.notorietyUpgrades = ensureNotorietyUpgrades();
+        }
 
         if (!mounted) return;
 
@@ -314,65 +299,7 @@ export function GameProvider({ children }: GameProviderProps) {
       mounted = false;
       if (cleanup) cleanup();
     };
-  }, [loadAndInitialize]);
-
-  // ============================================================================
-  // SLOT CHANGE DETECTION
-  // ============================================================================
-
-  // Watch for active slot changes and reload game state
-  useEffect(() => {
-    if (!activeSlotId || !engineRef.current) return;
-
-    const checkSlotChange = async () => {
-      try {
-        const { loadSaveSystem } = await import("@/lib/storage/slotStorage");
-        const saveSystem = await loadSaveSystem();
-        const currentActiveSlotId = saveSystem.activeSlotId;
-
-        // If the active slot has changed, reload the game state
-        if (currentActiveSlotId !== activeSlotId) {
-          console.log(`[useGame] Active slot changed from ${activeSlotId} to ${currentActiveSlotId}, reloading...`);
-
-          // Save current state before switching
-          if (engineRef.current) {
-            const currentState = engineRef.current.getState();
-            await saveGame(currentState);
-          }
-
-          // Load new slot's state
-          setActiveSlotId(currentActiveSlotId);
-          const newState = await loadAndInitialize();
-
-          // Update the engine with the new state
-          if (engineRef.current && newState) {
-            engineRef.current.setState(newState);
-          }
-        }
-      } catch (error) {
-        console.error("[useGame] Error checking slot change:", error);
-      }
-    };
-
-    // Check on window focus
-    const handleFocus = () => {
-      checkSlotChange();
-    };
-
-    window.addEventListener('focus', handleFocus);
-
-    // Also check periodically (every 2 seconds) when page is visible
-    const intervalId = setInterval(() => {
-      if (!document.hidden) {
-        checkSlotChange();
-      }
-    }, 2000);
-
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-      clearInterval(intervalId);
-    };
-  }, [activeSlotId, loadAndInitialize]);
+  }, []);
 
   // ============================================================================
   // THEME MANAGEMENT (with persistence + visual sync)

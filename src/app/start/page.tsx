@@ -34,7 +34,9 @@ export default function StartPage() {
 
     const updated = switchActiveSlot(saveSystem, slotId);
     await saveSaveSystem(updated);
-    router.push("/");
+
+    // Force full page reload to ensure correct slot loads
+    window.location.href = "/";
   };
 
   const handleNewGame = async (slotId: 1 | 2 | 3) => {
@@ -42,7 +44,9 @@ export default function StartPage() {
 
     const updated = createNewSlot(saveSystem, slotId);
     await saveSaveSystem(updated);
-    router.push("/");
+
+    // Force full page reload to ensure new slot loads
+    window.location.href = "/";
   };
 
   const handleDelete = async (slotId: 1 | 2 | 3) => {
