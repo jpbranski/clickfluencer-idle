@@ -27,7 +27,9 @@ function cacheFormattedValue(key: string, value: string): void {
   // If cache is full, remove oldest entry (first entry in Map)
   if (formatCache.size >= FORMAT_CACHE_MAX_SIZE) {
     const firstKey = formatCache.keys().next().value;
-    formatCache.delete(firstKey);
+    if (firstKey !== undefined) {
+      formatCache.delete(firstKey);
+    }
   }
   formatCache.set(key, value);
 }

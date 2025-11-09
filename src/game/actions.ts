@@ -21,9 +21,7 @@
 
 import {
   GameState,
-  Generator,
   Upgrade,
-  Theme,
   RandomEvent,
   getGeneratorCost,
   getClickPower,
