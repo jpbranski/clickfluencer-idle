@@ -259,6 +259,14 @@ export function SettingsDialog({
                 </div>
               )}
 
+              {/* Save Editor */}
+              <a
+                href="/save-editor"
+                className="btn-accent w-full block text-center"
+              >
+                🔧 Open Save Editor
+              </a>
+
               {/* Reset */}
               <div className="pt-3 border-t border-border">
                 {!showResetConfirm ? (

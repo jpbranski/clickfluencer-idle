@@ -28,20 +28,20 @@ interface GeneratorCardProps {
   };
   canAfford: boolean;
   onBuy: (count: number) => void;
-  followersPerSecond: number;
-  currentFollowers: number;
+  credsPerSecond: number;
+  currentCreds: number;
 }
 
 export const GeneratorCard = memo(function GeneratorCard({
   generator,
   canAfford,
   onBuy,
-  followersPerSecond,
-  currentFollowers,
+  credsPerSecond,
+  currentCreds,
 }: GeneratorCardProps) {
   // Calculate bulk cost for ×10 purchase
   const bulkCost = getBulkGeneratorCost(generator, 10);
-  const canAffordBulk = currentFollowers >= bulkCost;
+  const canAffordBulk = currentCreds >= bulkCost;
 
   const handleBuy = (count: number) => {
     if (!canAfford && count === 1) return;
@@ -52,8 +52,8 @@ export const GeneratorCard = memo(function GeneratorCard({
   const timeUntilAffordable = !canAfford
     ? formatTimeUntilAffordable(
         generator.cost,
-        currentFollowers,
-        followersPerSecond,
+        currentCreds,
+        credsPerSecond,
       )
     : null;
 
@@ -153,7 +153,7 @@ export const GeneratorCard = memo(function GeneratorCard({
                 ${canAfford ? "active:scale-95" : "cursor-not-allowed"}
                 ${canAfford ? "btn-accent" : "btn-muted"}
               `}
-              aria-label={`Buy one ${generator.name} for ${formatNumber(generator.cost)} followers`}
+              aria-label={`Buy one ${generator.name} for ${formatNumber(generator.cost)} creds`}
             >
               Buy 1
             </button>
@@ -194,6 +194,6 @@ export const GeneratorCard = memo(function GeneratorCard({
     prevProps.generator.cost === nextProps.generator.cost &&
     prevProps.generator.unlocked === nextProps.generator.unlocked &&
     prevProps.canAfford === nextProps.canAfford &&
-    prevProps.currentFollowers === nextProps.currentFollowers
+    prevProps.currentCreds === nextProps.currentCreds
   );
 });

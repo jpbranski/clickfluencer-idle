@@ -27,12 +27,12 @@ export default function HomePage() {
   const {
     state,
     isLoading,
-    followersPerSecond,
+    credsPerSecond,
     notorietyPerSecond,
     totalUpkeep,
-    netFollowersPerSecond,
+    netCredsPerSecond,
     canPrestige,
-    reputationGain,
+    prestigeGain,
     handleBuyGenerator,
     handleBuyNotorietyGenerator,
     handleBuyUpgrade,
@@ -159,7 +159,7 @@ export default function HomePage() {
             onClose={dismissOfflineProgress}
             timeAway={offlineProgress.timeAway}
             timeProcessed={offlineProgress.timeProcessed}
-            followersGained={offlineProgress.followersGained}
+            credsGained={offlineProgress.credsGained}
             wasCapped={offlineProgress.wasCapped}
           />
         )}
@@ -177,15 +177,15 @@ export default function HomePage() {
         <GameShell
           currencyBar={
             <CurrencyBar
-              followers={state.followers}
-              shards={state.shards}
+              creds={state.creds}
+              awards={state.awards}
               awardDropRate={state ? getAwardDropRate(state) : 0.003}
-              followersPerSecond={followersPerSecond}
-              reputation={state.reputation}
+              credsPerSecond={credsPerSecond}
+              prestige={state.prestige}
               notoriety={state.notoriety ?? 0}
               notorietyPerSecond={notorietyPerSecond}
               totalUpkeep={totalUpkeep}
-              netFollowersPerSecond={netFollowersPerSecond}
+              netCredsPerSecond={netCredsPerSecond}
             />
           }
           quickStats={
@@ -201,7 +201,7 @@ export default function HomePage() {
                 <div className="p-3 rounded-lg bg-surface">
                   <div className="text-xs text-muted mb-1">Score</div>
                   <div className="text-base font-bold font-mono number-display text-foreground">
-                    {formatNumber(state.stats.totalFollowersEarned)}
+                    {formatNumber(state.stats.totalCredsEarned)}
                   </div>
                 </div>
               </div>
@@ -209,15 +209,15 @@ export default function HomePage() {
           }
           shareButtons={
             <ShareButtons
-              creds={state.followers}
-              score={state.stats.totalFollowersEarned}
+              creds={state.creds}
+              score={state.stats.totalCredsEarned}
             />
           }
           generatorsTab={
             <GeneratorsPanel
               generators={state.generators}
-              followers={state.followers}
-              followersPerSecond={followersPerSecond}
+              creds={state.creds}
+              credsPerSecond={credsPerSecond}
               onBuyGenerator={handleBuyGenerator}
               state={state}
               onBuyNotorietyGenerator={handleBuyNotorietyGenerator}
@@ -226,10 +226,10 @@ export default function HomePage() {
           upgradesTab={
             <UpgradesPanel
               upgrades={state.upgrades}
-              followers={state.followers}
+              creds={state.creds}
               canPrestige={canPrestige}
-              reputationGain={reputationGain}
-              reputation={state.reputation}
+              prestigeGain={prestigeGain}
+              prestige={state.prestige}
               onBuyUpgrade={handleBuyUpgrade}
               onPrestige={handlePrestige}
               notoriety={state.notoriety || 0}
@@ -240,7 +240,7 @@ export default function HomePage() {
           themesTab={
             <ThemesPanel
               themes={state.themes}
-              shards={state.shards}
+              awards={state.awards}
               activeThemeId={state.themes.find((t) => t.active)?.id || "dark"}
               onPurchaseTheme={handlePurchaseTheme}
               onActivateTheme={handleActivateTheme}

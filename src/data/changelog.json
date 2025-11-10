@@ -1,5 +1,18 @@
 [
   {
+    "version": "0.2.3",
+    "slug": "v0-2-3-save-editor-and-schema-migration",
+    "date": "2025-11-10",
+    "title": "v0.2.3 — Save Editor & Schema Migration",
+    "description": "This patch introduces a powerful Save Editor tool for advanced users and implements an important save-file schema migration for improved naming consistency. The editor allows manual customization of all game values, while the migration system ensures backward compatibility with older saves.",
+    "changes": [
+      "Added full Save Editor page with import/export and manual customization",
+      "Migrated save-file keys: followers→creds, shards→awards, reputation→prestige",
+      "Automatic save-migration for backward compatibility",
+      "Save Editor now theme-compatible (warning box remains red regardless of theme)"
+    ]
+  },
+  {
     "version": "0.1.0",
     "slug": "v0-1-0-initial-release",
     "date": "2025-11-01",

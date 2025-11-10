@@ -76,10 +76,10 @@ export function getTotalUpkeep(state: GameState): number {
  */
 export function shouldUnlockNotorietyGenerator(
   generator: NotorietyGenerator,
-  followers: number,
+  creds: number,
 ): boolean {
   // Unlock at 50% of base cost
-  return followers >= generator.baseCost * 0.5;
+  return creds >= generator.baseCost * 0.5;
 }
 
 /**
@@ -92,7 +92,7 @@ export function getNotorietyGeneratorsWithStatus(
     const count = state.notorietyGenerators[gen.id] || 0;
     const cost = getNotorietyGeneratorCost(gen, count);
     const unlocked =
-      gen.unlocked || shouldUnlockNotorietyGenerator(gen, state.followers);
+      gen.unlocked || shouldUnlockNotorietyGenerator(gen, state.creds);
 
     return {
       ...gen,

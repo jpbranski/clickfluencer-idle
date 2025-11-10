@@ -17,8 +17,8 @@ import { GameState } from "@/game/state";
 
 interface GeneratorsPanelProps {
   generators: Generator[];
-  followers: number;
-  followersPerSecond: number;
+  creds: number;
+  credsPerSecond: number;
   onBuyGenerator: (generatorId: string, count?: number) => void;
   state: GameState;
   onBuyNotorietyGenerator: (generatorId: string) => void;
@@ -26,8 +26,8 @@ interface GeneratorsPanelProps {
 
 export function GeneratorsPanel({
   generators,
-  followers,
-  followersPerSecond,
+  creds,
+  credsPerSecond,
   onBuyGenerator,
   state,
   onBuyNotorietyGenerator,
@@ -76,16 +76,16 @@ export function GeneratorsPanel({
             const cost = getGeneratorCost(generator);
             const totalProduction =
               generator.baseFollowersPerSecond * generator.count;
-            const canAfford = followers >= cost;
+            const canAffordGen = creds >= cost;
 
             return (
               <GeneratorCard
                 key={generator.id}
                 generator={{ ...generator, cost, totalProduction }}
-                canAfford={canAfford}
+                canAfford={canAffordGen}
                 onBuy={(count) => onBuyGenerator(generator.id, count)}
-                followersPerSecond={followersPerSecond}
-                currentFollowers={followers}
+                credsPerSecond={credsPerSecond}
+                currentCreds={creds}
               />
             );
           })}
@@ -104,7 +104,7 @@ export function GeneratorsPanel({
             <NotorietyGeneratorCard
               key={generator.id}
               generator={generator}
-              canAfford={canAfford(followers, generator.cost)}
+              canAfford={canAfford(creds, generator.cost)}
               onBuy={() => onBuyNotorietyGenerator(generator.id)}
             />
           ))}

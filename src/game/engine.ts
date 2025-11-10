@@ -44,7 +44,7 @@ export type EventListener = (eventType: string, data: unknown) => void;
 export interface OfflineProgress {
   timeAway: number;
   timeProcessed: number;
-  followersGained: number;
+  credsGained: number;
   wasCapped: boolean;
 }
 
@@ -252,7 +252,7 @@ export class GameEngine {
    * Calculate and apply offline progress
    * - Caps at 72 hours
    * - Applies 50% base efficiency (increased by Overnight Success upgrade)
-   * - Applies reputation bonus to production
+   * - Applies prestige bonus to production
    * - Shows notification with results
    */
   private calculateOfflineProgress(): OfflineProgress {
@@ -264,7 +264,7 @@ export class GameEngine {
       return {
         timeAway: 0,
         timeProcessed: 0,
-        followersGained: 0,
+        credsGained: 0,
         wasCapped: false,
       };
     }
@@ -273,20 +273,20 @@ export class GameEngine {
     const timeProcessed = Math.min(timeAway, OFFLINE_PROGRESS_CAP);
     const wasCapped = timeAway > OFFLINE_PROGRESS_CAP;
 
-    // Calculate production (with reputation bonus applied through getFollowersPerSecond)
-    const followersPerSecond = getFollowersPerSecond(this.state);
+    // Calculate production (with prestige bonus applied through getFollowersPerSecond)
+    const credsPerSecond = getFollowersPerSecond(this.state);
     const offlineEfficiency = getOfflineEfficiency(this.state);
     const secondsElapsed = timeProcessed / 1000;
-    const followersGained = followersPerSecond * secondsElapsed * offlineEfficiency;
+    const credsGained = credsPerSecond * secondsElapsed * offlineEfficiency;
 
     // Apply offline gains
     this.state = {
       ...this.state,
-      followers: this.state.followers + followersGained,
+      creds: this.state.creds + credsGained,
       stats: {
         ...this.state.stats,
-        totalFollowersEarned:
-          this.state.stats.totalFollowersEarned + followersGained,
+        totalCredsEarned:
+          this.state.stats.totalCredsEarned + credsGained,
         playTime: this.state.stats.playTime + timeProcessed,
         lastTickTime: now,
       },
@@ -296,12 +296,12 @@ export class GameEngine {
     const result: OfflineProgress = {
       timeAway,
       timeProcessed,
-      followersGained,
+      credsGained,
       wasCapped,
     };
 
     // Emit event for UI notification
-    if (followersGained > 0) {
+    if (credsGained > 0) {
       this.emit("offline:progress", result);
     }
 

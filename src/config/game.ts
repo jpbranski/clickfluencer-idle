@@ -73,9 +73,9 @@ export const BALANCE = {
   PRESTIGE_EXPONENT: 0.4,
   REPUTATION_BONUS: 0.1, // 10% per point
 
-  // Shards (premium currency)
+  // Awards (premium currency)
   SHARD_DROP_CHANCE: 0.0003, // 0.03% per click
-  SHARD_DROP_AVERAGE: 333, // ~1 shard per 333 clicks
+  SHARD_DROP_AVERAGE: 333, // ~1 award per 333 clicks
 
   // Events
   EVENT_CHANCE: 0.05, // 5% every 30 seconds

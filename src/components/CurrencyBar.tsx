@@ -11,35 +11,35 @@
 import { formatNumber, formatNumberCompact } from "@/game/format";
 
 interface CurrencyBarProps {
-  followers: number;
-  shards: number;
-  followersPerSecond: number;
+  creds: number;
+  awards: number;
+  credsPerSecond: number;
   awardDropRate?: number;
-  reputation: number;
+  prestige: number;
   notoriety?: number;
   notorietyPerSecond?: number;
   totalUpkeep?: number;
-  netFollowersPerSecond?: number;
+  netCredsPerSecond?: number;
   compact?: boolean;
 }
 
 export function CurrencyBar({
-  followers,
-  shards,
-  followersPerSecond,
+  creds,
+  awards,
+  credsPerSecond,
   awardDropRate,
-  reputation,
+  prestige,
   notoriety = 0,
   notorietyPerSecond = 0,
   totalUpkeep: _totalUpkeep = 0,
-  netFollowersPerSecond,
+  netCredsPerSecond,
   compact = false,
 }: CurrencyBarProps) {
   // Ensure numeric values with fallbacks for undefined/null
   const safeNotoriety = typeof notoriety === 'number' ? notoriety : 0;
   const safeNotorietyPerSecond = typeof notorietyPerSecond === 'number' ? notorietyPerSecond : 0;
 
-  const displayFollowersPerSecond = netFollowersPerSecond !== undefined ? netFollowersPerSecond : followersPerSecond;
+  const displayCredsPerSecond = netCredsPerSecond !== undefined ? netCredsPerSecond : credsPerSecond;
   return (
     <div className="w-full">
       <div
@@ -68,20 +68,20 @@ export function CurrencyBar({
             </div>
             <div
               className="text-lg font-bold font-mono number-display truncate text-accent"
-              aria-label={`Prestige level ${reputation}`}
+              aria-label={`Prestige level ${prestige}`}
             >
-              {reputation}
+              {prestige}
             </div>
           </div>
         </div>
 
-        {/* Followers (Main Currency) */}
+        {/* Creds (Main Currency) */}
         <div className="flex items-center gap-2">
           <div
             className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center"
             aria-hidden="true"
           >
-            <span className="text-2xl" role="img" aria-label="followers">
+            <span className="text-2xl" role="img" aria-label="creds">
               👥
             </span>
           </div>
@@ -91,19 +91,19 @@ export function CurrencyBar({
             </div>
             <div
               className="text-lg font-bold font-mono number-display truncate"
-              aria-label={`${followers.toFixed(0)} followers`}
+              aria-label={`${creds.toFixed(0)} creds`}
             >
               {compact
-                ? formatNumberCompact(followers)
-                : formatNumber(followers, 2)}
+                ? formatNumberCompact(creds)
+                : formatNumber(creds, 2)}
             </div>
-            {displayFollowersPerSecond !== 0 && (
+            {displayCredsPerSecond !== 0 && (
               <div
-                className={`text-xs font-mono ${displayFollowersPerSecond >= 0 ? "text-success" : "text-warning"
+                className={`text-xs font-mono ${displayCredsPerSecond >= 0 ? "text-success" : "text-warning"
                   }`}
               >
-                {displayFollowersPerSecond >= 0 ? "+" : ""}
-                {formatNumber(displayFollowersPerSecond, 1)}/s
+                {displayCredsPerSecond >= 0 ? "+" : ""}
+                {formatNumber(displayCredsPerSecond, 1)}/s
               </div>
             )}
 
@@ -126,9 +126,9 @@ export function CurrencyBar({
             </div>
             <div
               className="text-lg font-bold font-mono number-display truncate text-accent"
-              aria-label={`${shards} awards`}
+              aria-label={`${awards} awards`}
             >
-              {shards.toLocaleString()}
+              {awards.toLocaleString()}
             </div>
             <div className="text-xs text-muted font-mono">
               {((awardDropRate || 0) * 100).toFixed(1)}% drop rate
@@ -179,11 +179,11 @@ export function CurrencyBar({
       {/* Mobile Compact View Alternative */}
       {compact && (
         <div className="sm:hidden mt-2 text-center text-xs text-muted font-mono">
-          <span>Prestige: {reputation}</span>
+          <span>Prestige: {prestige}</span>
           <span className="mx-2">•</span>
-          <span>Creds: {formatNumber(followers)}</span>
+          <span>Creds: {formatNumber(creds)}</span>
           <span className="mx-2">•</span>
-          <span>Awards: {shards}</span>
+          <span>Awards: {awards}</span>
           <span className="mx-2">•</span>
           <span>Notoriety: {safeNotoriety.toFixed(2)}</span>
         </div>

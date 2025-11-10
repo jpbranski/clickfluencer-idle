@@ -101,7 +101,7 @@ export interface Statistics {
   totalGeneratorsPurchased: number;
   totalUpgradesPurchased: number;
   prestigeCount: number;
-  shardsEarned: number; // Awards earned
+  awardsEarned: number; // Awards earned (renamed from shardsEarned in v0.2.3)
   playTime: number; // milliseconds
   lastTickTime: number;
   runStartTime: number;
@@ -118,9 +118,9 @@ export interface Achievement {
 
 export interface GameState {
   // Core Resources
-  followers: number;
-  shards: number; // Awards (premium currency from random drops)
-  reputation: number; // Prestige currency
+  creds: number; // Primary currency (renamed from followers in v0.2.3)
+  awards: number; // Premium currency from random drops (renamed from shards in v0.2.3)
+  prestige: number; // Prestige currency (renamed from reputation in v0.2.3)
   notoriety: number; // Strategic drain resource from Notoriety Generators
 
   // Generators (content creation systems)
@@ -431,9 +431,9 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
 export function createInitialState(): GameState {
   const now = Date.now();
   return {
-    followers: 0,
-    shards: 0,
-    reputation: 0,
+    creds: 0,
+    awards: 0,
+    prestige: 0,
     notoriety: 0,
     generators: INITIAL_GENERATORS.map((g) => ({ ...g })),
     upgrades: INITIAL_UPGRADES.map((u) => ({ ...u })),
@@ -444,7 +444,7 @@ export function createInitialState(): GameState {
       totalGeneratorsPurchased: 0,
       totalUpgradesPurchased: 0,
       prestigeCount: 0,
-      shardsEarned: 0,
+      awardsEarned: 0,
       playTime: 0,
       lastTickTime: now,
       runStartTime: now,
@@ -550,8 +550,8 @@ export function getClickPower(state: GameState): number {
       }
     });
 
-  // Apply reputation bonus (+10% per reputation point)
-  power *= 1 + state.reputation * 0.1;
+  // Apply prestige bonus (+10% per prestige point)
+  power *= 1 + state.prestige * 0.1;
 
   // Apply active theme multiplier bonus (only the active theme)
   if (activeTheme) {
@@ -602,8 +602,8 @@ export function getFollowersPerSecond(state: GameState): number {
       }
     });
 
-  // Apply reputation bonus (+10% per reputation point)
-  total *= 1 + state.reputation * 0.1;
+  // Apply prestige bonus (+10% per prestige point)
+  total *= 1 + state.prestige * 0.1;
 
   // Apply active theme bonus (only the active theme)
   const activeTheme = state.themes.find((t) => t.active);
@@ -633,15 +633,15 @@ export function getFollowersPerSecond(state: GameState): number {
 }
 
 /**
- * Check if a generator should be unlocked based on followers
+ * Check if a generator should be unlocked based on creds
  * Unlock thresholds are roughly 100% of the base cost
  */
 export function shouldUnlockGenerator(
   generator: Generator,
-  followers: number,
+  creds: number,
 ): boolean {
   if (generator.unlocked) return false;
-  return followers >= generator.baseCost * 1.0;
+  return creds >= generator.baseCost * 1.0;
 }
 
 /**
@@ -684,15 +684,15 @@ export function getTotalPlayTime(state: GameState): number {
 /**
  * Check if player can afford a purchase
  */
-export function canAfford(followers: number, cost: number): boolean {
-  return followers >= cost;
+export function canAfford(creds: number, cost: number): boolean {
+  return creds >= cost;
 }
 
 /**
  * Check if player can afford an award purchase
  */
-export function canAffordShards(shards: number, cost: number): boolean {
-  return shards >= cost;
+export function canAffordAwards(awards: number, cost: number): boolean {
+  return awards >= cost;
 }
 
 /**

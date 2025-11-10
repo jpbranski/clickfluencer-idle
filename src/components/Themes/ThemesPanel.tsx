@@ -11,7 +11,7 @@ import { canAffordShards } from "@/game/state";
 
 interface ThemesPanelProps {
   themes: any[];
-  shards: number;
+  awards: number;
   activeThemeId: string;
   onPurchaseTheme: (id: string) => void;
   onActivateTheme: (id: string) => void;
@@ -19,7 +19,7 @@ interface ThemesPanelProps {
 
 export function ThemesPanel({
   themes,
-  shards,
+  awards,
   activeThemeId,
   onPurchaseTheme,
   onActivateTheme,
@@ -40,11 +40,11 @@ export function ThemesPanel({
               ...theme,
               displayName: theme.name,
             }}
-            canAfford={canAffordShards(shards, theme.cost)}
+            canAfford={canAffordShards(awards, theme.cost)}
             isActive={theme.id === activeThemeId}
             onPurchase={() => onPurchaseTheme(theme.id)}
             onActivate={() => onActivateTheme(theme.id)}
-            currentShards={shards}
+            currentShards={awards}
           />
         ))}
       </div>
