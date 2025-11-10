@@ -57,6 +57,7 @@ import {
   autoSaveGame,
   exportSave,
   importSave,
+  deleteSave,
 } from "@/lib/storage";
 import { GAMEPLAY } from "@/app-config";
 import { themes as baseThemes } from "@/data/themes";
@@ -526,7 +527,13 @@ export function GameProvider({ children }: GameProviderProps) {
 
   const handleResetGame = useCallback(async () => {
     try {
+      // Delete all save data from IndexedDB and backups
+      await deleteSave();
+
+      // Clear localStorage (includes theme preferences, etc.)
       localStorage.clear();
+
+      // Reload to start fresh
       window.location.reload();
     } catch (err) {
       logger.error("Failed to reset game:", err);

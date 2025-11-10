@@ -19,6 +19,7 @@ import {
   load,
   exportSave as advancedExportSave,
   importSave as advancedImportSave,
+  deleteSave as advancedDeleteSave,
 } from "./storage/storage";
 import { storageLogger as logger } from "./logger";
 
@@ -131,6 +132,25 @@ export async function importSave(json: string) {
     }
   } catch (e) {
     logger.error("importSave error:", e);
+    return { success: false as const, error: String(e) };
+  }
+}
+
+/**
+ * Delete all save data (for hard reset)
+ */
+export async function deleteSave() {
+  try {
+    const result = await advancedDeleteSave();
+    if (result.success) {
+      logger.info("Save deleted successfully");
+      return { success: true as const };
+    } else {
+      logger.error("Delete failed:", result.error);
+      return { success: false as const, error: result.error };
+    }
+  } catch (e) {
+    logger.error("deleteSave error:", e);
     return { success: false as const, error: String(e) };
   }
 }
