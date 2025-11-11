@@ -174,13 +174,13 @@ export function migrateTo023(state: LegacySaveState): {
  * @param state - Raw game state from storage
  * @returns Migrated game state
  */
-export function autoMigrate<T extends LegacySaveState>(state: T): T {
+export function autoMigrate<T = any>(state: T): T {
   if (!state || typeof state !== "object") {
     return state;
   }
 
   // Apply 0.2.3 migration
-  const { state: migrated, result } = migrateTo023(state);
+  const { state: migrated, result } = migrateTo023(state as any);
 
   if (result.migrated) {
     logger.info(`Migration completed: ${result.changes.join(", ")}`);
