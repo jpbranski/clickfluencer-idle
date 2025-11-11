@@ -7,7 +7,7 @@
  */
 
 import { ThemeCard } from "@/components/ThemeCard";
-import { canAffordShards } from "@/game/state";
+import { canAffordAwards } from "@/game/state";
 
 interface ThemesPanelProps {
   themes: any[];
@@ -40,7 +40,7 @@ export function ThemesPanel({
               ...theme,
               displayName: theme.name,
             }}
-            canAfford={canAffordShards(awards, theme.cost)}
+            canAfford={canAffordAwards(awards, theme.cost)}
             isActive={theme.id === activeThemeId}
             onPurchase={() => onPurchaseTheme(theme.id)}
             onActivate={() => onActivateTheme(theme.id)}
