@@ -136,7 +136,7 @@ export function clickPost(state: GameState): ClickResult {
     stats: {
       ...state.stats,
       totalClicks: state.stats.totalClicks + 1,
-      totalFollowersEarned: state.stats.totalFollowersEarned + credsGained + credCacheAmount,
+      totalCredsEarned: state.stats.totalCredsEarned + credsGained + credCacheAmount,
       awardsEarned: state.stats.awardsEarned + (awardDropped ? 1 : 0),
     },
   };
@@ -559,7 +559,7 @@ export function tick(state: GameState, deltaTime: number): GameState {
     generators: newGenerators,
     stats: {
       ...state.stats,
-      totalFollowersEarned: state.stats.totalFollowersEarned + Math.max(0, credsGained),
+      totalCredsEarned: state.stats.totalCredsEarned + Math.max(0, credsGained),
       lastTickTime: Date.now(),
     },
   };

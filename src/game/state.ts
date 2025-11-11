@@ -97,7 +97,7 @@ export interface EventEffect {
 
 export interface Statistics {
   totalClicks: number;
-  totalFollowersEarned: number;
+  totalCredsEarned: number; // Total creds earned (renamed from totalFollowersEarned in v0.2.3)
   totalGeneratorsPurchased: number;
   totalUpgradesPurchased: number;
   prestigeCount: number;
@@ -440,7 +440,7 @@ export function createInitialState(): GameState {
     activeEvents: [],
     stats: {
       totalClicks: 0,
-      totalFollowersEarned: 0,
+      totalCredsEarned: 0,
       totalGeneratorsPurchased: 0,
       totalUpgradesPurchased: 0,
       prestigeCount: 0,

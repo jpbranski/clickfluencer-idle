@@ -8,6 +8,8 @@
  * - followers → creds
  * - shards → awards
  * - reputation → prestige
+ * - stats.totalFollowersEarned → stats.totalCredsEarned
+ * - stats.shardsEarned → stats.awardsEarned
  */
 
 import { storageLogger as logger } from "../logger";
@@ -27,6 +29,11 @@ interface LegacySaveState {
   followers?: number;
   shards?: number;
   reputation?: number;
+  stats?: {
+    totalFollowersEarned?: number;
+    shardsEarned?: number;
+    [key: string]: unknown;
+  };
   version?: string;
   [key: string]: unknown; // Allow other properties
 }
@@ -36,6 +43,11 @@ interface CurrentSaveState {
   creds?: number;
   awards?: number;
   prestige?: number;
+  stats?: {
+    totalCredsEarned?: number;
+    awardsEarned?: number;
+    [key: string]: unknown;
+  };
   version: string;
   [key: string]: unknown;
 }
@@ -49,11 +61,19 @@ interface CurrentSaveState {
  */
 function needsMigration(state: LegacySaveState): boolean {
   // Check if any legacy keys exist
-  return (
+  const hasLegacyCurrencies = (
     state.followers !== undefined ||
     state.shards !== undefined ||
     state.reputation !== undefined
   );
+
+  // Check if stats has legacy keys
+  const hasLegacyStats = (
+    state.stats?.totalFollowersEarned !== undefined ||
+    state.stats?.shardsEarned !== undefined
+  );
+
+  return hasLegacyCurrencies || hasLegacyStats;
 }
 
 /**
@@ -102,6 +122,28 @@ export function migrateTo023(state: LegacySaveState): {
     migratedState.prestige = state.reputation;
     delete migratedState.reputation;
     changes.push("reputation → prestige");
+  }
+
+  // Migrate stats properties
+  if (state.stats) {
+    // Ensure stats object exists in migrated state
+    if (!migratedState.stats) {
+      migratedState.stats = { ...state.stats };
+    }
+
+    // Migrate stats.totalFollowersEarned → stats.totalCredsEarned
+    if (state.stats.totalFollowersEarned !== undefined) {
+      migratedState.stats.totalCredsEarned = state.stats.totalFollowersEarned;
+      delete migratedState.stats.totalFollowersEarned;
+      changes.push("stats.totalFollowersEarned → stats.totalCredsEarned");
+    }
+
+    // Migrate stats.shardsEarned → stats.awardsEarned
+    if (state.stats.shardsEarned !== undefined) {
+      migratedState.stats.awardsEarned = state.stats.shardsEarned;
+      delete migratedState.stats.shardsEarned;
+      changes.push("stats.shardsEarned → stats.awardsEarned");
+    }
   }
 
   // Update version
