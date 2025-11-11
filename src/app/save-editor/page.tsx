@@ -12,9 +12,10 @@ import { useGame } from "@/hooks/useGame";
 import { useRouter } from "next/navigation";
 import { GameState } from "@/game/state";
 import { themes as allThemes } from "@/data/themes";
+import { exportSave, importSave as importSaveData } from "@/lib/storage";
 
 export default function SaveEditorPage() {
-  const { state, exportSave: exportCurrentSave, importSave } = useGame();
+  const { state, handleImportSave } = useGame();
   const router = useRouter();
 
   // Form state for all editable fields
@@ -150,7 +151,7 @@ export default function SaveEditorPage() {
 
   const handleDownload = async () => {
     try {
-      const saveData = await exportCurrentSave();
+      const saveData = await exportSave();
       if (!saveData) {
         setImportError("Failed to export save data");
         return;
@@ -195,7 +196,7 @@ export default function SaveEditorPage() {
                 "FINAL WARNING: This action cannot be undone. Proceed with import?"
               );
               if (doubleConfirm) {
-                await importSave(data);
+                handleImportSave(data);
                 setSuccessMessage("Save imported successfully! Reloading...");
                 setTimeout(() => window.location.reload(), 1500);
               }
