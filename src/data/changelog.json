@@ -99,5 +99,19 @@
       "Automatic save-migration for backward compatibility",
       "Save Editor now theme-compatible (warning box remains red regardless of theme)"
     ]
+  },
+  {
+    "version": "0.2.4",
+    "slug": "v0-2-4-infinite-upgrade-fix-and-prestige-ui",
+    "date": "2025-11-11",
+    "title": "v0.2.4 — Infinite Upgrade Fix, Prestige UI Improvements, and Layout Polish",
+    "description": "This patch addresses a critical issue preventing players from progressing their infinite upgrades, introduces a clearer Prestige progress indicator, and applies several UI refinements for a smoother and more readable experience.",
+    "changes": [
+      "Fixed a major bug preventing players from purchasing additional levels of infinite upgrades (AI Enhancements, Better Filters) due to incorrect `purchased` save-state behavior",
+      "Added new 'Next Prestige' banner that displays the required Creds for your next prestige milestone when prestige is not yet available",
+      "Improved banner spacing and layout with additional bottom padding to create clearer separation between UI sections",
+      "Improved formatting of large numbers in the prestige cost display for easier readability across themes",
+      "Added internal safeguards to prevent corrupted upgrades from blocking progression in imported save files",
+    ]
   }
 ]
