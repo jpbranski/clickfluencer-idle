@@ -529,16 +529,32 @@ export function GameProvider({ children }: GameProviderProps) {
 
   const handleResetGame = useCallback(async () => {
     try {
+      // Stop the game engine to prevent auto-saves during reset
+      if (engineRef.current) {
+        engineRef.current.stop();
+      }
+
+      // Clear auto-save interval
+      if (autoSaveIntervalRef.current) {
+        clearInterval(autoSaveIntervalRef.current);
+        autoSaveIntervalRef.current = null;
+      }
+
       // Delete all save data from IndexedDB and backups
       await deleteSave();
 
-      // Clear localStorage (includes theme preferences, etc.)
+      // Clear all localStorage data (themes, settings, etc.)
       localStorage.clear();
 
-      // Reload to start fresh
-      window.location.reload();
+      // Wait for cleanup to complete before reloading
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      // Force hard reload (bypasses cache completely)
+      window.location.href = window.location.href;
     } catch (err) {
       logger.error("Failed to reset game:", err);
+      // Still attempt reload even if cleanup fails
+      window.location.href = window.location.href;
     }
   }, []);
 

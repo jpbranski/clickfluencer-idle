@@ -168,7 +168,7 @@ export default function SaveEditorPage() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `clickfluencer-save-${Date.now()}.txt`;
+      a.download = `clickfluencer-save-${Date.now()}.json`;
       a.click();
       URL.revokeObjectURL(url);
 
