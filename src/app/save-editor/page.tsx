@@ -68,10 +68,11 @@ export default function SaveEditorPage() {
 
   const [importError, setImportError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isFormInitialized, setIsFormInitialized] = useState(false);
 
-  // Load current save data into form
+  // Load current save data into form ONLY ONCE on mount
   useEffect(() => {
-    if (state) {
+    if (state && !isFormInitialized) {
       setFormData({
         // Core currencies
         creds: state.creds || 0,
@@ -118,8 +119,9 @@ export default function SaveEditorPage() {
         unlockedThemes: state.themes?.filter((t) => t.unlocked).map((t) => t.id) || ["dark", "light"],
         activeTheme: state.themes?.find((t) => t.active)?.id || "dark",
       });
+      setIsFormInitialized(true);
     }
-  }, [state]);
+  }, [state, isFormInitialized]);
 
   const handleNumberChange = (field: string, value: string) => {
     const numValue = parseInt(value, 10);
