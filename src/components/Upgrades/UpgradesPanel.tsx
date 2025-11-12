@@ -15,10 +15,10 @@ import { NotorietyStore } from "./NotorietyStore";
 interface UpgradesPanelProps {
   // Cred Store props
   upgrades: any[];
-  followers: number;
+  creds: number;
   canPrestige: boolean;
-  reputationGain: number;
-  reputation: number;
+  prestigeGain: number;
+  prestige: number;
   onBuyUpgrade: (id: string) => void;
   onPrestige: () => void;
 
@@ -30,10 +30,10 @@ interface UpgradesPanelProps {
 
 export function UpgradesPanel({
   upgrades,
-  followers,
+  creds,
   canPrestige,
-  reputationGain,
-  reputation,
+  prestigeGain,
+  prestige,
   onBuyUpgrade,
   onPrestige,
   notoriety,
@@ -72,10 +72,10 @@ export function UpgradesPanel({
       {subTab === "creds" && (
         <CredStore
           upgrades={upgrades}
-          followers={followers}
+          creds={creds}
           canPrestige={canPrestige}
-          reputationGain={reputationGain}
-          reputation={reputation}
+          prestigeGain={prestigeGain}
+          prestige={prestige}
           onBuyUpgrade={onBuyUpgrade}
           onPrestige={onPrestige}
         />

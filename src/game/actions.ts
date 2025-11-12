@@ -28,7 +28,7 @@ import {
   getFollowersPerSecond,
   shouldUnlockGenerator,
   canAfford,
-  canAffordShards,
+  canAffordAwards,
   getClickEventMultiplier,
   getCredCacheRate,
   getCredCachePayoutMultiplier,
@@ -90,8 +90,8 @@ export interface ActionResult {
 }
 
 export interface ClickResult extends ActionResult {
-  followersGained: number;
-  shardDropped: boolean;
+  credsGained: number;
+  awardDropped: boolean;
   credCacheTriggered: boolean;
   credCacheAmount: number;
 }
@@ -102,7 +102,7 @@ export interface ClickResult extends ActionResult {
 
 /**
  * Execute a manual click
- * - Grants followers based on click power
+ * - Grants creds based on click power
  * - 0.3%-1.5% chance to drop an award
  * - Small chance to trigger Cred Cache (1-5% of current creds)
  * - Updates statistics
@@ -110,10 +110,10 @@ export interface ClickResult extends ActionResult {
 export function clickPost(state: GameState): ClickResult {
   const clickPower = getClickPower(state);
   const eventMultiplier = getClickEventMultiplier(state);
-  const followersGained = clickPower * eventMultiplier;
+  const credsGained = clickPower * eventMultiplier;
 
   // Check for award drop (Variable chance based on upgrades)
-  const shardDropped = Math.random() < getAwardDropRate(state);
+  const awardDropped = Math.random() < getAwardDropRate(state);
 
   // Check for Cred Cache drop
   const credCacheRate = getCredCacheRate(state);
@@ -123,7 +123,7 @@ export function clickPost(state: GameState): ClickResult {
   if (credCacheTriggered) {
     // Award 1-5% of current total creds
     const percentage = 0.01 + Math.random() * 0.04; // Random between 1% and 5%
-    const baseAmount = Math.floor(state.followers * percentage);
+    const baseAmount = Math.floor(state.creds * percentage);
     // Apply Notoriety Cache Value boost
     const cacheMultiplier = getCredCachePayoutMultiplier(state);
     credCacheAmount = Math.floor(baseAmount * cacheMultiplier);
@@ -131,21 +131,21 @@ export function clickPost(state: GameState): ClickResult {
 
   const newState: GameState = {
     ...state,
-    followers: state.followers + followersGained + credCacheAmount,
-    shards: state.shards + (shardDropped ? 1 : 0),
+    creds: state.creds + credsGained + credCacheAmount,
+    awards: state.awards + (awardDropped ? 1 : 0),
     stats: {
       ...state.stats,
       totalClicks: state.stats.totalClicks + 1,
-      totalFollowersEarned: state.stats.totalFollowersEarned + followersGained + credCacheAmount,
-      shardsEarned: state.stats.shardsEarned + (shardDropped ? 1 : 0),
+      totalCredsEarned: state.stats.totalCredsEarned + credsGained + credCacheAmount,
+      awardsEarned: state.stats.awardsEarned + (awardDropped ? 1 : 0),
     },
   };
 
   return {
     success: true,
     state: newState,
-    followersGained,
-    shardDropped,
+    credsGained,
+    awardDropped,
     credCacheTriggered,
     credCacheAmount,
   };
@@ -157,7 +157,7 @@ export function clickPost(state: GameState): ClickResult {
 
 /**
  * Purchase a generator (content creation system)
- * - Deducts followers equal to cost
+ * - Deducts creds equal to cost
  * - Increments generator count
  * - Updates cost for next purchase
  * - Updates statistics
@@ -186,11 +186,11 @@ export function buyGenerator(
 
   const cost = getGeneratorCost(generator);
 
-  if (!canAfford(state.followers, cost)) {
+  if (!canAfford(state.creds, cost)) {
     return {
       success: false,
       state,
-      message: "Not enough followers",
+      message: "Not enough creds",
     };
   }
 
@@ -201,7 +201,7 @@ export function buyGenerator(
 
   const newState: GameState = {
     ...state,
-    followers: state.followers - cost,
+    creds: state.creds - cost,
     generators: newGenerators,
     stats: {
       ...state.stats,
@@ -321,11 +321,11 @@ export function buyUpgrade(state: GameState, upgradeId: string): ActionResult {
 
   const currentCost = getUpgradeCost(upgrade);
 
-  if (!canAfford(state.followers, currentCost)) {
+  if (!canAfford(state.creds, currentCost)) {
     return {
       success: false,
       state,
-      message: "Not enough followers",
+      message: "Not enough creds",
     };
   }
 
@@ -362,7 +362,7 @@ export function buyUpgrade(state: GameState, upgradeId: string): ActionResult {
 
   const newState: GameState = {
     ...state,
-    followers: state.followers - currentCost,
+    creds: state.creds - currentCost,
     upgrades: newUpgrades,
     stats: {
       ...state.stats,
@@ -405,7 +405,7 @@ export function purchaseTheme(state: GameState, themeId: string): ActionResult {
     };
   }
 
-  if (!canAffordShards(state.shards, theme.cost)) {
+  if (!canAffordAwards(state.awards, theme.cost)) {
     return {
       success: false,
       state,
@@ -419,7 +419,7 @@ export function purchaseTheme(state: GameState, themeId: string): ActionResult {
 
   const newState: GameState = {
     ...state,
-    shards: state.shards - theme.cost,
+    awards: state.awards - theme.cost,
     themes: newThemes,
   };
 
@@ -520,24 +520,24 @@ export function removeExpiredEvents(state: GameState): GameState {
 
 /**
  * Process one game tick
- * - Generates followers from all generators (minus upkeep)
+ * - Generates creds from all generators (minus upkeep)
  * - Generates notoriety from notoriety generators
- * - Unlocks generators based on follower count
+ * - Unlocks generators based on cred count
  * - Removes expired events
  * - Updates statistics
  */
 export function tick(state: GameState, deltaTime: number): GameState {
   const secondsElapsed = deltaTime / 1000;
 
-  // Calculate followers generated this tick
-  const followersPerSecond = getFollowersPerSecond(state);
+  // Calculate creds generated this tick
+  const credsPerSecond = getFollowersPerSecond(state);
 
   // Calculate upkeep cost from notoriety generators
   const upkeepPerSecond = getTotalUpkeep(state);
 
-  // Net followers after upkeep
-  const netFollowersPerSecond = followersPerSecond - upkeepPerSecond;
-  const followersGained = netFollowersPerSecond * secondsElapsed;
+  // Net creds after upkeep
+  const netCredsPerSecond = credsPerSecond - upkeepPerSecond;
+  const credsGained = netCredsPerSecond * secondsElapsed;
 
   // Calculate notoriety gain this tick
   const notorietyPerSecond = getNotorietyGainPerSecond(state);
@@ -545,7 +545,7 @@ export function tick(state: GameState, deltaTime: number): GameState {
 
   // Update generators unlock status
   const newGenerators = state.generators.map((g) => {
-    if (shouldUnlockGenerator(g, state.followers)) {
+    if (shouldUnlockGenerator(g, state.creds)) {
       return { ...g, unlocked: true };
     }
     return g;
@@ -554,12 +554,12 @@ export function tick(state: GameState, deltaTime: number): GameState {
   // Remove expired events
   let newState: GameState = {
     ...state,
-    followers: state.followers + followersGained,
+    creds: state.creds + credsGained,
     notoriety: (state.notoriety || 0) + notorietyGained,
     generators: newGenerators,
     stats: {
       ...state.stats,
-      totalFollowersEarned: state.stats.totalFollowersEarned + Math.max(0, followersGained),
+      totalCredsEarned: state.stats.totalCredsEarned + Math.max(0, credsGained),
       lastTickTime: Date.now(),
     },
   };
@@ -591,7 +591,7 @@ export function prestige(state: GameState): ActionResult {
     };
   }
 
-  const newState = applyPrestige(state, result.reputationGained, result.followersLost);
+  const newState = applyPrestige(state, result.prestigeGained, result.credsLost);
 
   return {
     success: true,
@@ -606,7 +606,7 @@ export function prestige(state: GameState): ActionResult {
 
 /**
  * Purchase a notoriety generator
- * - Deducts followers equal to cost
+ * - Deducts creds equal to cost
  * - Increases generator level by 1
  * - Validates that Creds/s remains above 1 after upkeep
  */
@@ -627,7 +627,7 @@ export function buyNotorietyGenerator(
   const currentLevel = state.notorietyGenerators[generatorId] || 0;
   const cost = getNotorietyGeneratorCost(generator, currentLevel);
 
-  if (!canAfford(state.followers, cost)) {
+  if (!canAfford(state.creds, cost)) {
     return {
       success: false,
       state,
@@ -637,7 +637,7 @@ export function buyNotorietyGenerator(
 
   const newState: GameState = {
     ...state,
-    followers: state.followers - cost,
+    creds: state.creds - cost,
     notorietyGenerators: {
       ...state.notorietyGenerators,
       [generatorId]: currentLevel + 1,
@@ -692,16 +692,16 @@ export function buyNotorietyUpgrade(
   }
 
   // Handle special instant-effect upgrades like "buy_creds"
-  let bonusFollowers = 0;
+  let bonusCreds = 0;
   if (upgradeId === "buy_creds") {
-    const followersPerSecond = getFollowersPerSecond(state);
-    bonusFollowers = followersPerSecond * 30 * 60; // 30 minutes worth
+    const credsPerSecond = getFollowersPerSecond(state);
+    bonusCreds = credsPerSecond * 30 * 60; // 30 minutes worth
   }
 
   const newState: GameState = {
     ...state,
     notoriety: state.notoriety - cost,
-    followers: state.followers + bonusFollowers,
+    creds: state.creds + bonusCreds,
     notorietyUpgrades: {
       ...state.notorietyUpgrades,
       [upgradeId]: currentLevel + 1,

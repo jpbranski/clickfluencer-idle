@@ -14,7 +14,7 @@ interface OfflineEarningsModalProps {
   onClose: () => void;
   timeAway: number;
   timeProcessed: number;
-  followersGained: number;
+  credsGained: number;
   wasCapped: boolean;
 }
 
@@ -23,7 +23,7 @@ export function OfflineEarningsModal({
   onClose,
   timeAway,
   timeProcessed,
-  followersGained,
+  credsGained,
   wasCapped,
 }: OfflineEarningsModalProps) {
   if (!isOpen) return null;
@@ -83,13 +83,13 @@ export function OfflineEarningsModal({
             </div>
           </div>
 
-          {/* Followers Gained */}
+          {/* Creds Gained */}
           <div className="p-4 rounded-lg bg-success/10 border border-success/20">
             <div className="text-xs text-muted uppercase tracking-wide mb-1">
-              Followers Gained
+              Creds Gained
             </div>
             <div className="text-2xl font-bold text-success number-display">
-              +{formatNumber(followersGained)}
+              +{formatNumber(credsGained)}
             </div>
           </div>
 
@@ -131,7 +131,7 @@ export function OfflineEarningsModal({
               </span>
               <p>
                 Your content generators continued working while you were away,
-                earning followers based on your production rate.
+                earning creds based on your production rate.
               </p>
             </div>
           </div>

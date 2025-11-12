@@ -55,7 +55,7 @@ export const NOTORIETY_UPGRADES: NotorietyUpgrade[] = [
     id: "buy_creds",
     name: "Buy Creds",
     cap: Infinity,
-    effect: "Instantly grants 30 minutes of current followers/s",
+    effect: "Instantly grants 30 minutes of current creds/s",
     costFormula: () => 10,
     effectType: "instantCreds",
     effectValue: 1800, // 30 minutes in seconds
@@ -64,7 +64,7 @@ export const NOTORIETY_UPGRADES: NotorietyUpgrade[] = [
     id: "cred_boost",
     name: "Cred Boost",
     cap: Infinity,
-    effect: "+1% to all passive followers/s",
+    effect: "+1% to all passive creds/s",
     costFormula: (level) => 50 * Math.pow(1.4, level),
     effectType: "credBoost",
     effectValue: 0.01, // +1% per level
@@ -133,12 +133,12 @@ export function applyUpgradeEffect(
 
   switch (upgrade.effectType) {
     case "instantCreds": {
-      // Instantly grant 30 minutes of current followers/s
-      const followersPerSecond = getFollowersPerSecond(state);
-      const instantFollowers =
-        followersPerSecond * (upgrade.effectValue as number);
+      // Instantly grant 30 minutes of current creds/s
+      const credsPerSecond = getFollowersPerSecond(state);
+      const instantCreds =
+        credsPerSecond * (upgrade.effectValue as number);
       return {
-        followers: state.followers + instantFollowers,
+        creds: state.creds + instantCreds,
       };
     }
     // Other effects are passive and applied during calculation

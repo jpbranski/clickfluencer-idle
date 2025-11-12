@@ -44,7 +44,7 @@ import {
   getFollowersPerSecond,
   getGeneratorCost,
   canAfford,
-  canAffordShards,
+  canAffordAwards,
 } from "@/game/state";
 import {
   getNotorietyGainPerSecond,
@@ -59,6 +59,7 @@ import {
   importSave,
   deleteSave,
 } from "@/lib/storage";
+import { autoMigrate } from "@/lib/storage/migrations";
 import { GAMEPLAY } from "@/app-config";
 import { themes as baseThemes } from "@/data/themes";
 import { uiLogger as logger } from "@/lib/logger";
@@ -132,12 +133,12 @@ interface GameContextValue {
   error: string | null;
 
   clickPower: number;
-  followersPerSecond: number;
+  credsPerSecond: number;
   notorietyPerSecond: number;
   totalUpkeep: number;
-  netFollowersPerSecond: number;
+  netCredsPerSecond: number;
   canPrestige: boolean;
-  reputationGain: number;
+  prestigeGain: number;
   prestigeCost: number;
 
   handleClick: () => void;
@@ -201,7 +202,8 @@ export function GameProvider({ children }: GameProviderProps) {
         let initialState: GameState;
         if (result.success && result.data) {
           logger.debug("Loading saved state");
-          initialState = result.data;
+          // Apply migrations for backward compatibility (v0.2.3: followers→creds, shards→awards, reputation→prestige)
+          initialState = autoMigrate(result.data);
           if (result.restoredFromBackup) {
             logger.warn("Restored from backup due to corrupted save");
           }
@@ -393,13 +395,13 @@ export function GameProvider({ children }: GameProviderProps) {
   // ============================================================================
 
   const clickPower = state ? getClickPower(state) : 0;
-  const followersPerSecond = state ? getFollowersPerSecond(state) : 0;
+  const credsPerSecond = state ? getFollowersPerSecond(state) : 0;
   const notorietyPerSecond = state ? getNotorietyGainPerSecond(state) : 0;
   const totalUpkeep = state ? getNotorietyUpkeep(state) : 0;
-  const netFollowersPerSecond = state ? followersPerSecond - totalUpkeep : 0;
-  const canPrestigeNow = state ? canPrestige(state.followers, state.reputation) : false;
-  const reputationGain = 1; // Always gain 1 prestige point per purchase
-  const prestigeCostValue = state ? prestigeCost(state.reputation) : 0;
+  const netCredsPerSecond = state ? credsPerSecond - totalUpkeep : 0;
+  const canPrestigeNow = state ? canPrestige(state.creds, state.prestige) : false;
+  const prestigeGain = 1; // Always gain 1 prestige point per purchase
+  const prestigeCostValue = state ? prestigeCost(state.prestige) : 0;
 
   // ============================================================================
   // ACTIONS
@@ -527,16 +529,32 @@ export function GameProvider({ children }: GameProviderProps) {
 
   const handleResetGame = useCallback(async () => {
     try {
+      // Stop the game engine to prevent auto-saves during reset
+      if (engineRef.current) {
+        engineRef.current.stop();
+      }
+
+      // Clear auto-save interval
+      if (autoSaveIntervalRef.current) {
+        clearInterval(autoSaveIntervalRef.current);
+        autoSaveIntervalRef.current = null;
+      }
+
       // Delete all save data from IndexedDB and backups
       await deleteSave();
 
-      // Clear localStorage (includes theme preferences, etc.)
+      // Clear all localStorage data (themes, settings, etc.)
       localStorage.clear();
 
-      // Reload to start fresh
-      window.location.reload();
+      // Wait for cleanup to complete before reloading
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      // Force hard reload (bypasses cache completely)
+      window.location.href = window.location.href;
     } catch (err) {
       logger.error("Failed to reset game:", err);
+      // Still attempt reload even if cleanup fails
+      window.location.href = window.location.href;
     }
   }, []);
 
@@ -553,12 +571,12 @@ export function GameProvider({ children }: GameProviderProps) {
     isLoading,
     error,
     clickPower,
-    followersPerSecond,
+    credsPerSecond,
     notorietyPerSecond,
     totalUpkeep,
-    netFollowersPerSecond,
+    netCredsPerSecond,
     canPrestige: canPrestigeNow,
-    reputationGain,
+    prestigeGain,
     prestigeCost: prestigeCostValue,
     handleClick,
     handleBuyGenerator,

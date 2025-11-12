@@ -52,26 +52,26 @@ export default function GuidePage() {
               At its core, Clickfluencer Idle is about momentum. You start small
               with a single post button—the heartbeat of your fledgling brand.
               Each click earns{" "}
-              <strong className="text-foreground">followers</strong>, the
-              primary currency of growth. Spend those followers to unlock
+              <strong className="text-foreground">creds</strong>, the
+              primary currency of growth. Spend those creds to unlock
               automated generators such as{" "}
               <em>Social Media Managers</em>, <em>Video Editors</em>, and
-              <em> Sponsorship Deals</em> that produce followers for you over
+              <em> Sponsorship Deals</em> that produce creds for you over
               time.
             </p>
             <p className="text-muted leading-relaxed mb-4">
               Upgrades amplify your earnings, boost click power, and add
-              multipliers to your production rate. You’ll quickly learn that the
-              idle genre isn’t about doing nothing—it’s about designing
+              multipliers to your production rate. You'll quickly learn that the
+              idle genre isn't about doing nothing—it's about designing
               automation that works smarter than you can. Between active
               clicking bursts and passive income, your numbers climb at an
               exponential pace.
             </p>
             <p className="text-muted leading-relaxed">
-              Once you’ve hit critical mass, you can{" "}
+              Once you've hit critical mass, you can{" "}
               <strong className="text-foreground">Prestige</strong>: a soft
-              reset that converts your total followers into{" "}
-              <strong className="text-foreground">Cred Shards</strong> and{" "}
+              reset that converts your total creds into{" "}
+              <strong className="text-foreground">Prestige Points</strong> and{" "}
               <strong className="text-foreground">Notoriety</strong>. These
               serve as permanent buffs that make each subsequent run faster,
               smoother, and more efficient. The key is learning when to stop a
@@ -178,7 +178,7 @@ export default function GuidePage() {
                 tiers faster.
               </li>
               <li>
-                Save shards for infinite upgrades; they persist across prestiges
+                Save awards for infinite upgrades; they persist across prestiges
                 and yield compounding returns.
               </li>
               <li>
@@ -190,14 +190,14 @@ export default function GuidePage() {
                 only needed before device swaps or major resets.
               </li>
               <li>
-                Behind the scenes, Clickfluencer Idle’s math engine is
+                Behind the scenes, Clickfluencer Idle's math engine is
                 deterministic, meaning your offline earnings are calculated from
                 exact timestamps—no random fudge factor.
               </li>
               <li>
-                The game’s balance values were tuned to make even tiny upgrades
-                feel rewarding. If numbers jump faster than expected, that’s not
-                a bug—it’s intentional dopamine.
+                The game's balance values were tuned to make even tiny upgrades
+                feel rewarding. If numbers jump faster than expected, that's not
+                a bug—it's intentional dopamine.
               </li>
             </ul>
           </div>
@@ -212,10 +212,10 @@ export default function GuidePage() {
               satire, it invites you to laugh at the same systems you’re gaming.
             </p>
             <p className="text-muted leading-relaxed">
-              Whether you’re chasing prestige milestones or designing the
+              Whether you're chasing prestige milestones or designing the
               perfect content workflow, remember: every empire started with a
               single post. Keep clicking, keep experimenting, and enjoy the
-              climb—your followers are waiting.
+              climb—your creds are waiting.
             </p>
           </div>
         </article>

@@ -52,22 +52,22 @@ export function prestigeCost(currentPrestige: number): number {
 /**
  * Check if player can afford prestige (has enough Creds)
  */
-export function canPrestige(followers: number, currentPrestige: number): boolean {
-  return followers >= prestigeCost(currentPrestige);
+export function canPrestige(creds: number, currentPrestige: number): boolean {
+  return creds >= prestigeCost(currentPrestige);
 }
 
 /**
- * Calculate total production bonus from reputation
- * Formula: (1 + reputation * 0.10)
+ * Calculate total production bonus from prestige
+ * Formula: (1 + prestige * 0.10)
  *
  * Examples:
- *   0 Reputation => 1.0x (no bonus)
- *   1 Reputation => 1.1x (+10%)
- *   5 Reputation => 1.5x (+50%)
- *   10 Reputation => 2.0x (+100%)
+ *   0 Prestige => 1.0x (no bonus)
+ *   1 Prestige => 1.1x (+10%)
+ *   5 Prestige => 1.5x (+50%)
+ *   10 Prestige => 2.0x (+100%)
  */
-export function calculateReputationBonus(reputation: number): number {
-  return 1 + reputation * REPUTATION_BONUS_PERCENT;
+export function calculateReputationBonus(prestige: number): number {
+  return 1 + prestige * REPUTATION_BONUS_PERCENT;
 }
 
 // ============================================================================
@@ -76,9 +76,9 @@ export function calculateReputationBonus(reputation: number): number {
 
 export interface PrestigeResult {
   success: boolean;
-  reputationGained: number;
-  totalReputation: number;
-  followersLost: number;
+  prestigeGained: number;
+  totalPrestige: number;
+  credsLost: number;
   message: string;
 }
 
@@ -87,30 +87,30 @@ export interface PrestigeResult {
  * Returns result with stats about the prestige
  */
 export function executePrestige(state: GameState): PrestigeResult {
-  const cost = prestigeCost(state.reputation);
+  const cost = prestigeCost(state.prestige);
 
   // Check if can afford prestige
-  if (!canPrestige(state.followers, state.reputation)) {
+  if (!canPrestige(state.creds, state.prestige)) {
     return {
       success: false,
-      reputationGained: 0,
-      totalReputation: state.reputation,
-      followersLost: 0,
+      prestigeGained: 0,
+      totalPrestige: state.prestige,
+      credsLost: 0,
       message: `Need ${cost.toExponential(2)} Creds to prestige`,
     };
   }
 
-  // Prestige costs Creds and grants 1 reputation point
-  const reputationGained = 1;
-  const followersLost = cost;
-  const totalReputation = state.reputation + reputationGained;
+  // Prestige costs Creds and grants 1 prestige point
+  const prestigeGained = 1;
+  const credsLost = cost;
+  const totalPrestige = state.prestige + prestigeGained;
 
   return {
     success: true,
-    reputationGained,
-    totalReputation,
-    followersLost,
-    message: `Gained ${reputationGained} Prestige Point!`,
+    prestigeGained,
+    totalPrestige,
+    credsLost,
+    message: `Gained ${prestigeGained} Prestige Point!`,
   };
 }
 
@@ -118,7 +118,7 @@ export function executePrestige(state: GameState): PrestigeResult {
  * Reset game state for prestige while preserving certain elements
  *
  * Preserves:
- * - Reputation, shards (prestige currencies)
+ * - Prestige, awards (prestige currencies)
  * - Themes (cosmetic unlocks)
  * - Infinite scaling upgrades (AI Enhancements, Better Filters)
  * - Achievements (cosmetic)
@@ -126,7 +126,7 @@ export function executePrestige(state: GameState): PrestigeResult {
  * - Statistics (lifetime)
  *
  * Resets:
- * - Followers (Creds) and Notoriety → 0
+ * - Creds and Notoriety → 0
  * - Generators → 0 count
  * - Non-infinite upgrades → reset
  * - Notoriety generators → 0
@@ -134,7 +134,7 @@ export function executePrestige(state: GameState): PrestigeResult {
  */
 export function applyPrestige(
   state: GameState,
-  reputationGained: number,
+  prestigeGained: number,
   credCost: number,
 ): GameState {
   const initial = createInitialState();
@@ -174,10 +174,10 @@ export function applyPrestige(
   // Construct clean new state
   const newState: GameState = {
     ...initial,
-    reputation: state.reputation + reputationGained,
-    followers: 0, // 🔥 Fully reset creds
+    prestige: state.prestige + prestigeGained,
+    creds: 0, // 🔥 Fully reset creds
     notoriety: 0, // 🔥 Fully reset notoriety
-    shards: state.shards, // Keep awards
+    awards: state.awards, // Keep awards
     upgrades: preservedUpgrades,
     themes: preservedThemes,
     achievements: preservedAchievements,
@@ -202,11 +202,11 @@ export function applyPrestige(
 
 /**
  * Calculate effective production multiplier after prestige
- * Shows what your production would be with new reputation
+ * Shows what your production would be with new prestige
  */
 export function getPostPrestigeMultiplier(state: GameState): number {
-  const futureReputation = state.reputation + 1;
-  return calculateReputationBonus(futureReputation);
+  const futurePrestige = state.prestige + 1;
+  return calculateReputationBonus(futurePrestige);
 }
 
 /**
@@ -214,14 +214,14 @@ export function getPostPrestigeMultiplier(state: GameState): number {
  * Returns estimated milliseconds, or Infinity if production is too low
  */
 export function estimateTimeToPrestige(
-  currentFollowers: number,
+  currentCreds: number,
   currentPrestige: number,
-  followersPerSecond: number,
+  credsPerSecond: number,
 ): number {
   const cost = prestigeCost(currentPrestige);
-  if (currentFollowers >= cost) return 0;
-  if (followersPerSecond <= 0) return Infinity;
+  if (currentCreds >= cost) return 0;
+  if (credsPerSecond <= 0) return Infinity;
 
-  const needed = cost - currentFollowers;
-  return (needed / followersPerSecond) * 1000; // Convert to milliseconds
+  const needed = cost - currentCreds;
+  return (needed / credsPerSecond) * 1000; // Convert to milliseconds
 }

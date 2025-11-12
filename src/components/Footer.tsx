@@ -18,6 +18,7 @@ export function Footer() {
     { label: "Terms of Service", href: "/terms-of-service" },
     { label: "Report Bug", href: "/report-bug" },
     { label: "Accessibility", href: "/accessibility" },
+    { label: "Save Editor", href: "/save-editor" },
   ];
 
   return (

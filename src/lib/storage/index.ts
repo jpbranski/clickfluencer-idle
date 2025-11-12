@@ -98,7 +98,6 @@ export function autoSaveGame(state: GameState): void {
   autoSaveTimeout = setTimeout(async () => {
     try {
       await saveGame(state);
-      console.log("Auto-saved game state");
     } catch (error) {
       console.error("Auto-save failed:", error);
     }

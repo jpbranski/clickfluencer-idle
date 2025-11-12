@@ -13,20 +13,20 @@ import { getUpgradeCost } from "@/game/actions";
 
 interface CredStoreProps {
   upgrades: any[];
-  followers: number;
+  creds: number;
   canPrestige: boolean;
-  reputationGain: number;
-  reputation: number;
+  prestigeGain: number;
+  prestige: number;
   onBuyUpgrade: (id: string) => void;
   onPrestige: () => void;
 }
 
 export function CredStore({
   upgrades,
-  followers,
+  creds,
   canPrestige,
-  reputationGain,
-  reputation,
+  prestigeGain,
+  prestige,
   onBuyUpgrade,
   onPrestige,
 }: CredStoreProps) {
@@ -48,13 +48,13 @@ export function CredStore({
               <div className="text-sm mt-1">
                 Reset your progress to gain{" "}
                 <span className="font-bold">
-                  {reputationGain} Reputation
+                  {prestigeGain} Prestige
                 </span>
               </div>
               <div className="text-xs opacity-90 mt-1">
                 New bonus: ×
                 {(
-                  (1 + (reputation + reputationGain) * 0.1) *
+                  (1 + (prestige + prestigeGain) * 0.1) *
                   100
                 ).toFixed(0)}
                 % production
@@ -94,7 +94,7 @@ export function CredStore({
                 key={upgrade.id}
                 upgrade={upgrade}
                 currentCost={upgradeCost}
-                canAfford={canAfford(followers, upgradeCost)}
+                canAfford={canAfford(creds, upgradeCost)}
                 onPurchase={() => onBuyUpgrade(upgrade.id)}
               />
             );
