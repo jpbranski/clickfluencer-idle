@@ -58,14 +58,14 @@ export interface Upgrade {
 
 export interface UpgradeEffect {
   type:
-    | "clickMultiplier"
-    | "clickAdditive"
-    | "generatorMultiplier"
-    | "globalMultiplier"
-    | "special"
-    | "awardDropRate"
-    | "offlineEfficiency"
-    | "credCacheRate";
+  | "clickMultiplier"
+  | "clickAdditive"
+  | "generatorMultiplier"
+  | "globalMultiplier"
+  | "special"
+  | "awardDropRate"
+  | "offlineEfficiency"
+  | "credCacheRate";
   value: number;
   targetGeneratorId?: string;
 }
@@ -474,7 +474,7 @@ export function createInitialState(): GameState {
       ...t,
       unlocked: t.id === "dark" || t.id === "light", // whatever defaults you want
       active: t.id === "dark", // default active
-   })),
+    })),
     achievements: INITIAL_ACHIEVEMENTS.map((a) => ({ ...a })),
   };
 }
@@ -528,27 +528,33 @@ export function getClickPower(state: GameState): number {
 
   // Apply click multiplier upgrades
   state.upgrades
-    .filter((u) => u.purchased && u.effect.type === "clickMultiplier")
+    .filter((u) => u.effect.type === "clickMultiplier")
     .forEach((u) => {
-      // Handle infinite upgrades like Better Filters
-      if (u.currentLevel !== undefined && u.currentLevel > 0) {
-        // Apply effect raised to the power of level (e.g., 1.01^5 for level 5)
-        power *= Math.pow(u.effect.value, u.currentLevel);
-      } else {
-        // Regular one-time multiplier
+      const level = u.currentLevel ?? 0;
+
+      if (level > 0) {
+        // Infinite upgrade (e.g., Better Filters)
+        power *= Math.pow(u.effect.value, level);
+      } else if (u.purchased) {
+        // One-time click multiplier
         power *= u.effect.value;
       }
     });
 
+
   // Apply AI Enhancements (global multiplier that applies to click power)
   state.upgrades
-    .filter((u) => u.purchased && u.effect.type === "globalMultiplier" && u.id === "ai_enhancements")
+    .filter(
+      (u) =>
+        u.effect.type === "globalMultiplier" && u.id === "ai_enhancements"
+    )
     .forEach((u) => {
-      if (u.currentLevel !== undefined && u.currentLevel > 0) {
-        // Apply 5% per level: (base + additive) * 1.05^level
-        power *= Math.pow(u.effect.value, u.currentLevel);
+      const level = u.currentLevel ?? 0;
+      if (level > 0) {
+        power *= Math.pow(u.effect.value, level);
       }
     });
+
 
   // Apply prestige bonus (+10% per prestige point)
   power *= 1 + state.prestige * 0.1;
@@ -723,7 +729,7 @@ export function getCredCacheRate(state: GameState): number {
   }
 
   // Tier-based drop rates: 1/1000, 1/900, 1/800, 1/700, 1/600, 1/500
-  const rateByTier = [0, 1/1000, 1/900, 1/800, 1/700, 1/600, 1/500];
+  const rateByTier = [0, 1 / 1000, 1 / 900, 1 / 800, 1 / 700, 1 / 600, 1 / 500];
   const tier = credCache.tier;
   return rateByTier[tier] || 0;
 }
