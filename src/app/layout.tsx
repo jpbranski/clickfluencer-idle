@@ -54,7 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     'touch-grass': '#95d5b2',
                     terminal: '#272822',
                     'cherry-blossom': '#ffd6de',
-                    'themevv': '#ff2b2b'
+                    'themevv': '#ff2b2b',
                     nightshade: '#311b3a',
                     'el-blue': '#0a192f',
                     gold: '#d4af37'
