@@ -1,8 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { useGame } from "@/hooks/useGame";
 import { formatNumber } from "@/game/format";
+
+const MAX_FLOATING_NUMBERS = 20; // Limit floating numbers to prevent memory issues
+const THROTTLE_MS = 50;
 
 export default function PostButton() {
   const { handleClick, clickPower, isLoading, state } = useGame();
@@ -16,7 +19,6 @@ export default function PostButton() {
   const lastClickTime = useRef<number>(0);
   const clickIdCounter = useRef<number>(0);
 
-  const THROTTLE_MS = 50;
   const disabled = isLoading || !state;
 
   const actualYield = Math.floor(clickPower);
@@ -41,7 +43,14 @@ export default function PostButton() {
       x: clickX,
       y: clickY,
     };
-    setFloatingNumbers((prev) => [...prev, newFloating]);
+
+    // Limit floating numbers to prevent memory issues during rapid clicking
+    setFloatingNumbers((prev) => {
+      const updated = [...prev, newFloating];
+      // Keep only the most recent MAX_FLOATING_NUMBERS
+      return updated.slice(-MAX_FLOATING_NUMBERS);
+    });
+
     setTimeout(
       () =>
         setFloatingNumbers((prev) =>
@@ -55,14 +64,15 @@ export default function PostButton() {
 
   // ──────────────────────────────────────────
   // 🔍 BREAKDOWN LOGIC (read-only, UI only)
+  // Memoized to prevent recalculation on every render
   // ──────────────────────────────────────────
-  function getBreakdown() {
+  const breakdown = useMemo(() => {
     if (!state) return null;
 
-    const breakdown: Array<{ label: string; value: string }> = [];
+    const breakdownItems: Array<{ label: string; value: string }> = [];
 
     // Base click power is always 1
-    breakdown.push({
+    breakdownItems.push({
       label: "Base",
       value: "1",
     });
@@ -72,7 +82,7 @@ export default function PostButton() {
     if (camera && camera.tier) {
       const tierBonuses = [0, 1, 2, 3, 5, 8, 15, 25];
       const add = tierBonuses[camera.tier] ?? 0;
-      breakdown.push({
+      breakdownItems.push({
         label: `Better Camera (Tier ${camera.tier})`,
         value: `+${add}`,
       });
@@ -84,7 +94,7 @@ export default function PostButton() {
         (u) => u.purchased && u.effect.type === "clickAdditive" && u.id !== "better_camera",
       )
       .forEach((u) => {
-        breakdown.push({
+        breakdownItems.push({
           label: `${u.name} (Additive)`,
           value: `+${u.effect.value}`,
         });
@@ -93,7 +103,7 @@ export default function PostButton() {
     // Theme additive
     const activeTheme = state.themes.find((t) => t.active);
     if (activeTheme?.bonusClickPower) {
-      breakdown.push({
+      breakdownItems.push({
         label: `Theme Bonus (${activeTheme.name})`,
         value: `+${activeTheme.bonusClickPower}`,
       });
@@ -102,7 +112,7 @@ export default function PostButton() {
     // Better Filters (Infinite click multiplier)
     const filters = state.upgrades.find((u) => u.id === "better_filters");
     if (filters?.currentLevel && filters.currentLevel > 0) {
-      breakdown.push({
+      breakdownItems.push({
         label: `Better Filters (Lv ${filters.currentLevel})`,
         value: `×${filters.effect.value}^${filters.currentLevel}`,
       });
@@ -111,7 +121,7 @@ export default function PostButton() {
     // AI Enhancements (Global multiplier)
     const ai = state.upgrades.find((u) => u.id === "ai_enhancements");
     if (ai?.currentLevel && ai.currentLevel > 0) {
-      breakdown.push({
+      breakdownItems.push({
         label: `AI Enhancements (Lv ${ai.currentLevel})`,
         value: `×${ai.effect.value}^${ai.currentLevel}`,
       });
@@ -119,7 +129,7 @@ export default function PostButton() {
 
     // Prestige
     if (state.prestige > 0) {
-      breakdown.push({
+      breakdownItems.push({
         label: `Prestige Bonus`,
         value: `×${1 + state.prestige * 0.1}`,
       });
@@ -127,16 +137,14 @@ export default function PostButton() {
 
     // Theme multiplier
     if (activeTheme) {
-      breakdown.push({
+      breakdownItems.push({
         label: `Theme Multiplier (${activeTheme.name})`,
         value: `×${activeTheme.bonusMultiplier}`,
       });
     }
 
-    return breakdown;
-  }
-
-  const breakdown = getBreakdown();
+    return breakdownItems;
+  }, [state?.upgrades, state?.prestige, state?.themes]);
 
   return (
     <div className="relative flex flex-col items-center justify-center">

@@ -485,7 +485,17 @@ export function createInitialState(): GameState {
 
 /**
  * Calculate the current cost of purchasing a generator
- * Uses exponential scaling: baseCost * (costMultiplier ^ count)
+ *
+ * Uses exponential scaling formula: `baseCost * (costMultiplier ^ count)`
+ *
+ * @param generator - The generator to calculate cost for
+ * @returns The cost in creds for the next purchase of this generator
+ *
+ * @example
+ * ```ts
+ * const photoPost = { baseCost: 10, costMultiplier: 1.15, count: 5 };
+ * getGeneratorCost(photoPost); // Returns: 20 (10 * 1.15^5)
+ * ```
  */
 export function getGeneratorCost(generator: Generator): number {
   return Math.floor(
@@ -495,7 +505,26 @@ export function getGeneratorCost(generator: Generator): number {
 
 /**
  * Calculate click power (followers per click)
- * Factors in: base click (1) + additive upgrades + multipliers + AI enhancements + reputation + theme bonuses
+ *
+ * **Calculation Order:**
+ * 1. Base power starts at 1
+ * 2. Add tier-based bonuses (Better Camera: +1 to +25 depending on tier)
+ * 3. Add other additive click upgrades
+ * 4. Add active theme click power bonus (if any)
+ * 5. Apply click multipliers (Better Filters: 1.01^level)
+ * 6. Apply global multipliers that affect clicks (AI Enhancements: 1.05^level)
+ * 7. Apply prestige bonus (1 + prestige * 0.1)
+ * 8. Apply active theme multiplier
+ *
+ * @param state - The current game state
+ * @returns The total click power (creds gained per click)
+ *
+ * @example
+ * ```ts
+ * // With base=1, Better Camera tier 3 (+3), prestige 2 (+20%), theme 1.5x
+ * // Result: (1 + 3) * 1.2 * 1.5 = 7.2 creds per click
+ * const power = getClickPower(state);
+ * ```
  */
 export function getClickPower(state: GameState): number {
   let basePower = 1;
@@ -568,8 +597,29 @@ export function getClickPower(state: GameState): number {
 }
 
 /**
- * Calculate total followers per second from all generators
- * Factors in: base generator output + upgrades + events + reputation + themes + notoriety bonuses
+ * Calculate total creds per second from all generators
+ *
+ * **Calculation Order:**
+ * 1. For each generator: baseOutput * count
+ * 2. Apply generator-specific multipliers (e.g., Photo Post 2x upgrade)
+ * 3. Sum all generator outputs
+ * 4. Apply global multipliers (Viral Strategy: 1.5x, etc.)
+ * 5. Apply prestige bonus (+10% per prestige point)
+ * 6. Apply active theme multiplier
+ * 7. Apply active event multipliers (Viral Post: 3x, etc.)
+ * 8. Apply notoriety cred boost (+1% per notoriety upgrade level)
+ *
+ * @param state - The current game state
+ * @returns The total creds gained per second from passive generation
+ *
+ * @example
+ * ```ts
+ * // With 10 Photo Posts (0.1/s each) and Viral Strategy (1.5x)
+ * // Result: (10 * 0.1) * 1.5 = 1.5 creds/second
+ * const production = getFollowersPerSecond(state);
+ * ```
+ *
+ * @see {@link getClickPower} for click-based income calculation
  */
 export function getFollowersPerSecond(state: GameState): number {
   let total = 0;

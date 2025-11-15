@@ -114,6 +114,21 @@
     }
   }
 
+  .animate-float-up {
+    animation: float-up 1s ease-out forwards;
+    will-change: transform, opacity;
+  }
+  @keyframes float-up {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-60px);
+      opacity: 0;
+    }
+  }
+
   .animate-scale-in {
     animation: scale-in 0.2s ease-out;
   }
@@ -125,6 +140,25 @@
     100% {
       transform: scale(1);
       opacity: 1;
+    }
+  }
+
+  /* Accessibility: Respect prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float,
+    .animate-float-up,
+    .animate-scale-in,
+    .animate-pulse,
+    .animate-bounce,
+    .animate-bounce-slow,
+    .animate-ping,
+    .animate-pulse-slow {
+      animation: none !important;
+      transition: none !important;
+    }
+
+    .marquee__inner {
+      animation: none !important;
     }
   }
 
@@ -231,6 +265,7 @@
     background-color: var(--card);
     border: 1px solid var(--border);
     border-radius: 0.75rem; /* rounded-xl */
+    contain: layout style paint; /* Performance optimization */
   }
 
   /* Buttons */

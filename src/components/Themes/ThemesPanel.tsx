@@ -7,10 +7,10 @@
  */
 
 import { ThemeCard } from "@/components/ThemeCard";
-import { canAffordAwards } from "@/game/state";
+import { canAffordAwards, Theme } from "@/game/state";
 
 interface ThemesPanelProps {
-  themes: any[];
+  themes: Theme[];
   awards: number;
   activeThemeId: string;
   onPurchaseTheme: (id: string) => void;
