@@ -73,77 +73,146 @@ export default function HomePage() {
         <Link rel="canonical" href="https://www.clickfluenceridle.com/" />
       </Head>
 
-      {/* Splash Screen */}
-      <section className="relative flex flex-col items-center justify-center text-center min-h-[90vh] px-6 overflow-hidden">
+      {/* Hero Section - Premium Landing */}
+      <section className="relative flex flex-col items-center justify-center text-center min-h-screen px-6 overflow-hidden">
+        {/* Animated Background Mesh Gradient */}
+        <div className="absolute inset-0 bg-gradient-mesh opacity-60" />
         <motion.div
-          className="absolute inset-0 bg-gradient-to-br from-accent/10 via-surface/20 to-transparent blur-3xl"
-          animate={{ opacity: [0.4, 0.7, 0.4] }}
-          transition={{ duration: 8, repeat: Infinity }}
+          className="absolute inset-0"
+          style={{
+            background: "radial-gradient(circle at 50% 50%, rgb(from var(--accent) r g b / 0.15), transparent 70%)",
+          }}
+          animate={{
+            scale: [1, 1.1, 1],
+            opacity: [0.3, 0.5, 0.3]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
-        <div className="relative z-10 max-w-3xl">
-          <h1 className="text-5xl sm:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-pink-500 to-blue-500 bg-clip-text text-transparent">
+
+        {/* Main Content */}
+        <div className="relative z-10 max-w-4xl">
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mb-6"
+          >
+            <span
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold shadow-premium"
+              style={{
+                backgroundColor: "rgb(from var(--accent) r g b / 0.1)",
+                color: "var(--accent)",
+                border: "1px solid rgb(from var(--accent) r g b / 0.2)",
+              }}
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ backgroundColor: "var(--accent)" }} />
+                <span className="relative inline-flex rounded-full h-2 w-2" style={{ backgroundColor: "var(--accent)" }} />
+              </span>
+              Free to Play • No Ads • Privacy First
+            </span>
+          </motion.div>
+
+          {/* Title */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-display-1 sm:text-display-2 mb-6"
+            style={{
+              background: "linear-gradient(135deg, var(--foreground) 0%, var(--accent) 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
             Clickfluencer Idle
-          </h1>
+          </motion.h1>
 
-          <p className="text-lg text-muted mb-8 leading-relaxed">
-            Build your influence, balance your strategy, and master the algorithmic grind.{" "}
-            <strong className="text-foreground">Clickfluencer Idle</strong> is a cozy-chaotic
-            idle experiment about progress, patience, and creativity in a world that never
-            stops refreshing. You’ll click, automate, and optimize your way through the ups
-            and downs of internet fame—<strong className="text-foreground">
-              balancing the four distinct currencies
-            </strong>{" "}
-            that determine your strategic future. Every prestige choice tells its own story of
-            growth, success, and self-discovery.
-          </p>
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-body-lg text-muted mb-10 leading-relaxed max-w-2xl mx-auto"
+          >
+            Build your influence, balance your strategy, and master the algorithmic grind.
+            A <span className="text-foreground font-semibold">cozy-chaotic idle game</span> about
+            progress, patience, and creativity in a world that never stops refreshing.
+          </motion.p>
 
-          <div className="flex justify-center gap-4 flex-wrap mb-4">
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="flex justify-center gap-4 flex-wrap mb-8"
+          >
+            <button
+              onClick={scrollToGame}
+              className="btn-primary group"
+            >
+              <span className="mr-2">Start Playing</span>
+              <motion.span
+                animate={{ x: [0, 4, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
+                →
+              </motion.span>
+            </button>
             <Link
               href="/guide"
-              className="px-6 py-3 rounded-lg bg-accent text-background font-semibold hover:opacity-90 transition"
+              className="btn-secondary"
             >
               Read the Guide
             </Link>
-            <Link
-              href="/news"
-              className="px-6 py-3 rounded-lg border border-accent text-accent font-semibold hover:bg-accent/10 transition"
-            >
-              Latest Updates
-            </Link>
-          </div>
+          </motion.div>
 
           {/* Trust Links */}
-          <div className="flex justify-center gap-3 text-xs text-muted">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="flex justify-center gap-3 text-xs text-muted"
+          >
             <Link href="/privacy-policy" className="hover:text-accent transition">
-              Privacy Policy
+              Privacy
             </Link>
-            <span>⋅</span>
+            <span>•</span>
             <Link href="/terms-of-service" className="hover:text-accent transition">
-              Terms of Service
+              Terms
             </Link>
-          </div>
+            <span>•</span>
+            <Link href="/news" className="hover:text-accent transition">
+              Updates
+            </Link>
+          </motion.div>
         </div>
 
-        {/* Scroll to Game Button */}
+        {/* Scroll Indicator */}
         <motion.button
           onClick={scrollToGame}
-          className="absolute bottom-8 flex flex-col items-center text-sm text-muted hover:text-accent transition"
+          className="absolute bottom-12 flex flex-col items-center text-sm text-muted hover:text-accent transition cursor-pointer group"
           initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: [0, 1, 0.8, 1] }}
-          transition={{ delay: 1, duration: 3, repeat: Infinity }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1 }}
         >
-          <span>Scroll to Game</span>
-          <motion.svg
-            className="mt-2 w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            animate={{ y: [0, 6, 0], opacity: [0.6, 1, 0.6] }}
-            transition={{ duration: 1.8, repeat: Infinity }}
+          <span className="mb-2 font-medium">Play Now</span>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-          </motion.svg>
+            <svg
+              className="w-6 h-6 group-hover:scale-110 transition-transform"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </motion.div>
         </motion.button>
       </section>
 

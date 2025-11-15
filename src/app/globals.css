@@ -258,19 +258,61 @@
   .ring-accent { --tw-ring-color: var(--accent); }
   .shadow-accent { box-shadow: 0 0 12px var(--accent); }
 
-  /* === Common component patterns === */
+  /* Typography utilities are defined in tailwind.config.ts */
+  /* Use them directly via className (e.g., className="text-heading-1") */
 
-  /* Card base (final semantic version) */
+  /* === Premium Component Patterns === */
+
+  /* Card system with elevation levels */
   .card {
     background-color: var(--card);
     border: 1px solid var(--border);
-    border-radius: 0.75rem; /* rounded-xl */
-    contain: layout style paint; /* Performance optimization */
+    border-radius: 0.75rem;
+    contain: layout style paint;
+    transition: all 0.2s ease-out;
   }
 
-  /* Buttons */
+  .card-premium {
+    @apply card shadow-game-card;
+  }
+
+  .card-premium:hover {
+    @apply shadow-game-card-hover;
+    border-color: rgb(from var(--accent) r g b / 0.3);
+  }
+
+  .card-interactive {
+    @apply card-premium cursor-pointer;
+  }
+
+  .card-interactive:active {
+    transform: scale(0.98);
+  }
+
+  /* Enhanced button system */
   .btn {
-    @apply inline-flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition;
+    @apply inline-flex items-center justify-center px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-150;
+    contain: layout style paint;
+  }
+
+  .btn-primary {
+    @apply btn shadow-premium;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    @apply shadow-premium-lg;
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:active:not(:disabled) {
+    transform: translateY(0) scale(0.98);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 
   .btn-accent {
@@ -279,15 +321,27 @@
     color: var(--accent-foreground);
   }
 
-  .btn-muted {
-    @apply btn hover:opacity-90;
-    background-color: var(--background);
-    color: var(--muted);
+  .btn-secondary {
+    @apply btn border-2;
+    background-color: transparent;
+    color: var(--accent);
+    border-color: var(--accent);
   }
 
-  /* Badges */
+  .btn-secondary:hover:not(:disabled) {
+    background-color: rgb(from var(--accent) r g b / 0.1);
+  }
+
+  .btn-muted {
+    @apply btn hover:opacity-90;
+    background-color: var(--surface);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  /* Badge system */
   .badge {
-    @apply text-xs px-2 py-1 rounded-full;
+    @apply text-xs px-2.5 py-1 rounded-full font-medium;
   }
 
   .badge-accent {
@@ -298,12 +352,42 @@
 
   .badge-muted {
     @apply badge;
-    background-color: var(--border);
-    color: var(--foreground);
-    opacity: 0.7;
+    background-color: var(--surface);
+    color: var(--muted);
+    border: 1px solid var(--border);
   }
 
-  /* Optional text transparency helpers */
+  .badge-success {
+    @apply badge;
+    background-color: var(--success);
+    color: var(--accent-foreground);
+  }
+
+  /* Gradient backgrounds for hero sections */
+  .bg-gradient-radial {
+    background: radial-gradient(circle at 50% 50%, rgb(from var(--accent) r g b / 0.15), transparent 70%);
+  }
+
+  .bg-gradient-mesh {
+    background:
+      radial-gradient(at 27% 37%, rgb(from var(--accent) r g b / 0.1) 0px, transparent 50%),
+      radial-gradient(at 97% 21%, rgb(from var(--accent) r g b / 0.08) 0px, transparent 50%),
+      radial-gradient(at 52% 99%, rgb(from var(--accent) r g b / 0.06) 0px, transparent 50%),
+      radial-gradient(at 10% 29%, rgb(from var(--accent) r g b / 0.07) 0px, transparent 50%);
+  }
+
+  /* Shimmer effect for premium elements */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgb(from var(--accent) r g b / 0.1) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+  }
+
+  /* Text utilities */
   .text-foreground-dimmed {
     color: var(--foreground);
     opacity: 0.7;
@@ -312,6 +396,17 @@
   .text-muted-strong {
     color: var(--muted);
     opacity: 0.9;
+  }
+
+  /* Stat display pattern for numbers */
+  .stat-value {
+    @apply number-display text-2xl font-bold;
+    color: var(--accent);
+  }
+
+  .stat-label {
+    @apply text-xs uppercase tracking-wide;
+    color: var(--muted);
   }
 }
 

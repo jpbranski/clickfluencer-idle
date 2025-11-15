@@ -21,30 +21,44 @@ export default function AboutPage() {
       </nav>
 
       {/* Hero */}
-      <section className="relative py-20 text-center overflow-hidden">
+      <section className="relative py-24 text-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-mesh opacity-50" />
         <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-blue-500/10 blur-3xl"
-          animate={{ opacity: [0.4, 0.7, 0.4] }}
+          className="absolute inset-0"
+          style={{
+            background: "radial-gradient(circle at 50% 50%, rgb(from var(--accent) r g b / 0.1), transparent 70%)",
+          }}
+          animate={{ opacity: [0.3, 0.5, 0.3] }}
           transition={{ duration: 8, repeat: Infinity }}
         />
         <div className="relative z-10 px-6">
-          <h1 className="text-4xl sm:text-6xl font-bold mb-4 bg-gradient-to-r from-purple-600 via-pink-500 to-blue-500 bg-clip-text text-transparent">
+          <h1
+            className="text-heading-1 sm:text-display-2 mb-6"
+            style={{
+              background: "linear-gradient(135deg, var(--foreground) 0%, var(--accent) 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
             About Clickfluencer Idle
           </h1>
-          <p className="max-w-2xl mx-auto text-lg text-muted">
+          <p className="max-w-2xl mx-auto text-body-lg text-muted">
             A cozy-chaotic idle game experiment by{" "}
-            <span className="font-semibold text-accent">JP the Pirate</span>—blending humor, systems design, and creator culture into something intentionally simple, unexpectedly deep, and pleasantly addictive.
+            <span className="font-semibold text-foreground">JP the Pirate</span>—blending humor, systems design, and creator culture into something intentionally simple, unexpectedly deep, and pleasantly addictive.
           </p>
         </div>
       </section>
 
       {/* Mission */}
-      <section className="relative z-10 px-6 py-16">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-semibold mb-4">The Mission</h2>
-          <p className="text-lg text-muted leading-relaxed">
-            Clickfluencer Idle isn’t just about watching numbers rise—it’s about exploring how we define progress in digital spaces. The game is a small, focused sandbox where attention, pacing, and incentives intersect. It’s satire without cynicism: a playful lens on the creator grind that rewards curiosity, iteration, and the quiet satisfaction of building a system that hums along even when you step away. The goal is to make something approachable for non-gamers and still interesting for players who enjoy optimizing loops and testing strategies.
-          </p>
+      <section className="relative z-10 px-6 py-20">
+        <div className="max-w-4xl mx-auto">
+          <div className="card-premium p-8 sm:p-12 text-center">
+            <h2 className="text-heading-2 mb-6 text-foreground">The Mission</h2>
+            <p className="text-body-lg text-muted leading-relaxed">
+              Clickfluencer Idle isn't just about watching numbers rise—it's about exploring how we define progress in digital spaces. The game is a small, focused sandbox where attention, pacing, and incentives intersect. It's satire without cynicism: a playful lens on the creator grind that rewards curiosity, iteration, and the quiet satisfaction of building a system that hums along even when you step away. The goal is to make something approachable for non-gamers and still interesting for players who enjoy optimizing loops and testing strategies.
+            </p>
+          </div>
         </div>
       </section>
 
