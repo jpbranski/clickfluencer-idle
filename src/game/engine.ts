@@ -131,9 +131,25 @@ export class GameEngine {
 
   /**
    * Start the game engine
-   * - Begins tick loop
-   * - Starts event checking
-   * - Calculates offline progress if applicable
+   *
+   * Initializes the main game loop and begins processing. This method:
+   * 1. Calculates offline progress if the player was away
+   * 2. Starts the main tick loop (250ms interval = 4 ticks per second)
+   * 3. Starts the event checking loop (30s interval)
+   * 4. Emits an 'engine:started' event
+   *
+   * **Safe to call multiple times** - will not create duplicate intervals if already running.
+   *
+   * @emits engine:started - When the engine successfully starts
+   *
+   * @example
+   * ```ts
+   * const engine = createGameEngine(initialState);
+   * engine.start(); // Begins game loop
+   * ```
+   *
+   * @see {@link stop} to halt the game loop
+   * @see {@link pause} to temporarily pause ticking
    */
   public start(): void {
     if (this.isRunning) return;
@@ -219,9 +235,20 @@ export class GameEngine {
 
   /**
    * Process a single game tick
-   * - Calculates delta time since last tick
-   * - Updates game state via tick action
-   * - Notifies subscribers
+   *
+   * This is the heart of the game loop, called every 250ms (4 times per second).
+   *
+   * **Process:**
+   * 1. Calculate delta time since last tick (usually ~250ms, but can vary)
+   * 2. Call the `tick()` action to update game state (applies production, checks events, etc.)
+   * 3. Update play time statistics
+   * 4. Notify all subscribers of the state change
+   *
+   * Delta time ensures accurate production even if the interval is slightly off.
+   * For example, if 260ms actually elapsed, production is calculated for 260ms, not 250ms.
+   *
+   * @private
+   * @see {@link tick} in actions.ts for the tick logic implementation
    */
   private processTick(): void {
     const now = Date.now();
@@ -250,10 +277,33 @@ export class GameEngine {
 
   /**
    * Calculate and apply offline progress
-   * - Caps at 72 hours
-   * - Applies 50% base efficiency (increased by Overnight Success upgrade)
-   * - Applies prestige bonus to production
-   * - Shows notification with results
+   *
+   * When the player returns after being away, this calculates how many creds
+   * they earned while offline and applies them to the game state.
+   *
+   * **Rules:**
+   * - Minimum 1 minute away required (prevents abuse from refreshing)
+   * - Maximum 72 hours of progress (caps at 3 days)
+   * - Base efficiency is 50% (can be increased with Overnight Success upgrade)
+   * - Prestige bonuses apply to offline production
+   * - Notoriety upkeep does NOT drain while offline (player-friendly)
+   *
+   * **Calculation:**
+   * ```
+   * credsGained = credsPerSecond * secondsElapsed * offlineEfficiency
+   * ```
+   *
+   * @returns An object describing the offline progress (time away, creds gained, was capped)
+   * @emits offline:progress - If any creds were gained (triggers UI notification)
+   *
+   * @example
+   * ```ts
+   * // Player away for 5 hours with 100 creds/sec and 50% efficiency
+   * // Result: 100 * (5 * 3600) * 0.5 = 900,000 creds
+   * ```
+   *
+   * @private
+   * @see {@link getOfflineEfficiency} for upgrade-based efficiency calculation
    */
   private calculateOfflineProgress(): OfflineProgress {
     const now = Date.now();

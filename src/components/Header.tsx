@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import newsItems from "@/data/news.json"; // import your news data
+import newsItems from "@/data/news.json";
+import type { NewsItem } from "@/types";
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -146,7 +147,7 @@ export function Header() {
 }
 
 /* Helper Component for the marquee */
-function MarqueeItem({ item }: { item: any }) {
+function MarqueeItem({ item }: { item: NewsItem }) {
   return item.link ? (
     <Link href={item.link} className="mx-8 hover:text-accent transition-colors">
       {item.text}

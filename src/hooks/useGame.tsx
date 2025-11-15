@@ -23,10 +23,11 @@ import {
   useState,
   useCallback,
   useRef,
+  useMemo,
   ReactNode,
 } from "react";
 import { GameEngine, createGameEngine, OfflineProgress } from "@/game/engine";
-import { GameState } from "@/game/state";
+import { GameState, Upgrade } from "@/game/state";
 import {
   clickPost,
   buyGenerator,
@@ -63,6 +64,7 @@ import { autoMigrate } from "@/lib/storage/migrations";
 import { GAMEPLAY } from "@/app-config";
 import { themes as baseThemes } from "@/data/themes";
 import { uiLogger as logger } from "@/lib/logger";
+import { INITIAL_UPGRADES } from "@/game/state";
 
 // ============================================================================
 // UTILITIES
@@ -84,16 +86,15 @@ function mergeThemes<T extends { id: string }>(savedThemes?: T[]): T[] {
 
 // Merge saved upgrade data with base upgrade definitions.
 // Ensures new upgrades appear even if not in the player's save file.
-function mergeUpgrades<T extends { id: string }>(savedUpgrades?: T[]): T[] {
-  const { INITIAL_UPGRADES } = require("@/game/state");
+function mergeUpgrades<T extends { id: string }>(savedUpgrades?: T[]): Upgrade[] {
   const savedMap = new Map(savedUpgrades?.map((u) => [u.id, u]) || []);
 
-  return INITIAL_UPGRADES.map((base: T) => {
+  return INITIAL_UPGRADES.map((base) => {
     const saved = savedMap.get(base.id);
     return {
       ...base,
       ...saved,
-    } as T;
+    };
   });
 }
 
@@ -264,20 +265,13 @@ export function GameProvider({ children }: GameProviderProps) {
         engine.start();
         setIsLoading(false);
 
-        // Setup auto-save
+        // Setup auto-save (interval-based only to avoid excessive I/O)
         if (GAMEPLAY.autoSaveEnabled) {
           autoSaveIntervalRef.current = setInterval(() => {
             const currentState = engine.getState();
             autoSaveGame(currentState);
           }, GAMEPLAY.autoSaveInterval);
         }
-
-        // Also save immediately on state changes (debounced)
-        const saveOnChange = () => {
-          const currentState = engine.getState();
-          autoSaveGame(currentState);
-        };
-        engine.subscribe(saveOnChange);
 
         // Store cleanup function
         cleanup = () => {
@@ -391,17 +385,46 @@ export function GameProvider({ children }: GameProviderProps) {
   );
 
   // ============================================================================
-  // COMPUTED VALUES
+  // COMPUTED VALUES (Memoized to prevent recalculation on every render)
   // ============================================================================
 
-  const clickPower = state ? getClickPower(state) : 0;
-  const credsPerSecond = state ? getFollowersPerSecond(state) : 0;
-  const notorietyPerSecond = state ? getNotorietyGainPerSecond(state) : 0;
-  const totalUpkeep = state ? getNotorietyUpkeep(state) : 0;
-  const netCredsPerSecond = state ? credsPerSecond - totalUpkeep : 0;
-  const canPrestigeNow = state ? canPrestige(state.creds, state.prestige) : false;
+  const clickPower = useMemo(() =>
+    state ? getClickPower(state) : 0,
+    [state?.upgrades, state?.prestige, state?.themes, state?.activeEvents]
+  );
+
+  const credsPerSecond = useMemo(() =>
+    state ? getFollowersPerSecond(state) : 0,
+    [state?.generators, state?.upgrades, state?.prestige, state?.themes, state?.activeEvents, state?.notorietyUpgrades]
+  );
+
+  const notorietyPerSecond = useMemo(() =>
+    state ? getNotorietyGainPerSecond(state) : 0,
+    [state?.notorietyGenerators, state?.notorietyUpgrades]
+  );
+
+  const totalUpkeep = useMemo(() =>
+    state ? getNotorietyUpkeep(state) : 0,
+    [state?.notorietyGenerators]
+  );
+
+  const netCredsPerSecond = useMemo(() =>
+    state ? credsPerSecond - totalUpkeep : 0,
+    [credsPerSecond, totalUpkeep]
+  );
+
+  const canPrestigeNow = useMemo(() =>
+    state ? canPrestige(state.creds, state.prestige) : false,
+    [state?.creds, state?.prestige]
+  );
+
   const prestigeGain = 1; // Always gain 1 prestige point per purchase
-  const prestigeCostValue = state ? prestigeCost(state.prestige) : 0;
+
+  const prestigeCostValue = useMemo(() =>
+    state ? prestigeCost(state.prestige) : 0,
+    [state?.prestige]
+  );
+
 
   // ============================================================================
   // ACTIONS

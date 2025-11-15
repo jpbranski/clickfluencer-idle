@@ -11,10 +11,11 @@
 import { useState } from "react";
 import { CredStore } from "./CredStore";
 import { NotorietyStore } from "./NotorietyStore";
+import { Upgrade, GameState } from "@/game/state";
 
 interface UpgradesPanelProps {
   // Cred Store props
-  upgrades: any[];
+  upgrades: Upgrade[];
   creds: number;
   canPrestige: boolean;
   prestigeGain: number;
@@ -24,7 +25,7 @@ interface UpgradesPanelProps {
 
   // Notoriety Store props
   notoriety: number;
-  state: any;
+  state: GameState;
   onBuyNotorietyUpgrade: (id: string) => void;
 }
 
