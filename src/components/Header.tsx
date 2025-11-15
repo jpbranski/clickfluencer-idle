@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import newsItems from "@/data/news.json"; // ✅ import your news data
+import newsItems from "@/data/news.json"; // import your news data
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -77,24 +77,17 @@ export function Header() {
         </button>
       </div>
 
-      {/* 📰 Marquee News Bar */}
-      <div className="overflow-hidden bg-card border-t border-border text-xs md:text-sm text-muted group">
-        <div className="whitespace-nowrap animate-marquee group-hover:[animation-play-state:paused] py-2">
-          {newsItems.map((item, index) =>
-            item.link ? (
-              <Link
-                key={index}
-                href={item.link}
-                className="mx-8 hover:text-accent transition-colors"
-              >
-                {item.text}
-              </Link>
-            ) : (
-              <span key={index} className="mx-8">
-                {item.text}
-              </span>
-            )
-          )}
+      {/* 📰 NEW Leak-Free Marquee */}
+      <div className="marquee bg-card border-t border-border text-xs md:text-sm text-muted py-2">
+        <div className="marquee__inner">
+          {newsItems.map((item, i) => (
+            <MarqueeItem key={`a-${i}`} item={item} />
+          ))}
+
+          {/* Duplicate for seamless infinite scroll */}
+          {newsItems.map((item, i) => (
+            <MarqueeItem key={`b-${i}`} item={item} />
+          ))}
         </div>
       </div>
 
@@ -127,6 +120,7 @@ export function Header() {
               </svg>
             </button>
           </div>
+
           {navItems.map((item) => (
             <Link
               key={item.name}
@@ -148,5 +142,16 @@ export function Header() {
         />
       )}
     </header>
+  );
+}
+
+/* Helper Component for the marquee */
+function MarqueeItem({ item }: { item: any }) {
+  return item.link ? (
+    <Link href={item.link} className="mx-8 hover:text-accent transition-colors">
+      {item.text}
+    </Link>
+  ) : (
+    <span className="mx-8">{item.text}</span>
   );
 }
