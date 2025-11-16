@@ -8,7 +8,7 @@
 
 :root {
   /* Default (Dark) theme as fallback */
-  --background: radial-gradient(circle at 50% 20%, #1a1f3a 0%, #0d1117 40%, #0a0c12 100%);
+  --background: linear-gradient(180deg, #1a1f3a 0%, #0d1117 50%, #0a0c12 100%);
   --surface: #161b22;
   --foreground: #e6edf3;
   --muted: #8b949e;
@@ -26,7 +26,7 @@
    Stormy blue & slate, inspired by Discord / X aesthetic
    ========================================================= */
 [data-theme='dark'] {
-  --background: radial-gradient(circle at 50% 20%, #1a1f3a 0%, #0d1117 40%, #0a0c12 100%);
+  --background: linear-gradient(180deg, #1a1f3a 0%, #0d1117 50%, #0a0c12 100%);
   --surface: #161b22;
   --foreground: #e6edf3;
   --muted: #8b949e;
@@ -44,7 +44,7 @@
    Soft neutral Material-style palette
    ========================================================= */
 [data-theme='light'] {
-  --background: radial-gradient(circle at 50% 20%, #ffffff 0%, #fafafa 40%, #f5f5f5 100%);
+  --background: linear-gradient(180deg, #ffffff 0%, #fafafa 50%, #f5f5f5 100%);
   --surface: #ffffff;
   --foreground: #1a1a1a;
   --muted: #5f6368;
@@ -62,7 +62,7 @@
    Deep purples, blues, blacks, silvery white accents
    ========================================================= */
 [data-theme='night-sky'] {
-  --background: radial-gradient(circle at 25% 20%, #1b1f3b, #090b1a 70%);
+  --background: linear-gradient(180deg, #1b1f3b 0%, #131729 40%, #090b1a 100%);
   --surface: #101226;
   --foreground: #d7d9ff;
   --muted: #a0a3d2;
@@ -80,7 +80,7 @@
    Light theme with natural greens and soft browns
    ========================================================= */
 [data-theme='touch-grass'] {
-  --background: radial-gradient(circle at 50% 20%, #e8f5e9 0%, #f2f9f4 40%, #e0f0e3 100%);
+  --background: linear-gradient(180deg, #e8f5e9 0%, #f2f9f4 50%, #e0f0e3 100%);
   --surface: #ffffff;
   --foreground: #1d3124;
   --muted: #4f6f54;
@@ -98,7 +98,7 @@
    Monokai Dark inspired
    ========================================================= */
 [data-theme='terminal'] {
-  --background: radial-gradient(circle at 50% 20%, #3e3d32 0%, #272822 40%, #1e1f1c 100%);
+  --background: linear-gradient(180deg, #3e3d32 0%, #272822 50%, #1e1f1c 100%);
   --surface: #1e1f1c;
   --foreground: #f8f8f2;
   --muted: #75715e;
@@ -116,7 +116,7 @@
    Gentle pinks and whites with blossom undertones
    ========================================================= */
 [data-theme='cherry-blossom'] {
-  --background: radial-gradient(circle at 50% 20%, #ffe3ea 0%, #fff5f8 40%, #ffe0e7 100%);
+  --background: linear-gradient(180deg, #ffe3ea 0%, #fff5f8 50%, #ffe0e7 100%);
   --surface: #ffffff;
   --foreground: #3c1a1a;
   --muted: #a27b7b;
@@ -134,7 +134,7 @@
    Minimalist black & white with red accent (panda/crayon)
    ========================================================= */
 [data-theme='themevv'] {
-  --background: radial-gradient(circle at 50% 20%, #fafafa 0%, #ffffff 40%, #f8f8f8 100%);
+  --background: linear-gradient(180deg, #fafafa 0%, #ffffff 50%, #f8f8f8 100%);
   --surface: #f2f2f2;
   --foreground: #0d0d0d;
   --muted: #666666;
@@ -152,7 +152,7 @@
    Belladonna-inspired dark violet & green undertones
    ========================================================= */
 [data-theme='nightshade'] {
-  --background: radial-gradient(circle at 50% 20%, #2a1a2f 0%, #0c0c0d 40%, #08080a 100%);
+  --background: linear-gradient(180deg, #2a1a2f 0%, #171019 40%, #08080a 100%);
   --surface: #161017;
   --foreground: #e5d8f0;
   --muted: #bda9cc;
@@ -169,7 +169,7 @@
    EL BLUE (Extra Life blue palette)
    ========================================================= */
 [data-theme='el-blue'] {
-  --background: radial-gradient(circle at 50% 20%, #1e385b 0%, #0a192f 40%, #050f1e 100%);
+  --background: linear-gradient(180deg, #1e385b 0%, #0f2342 40%, #050f1e 100%);
   --surface: #112240;
   --foreground: #e6f1ff;
   --muted: #8ea9c1;
@@ -187,7 +187,7 @@
    Luxurious warm gold theme (accessibility checked)
    ========================================================= */
 [data-theme='gold'] {
-  --background: radial-gradient(circle at 50% 20%, #2f220b 0%, #1b1305 40%, #0f0a02 100%);
+  --background: linear-gradient(180deg, #2f220b 0%, #1b1305 50%, #0f0a02 100%);
   --surface: #261b09;
   --foreground: #f9f6ef;
   --muted: #c7b77a;

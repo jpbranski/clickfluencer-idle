@@ -189,31 +189,34 @@ export function SettingsDialog({
             </div>
           </section>
 
-          {/* TODO: Support the Developer - Commented out for now
+          {/* Support the Developer */}
           <section>
             <h3 className="text-lg font-bold mb-4">Support the Developer</h3>
             <div className="space-y-3">
               <a
-                href="https://buymeacoffee.com/jpbranski"
+                href="https://patreon.com/jpthepirate"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="
-                  block w-full px-4 py-3 rounded-lg text-center
-                  bg-[#FFDD00] hover:bg-[#FFDD00]/90 text-[#000000]
+                  flex items-center justify-center gap-2
+                  w-full px-4 py-3 rounded-full text-center
+                  bg-accent hover:bg-accent/90 text-accent-foreground
                   font-semibold text-sm
-                  transition-colors duration-150 active:scale-95
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFDD00]
+                  transition-all duration-150 active:scale-95
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent
                   motion-reduce:transition-none
+                  shadow-md hover:shadow-lg
                 "
+                aria-label="Support the developer on Patreon"
               >
-                ☕ Buy Me a Coffee
+                <span className="text-base">❤️</span>
+                <span>Support the Developer</span>
               </a>
               <div className="text-xs text-center text-muted">
-                Enjoying the game? Consider supporting development!
+                Enjoying the game? Consider supporting development on Patreon!
               </div>
             </div>
           </section>
-          */}
 
           {/* Navigation */}
           {onMainMenu && (

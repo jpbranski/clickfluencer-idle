@@ -36,6 +36,7 @@ import {
   activateTheme,
   prestige,
   updateSetting,
+  updatePlayerName,
   buyNotorietyGenerator,
   buyNotorietyUpgrade,
   ActionResult,
@@ -151,6 +152,7 @@ interface GameContextValue {
   handleActivateTheme: (themeId: string) => void;
   handlePrestige: () => void;
   handleUpdateSetting: (key: string, value: boolean) => void;
+  handleUpdatePlayerName: (playerName: string) => void;
   handleExportSave: () => void;
   handleImportSave: (data: string) => void;
   handleResetGame: () => void;
@@ -522,6 +524,17 @@ export function GameProvider({ children }: GameProviderProps) {
     [state]
   );
 
+  const handleUpdatePlayerName = useCallback(
+    (playerName: string) => {
+      if (!engineRef.current || !state) return;
+      engineRef.current.executeAction((currentState) => ({
+        success: true,
+        state: updatePlayerName(currentState, playerName),
+      }));
+    },
+    [state]
+  );
+
   const handleExportSave = useCallback(async () => {
     if (!state) return;
     try {
@@ -610,6 +623,7 @@ export function GameProvider({ children }: GameProviderProps) {
     handleActivateTheme,
     handlePrestige,
     handleUpdateSetting,
+    handleUpdatePlayerName,
     handleExportSave,
     handleImportSave,
     handleResetGame,
