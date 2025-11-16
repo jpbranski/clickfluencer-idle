@@ -53,9 +53,10 @@ export const ThemeCard = memo(function ThemeCard({
 
       {/* --- Theme preview --- */}
       <div
-        className="h-16 w-full rounded-md mb-2 border border-border"
+        className="h-16 w-full rounded-md mb-2"
         style={{
-          background: theme.preview || 'linear-gradient(to bottom right, var(--accent), var(--card))'
+          background: theme.preview || 'linear-gradient(135deg, var(--accent), var(--card))',
+          border: '1px solid rgba(255, 255, 255, 0.06)'
         }}
       />
 
