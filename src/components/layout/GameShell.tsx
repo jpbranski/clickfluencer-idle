@@ -40,7 +40,7 @@ export function GameShell({
   const [_sheetOpen, _setSheetOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {/* Desktop Layout */}
       <div className="hidden lg:flex h-screen justify-center">
         <div className="flex w-full max-w-[1280px] px-4">

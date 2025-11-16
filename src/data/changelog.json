@@ -211,5 +211,32 @@
       "Performance Maintained — No regression in game tick rate or UI responsiveness with new features",
       "Mobile Optimized — Dev console, announcements, and offline modal fully responsive on all devices"
     ]
+  },
+  {
+    "version": "0.3.3",
+    "slug": "v0-3-3-phase-3b-polish-hotfix",
+    "date": "2025-11-16",
+    "title": "v0.3.3 — Phase 3B: Polish & Hotfix Pass",
+    "description": "Comprehensive polish update addressing visual consistency, navigation improvements, and UI refinements across achievements, sharing, and theming systems. This update focuses on removing all remaining visual seams, improving the achievement display, enhancing share card functionality, and streamlining navigation.",
+    "changes": [
+      "Polished all theme backgrounds to remove visible seams between sections with improved unified gradient system",
+      "Enhanced unified gradient with smoother transitions and better coverage on mobile and ultra-wide screens",
+      "Removed solid backgrounds from Footer and GameShell to ensure seamless gradient flow",
+      "Updated navigation: added Announcements link, removed Guide from top nav, moved Acknowledgements to footer only",
+      "Complete overhaul of Achievement UI with 2-column desktop layout (3 columns on ultra-wide >1600px)",
+      "Achievement cards now show requirement text for all non-secret achievements with improved readability",
+      "Implemented cleaner achievement card spacing with reduced padding and larger icons (text-5xl)",
+      "Completed achievements display soft green glow effect for visual distinction",
+      "Secret achievements show grayscale silhouette effect with 30% opacity until unlocked",
+      "Tier badges repositioned to prevent overlap with achievement icons",
+      "Improved Share Card with theme-based gradient backgrounds using active theme accent colors",
+      "Share Card now displays 3 metrics: Score, Prestige, and Total Achievements Unlocked",
+      "Enhanced Share Card typography with larger title, better spacing, and social share tile aesthetic",
+      "Share image export layout improved with centered metrics and emoji consistency across platforms",
+      "Reduced hero section overlay intensity for more subtle visual transitions",
+      "Ad placeholder removal confirmed complete (completed in v0.3.2)",
+      "Improved visual consistency across all 10 themes with reduced button glow intensity",
+      "All changes tested and verified across mobile, tablet, and ultra-wide viewports"
+    ]
   }
 ]

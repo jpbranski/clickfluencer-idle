@@ -22,7 +22,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="w-full mt-12 bg-surface border-t border-border text-foreground transition-colors">
+    <footer className="w-full mt-12 border-t border-border text-foreground transition-colors">
       <div className="container mx-auto px-4 py-8">
         {/* Navigation Links */}
         <nav
