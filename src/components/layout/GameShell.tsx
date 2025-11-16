@@ -7,7 +7,7 @@
  * Mobile: Game-first layout (POST button → tabs → content)
  */
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import { BottomNav } from "./BottomNav";
 
 interface GameShellProps {
@@ -37,12 +37,37 @@ export function GameShell({
 }: GameShellProps) {
   const [activeTab, setActiveTab] = useState<"generators" | "upgrades" | "themes" | "achievements" | "settings">("generators");
 
+  // Calculate and set sticky offset based on header height
+  useEffect(() => {
+    const calculateStickyOffset = () => {
+      const header = document.querySelector('header');
+      if (header) {
+        const headerHeight = header.getBoundingClientRect().height;
+        document.documentElement.style.setProperty("--sticky-offset", `${headerHeight}px`);
+
+        // For mobile tabs, calculate header + currency bar height
+        const currencyWrapper = document.querySelector('.currency-sticky-wrapper-mobile');
+        if (currencyWrapper) {
+          const currencyHeight = currencyWrapper.getBoundingClientRect().height;
+          document.documentElement.style.setProperty("--tabs-sticky-offset", `${headerHeight + currencyHeight}px`);
+        }
+      }
+    };
+
+    // Calculate on mount and after a short delay to ensure elements are rendered
+    setTimeout(calculateStickyOffset, 100);
+
+    // Recalculate on resize
+    window.addEventListener('resize', calculateStickyOffset);
+    return () => window.removeEventListener('resize', calculateStickyOffset);
+  }, []);
+
   return (
     <div className="min-h-screen">
       {/* ===== DESKTOP LAYOUT - Two-Column Game Dashboard ===== */}
       <div className="hidden lg:block">
         {/* Sticky Currency HUD Header */}
-        <div className="sticky top-0 z-40 bg-card/90 backdrop-blur-lg border-b border-border shadow-lg">
+        <div className="currency-sticky-wrapper">
           <div className="max-w-[1400px] mx-auto px-6 py-3">
             {currencyBar}
           </div>
@@ -151,15 +176,15 @@ export function GameShell({
       {/* ===== MOBILE LAYOUT - Game-First Approach ===== */}
       <div className="lg:hidden min-h-screen flex flex-col pb-20">
         {/* Sticky Mobile HUD */}
-        <header className="sticky top-0 z-40 bg-card/90 backdrop-blur-lg border-b border-border shadow-lg">
-          <div className="px-4 py-3 flex items-center justify-between">
+        <div className="currency-sticky-wrapper-mobile">
+          <div className="px-4 py-3 flex items-center justify-between bg-card/90 backdrop-blur-lg border-b border-border">
             <h1 className="text-xl font-bold text-accent">Clickfluencer</h1>
             {settingsButton}
           </div>
-          <div className="px-4 pb-3">
+          <div className="px-4 pb-3 bg-card/90 backdrop-blur-lg border-b border-border shadow-lg">
             {currencyBar}
           </div>
-        </header>
+        </div>
 
         {/* POST Button FIRST - Mobile Game Priority */}
         <div className="flex justify-center px-4 py-6 bg-gradient-to-b from-card/50 to-transparent">
@@ -169,7 +194,7 @@ export function GameShell({
         </div>
 
         {/* Horizontal Scrolling Pill Tabs */}
-        <div className="sticky top-[120px] z-30 bg-card/80 backdrop-blur-sm border-y border-border px-3 py-3 overflow-x-auto mobile-tabs-scroll">
+        <div className="mobile-tabs-sticky z-30 bg-card/80 backdrop-blur-sm border-y border-border px-3 py-3 overflow-x-auto mobile-tabs-scroll">
           <div className="flex gap-2 min-w-max">
             <button
               onClick={() => setActiveTab("generators")}

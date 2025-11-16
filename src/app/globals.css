@@ -564,3 +564,29 @@
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+
+/* -------------------------------------------------------
+   Currency Bar Sticky Behavior
+------------------------------------------------------- */
+.currency-sticky-wrapper {
+  position: sticky;
+  top: var(--sticky-offset, 0px);
+  z-index: 40;
+  background-color: rgb(from var(--card) r g b / 0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  transition: all 0.2s ease;
+}
+
+.currency-sticky-wrapper-mobile {
+  position: sticky;
+  top: var(--sticky-offset, 0px);
+  z-index: 40;
+  transition: all 0.2s ease;
+}
+
+.mobile-tabs-sticky {
+  position: sticky;
+  top: var(--tabs-sticky-offset, 120px);
+}
