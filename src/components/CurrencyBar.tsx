@@ -40,154 +40,100 @@ export function CurrencyBar({
   const safeNotorietyPerSecond = typeof notorietyPerSecond === 'number' ? notorietyPerSecond : 0;
 
   const displayCredsPerSecond = netCredsPerSecond !== undefined ? netCredsPerSecond : credsPerSecond;
+
   return (
     <div className="w-full">
-      <div
-        className={`
-        grid grid-cols-3 gap-4 sm:gap-6
-        px-4 py-3 rounded-lg
-        bg-surface backdrop-blur-sm
-        border border-border
-        shadow-lg
-        transition-colors
-      `}
-      >
-        {/* Prestige Level */}
-        <div className="flex items-center gap-2">
-          <div
-            className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-600 flex items-center justify-center"
-            aria-hidden="true"
-          >
-            <span className="text-2xl" role="img" aria-label="prestige">
-              ⭐
-            </span>
+      {/* Single-Line Currency HUD - Option C Game Dashboard */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 px-4 py-3 bg-surface backdrop-blur-sm border border-border rounded-lg shadow-lg transition-colors">
+
+        {/* Prestige */}
+        <div
+          className="flex items-center gap-2 min-w-0 cursor-help group"
+          title="Prestige level"
+        >
+          <div className="flex-shrink-0 w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-600 flex items-center justify-center">
+            <span className="text-xl md:text-2xl">⭐</span>
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs text-muted uppercase tracking-wide font-semibold">
+            <div className="text-[10px] md:text-xs text-muted uppercase tracking-wide font-semibold">
               Prestige
             </div>
-            <div
-              className="text-lg font-bold font-mono number-display truncate text-accent"
-              aria-label={`Prestige level ${prestige}`}
-            >
+            <div className="text-base md:text-lg font-bold font-mono truncate text-accent">
               {prestige}
             </div>
           </div>
         </div>
 
-        {/* Creds (Main Currency) */}
-        <div className="flex items-center gap-2">
-          <div
-            className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center"
-            aria-hidden="true"
-          >
-            <span className="text-2xl" role="img" aria-label="creds">
-              👥
-            </span>
+        {/* Creds */}
+        <div
+          className="flex items-center gap-2 min-w-0 cursor-help group"
+          title={`${formatNumber(creds)} creds\n${displayCredsPerSecond >= 0 ? '+' : ''}${formatNumber(displayCredsPerSecond, 1)}/s`}
+        >
+          <div className="flex-shrink-0 w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+            <span className="text-xl md:text-2xl">👥</span>
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs text-muted uppercase tracking-wide font-semibold">
+            <div className="text-[10px] md:text-xs text-muted uppercase tracking-wide font-semibold">
               Creds
             </div>
-            <div
-              className="text-lg font-bold font-mono number-display truncate"
-              aria-label={`${creds.toFixed(0)} creds`}
-            >
-              {compact
-                ? formatNumberCompact(creds)
-                : formatNumber(creds, 2)}
+            <div className="text-base md:text-lg font-bold font-mono truncate">
+              {compact ? formatNumberCompact(creds) : formatNumber(creds, 2)}
             </div>
-            {displayCredsPerSecond !== 0 && (
-              <div
-                className={`text-xs font-mono ${displayCredsPerSecond >= 0 ? "text-success" : "text-warning"
-                  }`}
-              >
-                {displayCredsPerSecond >= 0 ? "+" : ""}
-                {formatNumber(displayCredsPerSecond, 1)}/s
-              </div>
-            )}
-
+            <div className={`text-[10px] md:text-xs font-mono leading-none ${displayCredsPerSecond >= 0 ? "text-success" : "text-warning"}`}>
+              {displayCredsPerSecond >= 0 ? "+" : ""}{formatNumberCompact(displayCredsPerSecond)}/s
+            </div>
           </div>
         </div>
 
-        {/* Awards (Premium Currency) */}
-        <div className="flex items-center gap-2">
-          <div
-            className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center"
-            aria-hidden="true"
-          >
-            <span className="text-2xl" role="img" aria-label="awards">
-              💎
-            </span>
+        {/* Awards */}
+        <div
+          className="flex items-center gap-2 min-w-0 cursor-help group"
+          title={`${awards} awards\n${((awardDropRate || 0) * 100).toFixed(1)}% drop rate`}
+        >
+          <div className="flex-shrink-0 w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+            <span className="text-xl md:text-2xl">💎</span>
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs text-muted uppercase tracking-wide font-semibold">
+            <div className="text-[10px] md:text-xs text-muted uppercase tracking-wide font-semibold">
               Awards
             </div>
-            <div
-              className="text-lg font-bold font-mono number-display truncate text-accent"
-              aria-label={`${awards} awards`}
-            >
+            <div className="text-base md:text-lg font-bold font-mono truncate text-accent">
               {awards.toLocaleString()}
             </div>
-            <div className="text-xs text-muted font-mono">
-              {((awardDropRate || 0) * 100).toFixed(1)}% drop rate
+            <div className="text-[10px] md:text-xs text-muted font-mono leading-none">
+              {((awardDropRate || 0) * 100).toFixed(1)}%
             </div>
           </div>
         </div>
 
-        {/* Vertical Divider */}
+        {/* Notoriety */}
         <div
-          className="hidden sm:block w-px h-12 bg-border"
-          aria-hidden="true"
-        />
-
-        {/* Notoriety (Third Currency - v1.0.0) */}
-        <div className="flex items-center gap-2 min-w-[140px]">
-          <div
-            className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center"
-            aria-hidden="true"
-          >
-            <span className="text-2xl" role="img" aria-label="notoriety">
-              😎
-            </span>
+          className="flex items-center gap-2 min-w-0 cursor-help group"
+          title={`${safeNotoriety.toFixed(2)} notoriety\n${safeNotorietyPerSecond > 0 ? `+${safeNotorietyPerSecond.toFixed(3)}/s` : safeNotoriety > 0 ? 'Paused (no creds)' : 'Inactive'}`}
+        >
+          <div className="flex-shrink-0 w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center">
+            <span className="text-xl md:text-2xl">😎</span>
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs text-muted uppercase tracking-wide font-semibold">
+            <div className="text-[10px] md:text-xs text-muted uppercase tracking-wide font-semibold">
               Notoriety
             </div>
-            <div
-              className="text-lg font-bold font-mono number-display truncate text-accent"
-              aria-label={`${safeNotoriety.toFixed(3)} notoriety`}
-            >
+            <div className="text-base md:text-lg font-bold font-mono truncate text-accent">
               {safeNotoriety.toFixed(2)}
             </div>
             {safeNotorietyPerSecond > 0 && (
-              <div className="text-xs text-success font-mono">
-                +{safeNotorietyPerSecond.toFixed(3)}/s
+              <div className="text-[10px] md:text-xs text-success font-mono leading-none">
+                +{safeNotorietyPerSecond.toFixed(2)}/s
               </div>
             )}
             {safeNotorietyPerSecond === 0 && safeNotoriety > 0 && (
-              <div className="text-xs text-warning font-mono">
-                Paused (no creds)
+              <div className="text-[10px] md:text-xs text-warning font-mono leading-none">
+                Paused
               </div>
             )}
           </div>
         </div>
       </div>
-
-      {/* Mobile Compact View Alternative */}
-      {compact && (
-        <div className="sm:hidden mt-2 text-center text-xs text-muted font-mono">
-          <span>Prestige: {prestige}</span>
-          <span className="mx-2">•</span>
-          <span>Creds: {formatNumber(creds)}</span>
-          <span className="mx-2">•</span>
-          <span>Awards: {awards}</span>
-          <span className="mx-2">•</span>
-          <span>Notoriety: {safeNotoriety.toFixed(2)}</span>
-        </div>
-      )}
     </div>
   );
 }
