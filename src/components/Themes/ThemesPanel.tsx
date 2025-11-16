@@ -25,18 +25,9 @@ export function ThemesPanel({
   onActivateTheme,
 }: ThemesPanelProps) {
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="text-center">
-        <h2 className="text-3xl font-bold mb-2 text-foreground">Themes</h2>
-        <p className="text-sm text-muted">
-          Unlock cosmetic themes with awards. Bonuses apply{" "}
-          <strong>permanently</strong> once unlocked!
-        </p>
-      </div>
-
-      {/* Theme Grid - 2 columns desktop, 1 mobile */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+    <div className="space-y-4">
+      {/* Theme Grid */}
+      <div className="grid grid-cols-1 gap-4">
         {themes.map((theme) => (
           <ThemeCard
             key={theme.id}
@@ -54,7 +45,7 @@ export function ThemesPanel({
       </div>
 
       {/* Info Box */}
-      <div className="max-w-2xl mx-auto p-5 rounded-xl bg-surface/50 border border-border">
+      <div className="p-4 rounded-lg bg-surface/50 border border-border text-sm">
         <div className="flex items-start gap-3 text-sm text-muted">
           <span className="text-2xl">💡</span>
           <div>

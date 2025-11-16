@@ -44,38 +44,28 @@ export function UpgradesPanel({
   const [subTab, setSubTab] = useState<"creds" | "notoriety">("creds");
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="text-center">
-        <h2 className="text-3xl font-bold mb-2 text-foreground">
-          Upgrades
-        </h2>
-        <p className="text-sm text-muted">
-          Permanent improvements to boost your progress
-        </p>
-      </div>
-
-      {/* Sub-Tab Navigation - Centered pills */}
-      <div className="flex justify-center gap-3">
+    <div className="space-y-4">
+      {/* Sub-Tab Navigation */}
+      <div className="flex gap-2">
         <button
           onClick={() => setSubTab("creds")}
-          className={`px-6 py-2.5 rounded-full font-semibold transition-all ${
+          className={`flex-1 px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
             subTab === "creds"
-              ? "bg-accent text-accent-foreground shadow-md"
+              ? "bg-accent text-accent-foreground"
               : "bg-surface/50 text-foreground hover:bg-surface"
           }`}
         >
-          💰 Cred Store
+          💰 Creds
         </button>
         <button
           onClick={() => setSubTab("notoriety")}
-          className={`px-6 py-2.5 rounded-full font-semibold transition-all ${
+          className={`flex-1 px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
             subTab === "notoriety"
-              ? "bg-accent text-accent-foreground shadow-md"
+              ? "bg-accent text-accent-foreground"
               : "bg-surface/50 text-foreground hover:bg-surface"
           }`}
         >
-          😎 Notoriety Store
+          😎 Notoriety
         </button>
       </div>
 

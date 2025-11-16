@@ -238,5 +238,24 @@
       "Improved visual consistency across all 10 themes with reduced button glow intensity",
       "All changes tested and verified across mobile, tablet, and ultra-wide viewports"
     ]
+  },
+  {
+    "version": "0.4.0",
+    "slug": "v0-4-0-game-dashboard-layout",
+    "date": "2025-02-01",
+    "title": "v0.4.0 — Option C: Game Dashboard Layout Transformation",
+    "description": "Complete layout redesign implementing the Option C Game Dashboard style. This major update transforms the UI into a proper two-column game dashboard on desktop with the POST button prominently positioned in the primary action zone, while mobile receives a game-first layout with the POST button appearing before navigation tabs.",
+    "changes": [
+      "Full layout redesign to Option C Game Dashboard style",
+      "Massive UI overhaul with improved mobile gameplay",
+      "Continuous background gradients across all themes",
+      "New Announcements page added to main navigation",
+      "Complete achievements redesign with visible requirements",
+      "POST button relocated to primary action zone",
+      "Currency HUD condensed into a single-line module",
+      "Share Card updated with theme-based gradient and new metrics",
+      "Improved code structure and reduced heavy glow/shadow usage",
+      "Performance and accessibility improvements"
+    ]
   }
 ]

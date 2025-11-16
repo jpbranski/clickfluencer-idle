@@ -150,10 +150,10 @@ export default function PostButton() {
     <div className="relative flex flex-col items-center justify-center">
       {/* PREMIUM CLICK BUTTON */}
       <div className="relative">
-        {/* Glow Effect - Reduced intensity */}
+        {/* Glow Effect - Soft Ambient Halo */}
         {!disabled && (
           <div
-            className="absolute inset-0 rounded-full opacity-20 blur-2xl"
+            className="absolute inset-0 rounded-full opacity-35 blur-xl"
             style={{
               background: "var(--accent)",
             }}
@@ -178,7 +178,7 @@ export default function PostButton() {
             color: "var(--accent-foreground)",
             boxShadow: disabled
               ? "none"
-              : "0 0 45px rgb(from var(--accent) r g b / 0.45)",
+              : "0 0 40px rgb(from var(--accent) r g b / 0.35)",
           }}
           aria-label={`Click to gain ${actualYield} followers`}
           aria-disabled={disabled}
