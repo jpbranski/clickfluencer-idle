@@ -15,7 +15,7 @@
 
 import { useState, useEffect } from "react";
 import { createInitialState } from "@/game/state";
-import { load, save, exportSave, importSave } from "@/lib/storage";
+import { load, save, exportSave, importSave } from "@/lib/storage/storage";
 
 export default function SaveInspectorPage() {
   const [currentSave, setCurrentSave] = useState<string>("");
@@ -93,6 +93,10 @@ export default function SaveInspectorPage() {
   const handleExport = async () => {
     try {
       const exported = await exportSave();
+      if (!exported) {
+        setError("No save data to export");
+        return;
+      }
       const blob = new Blob([exported], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
