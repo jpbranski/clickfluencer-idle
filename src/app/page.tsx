@@ -68,7 +68,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen text-foreground">
+    <main className="min-h-screen bg-background text-foreground">
       <Head>
         <Link rel="canonical" href="https://www.clickfluenceridle.com/" />
       </Head>
