@@ -7,8 +7,9 @@
  * Generates a dynamic image with game stats
  */
 
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import { formatNumber } from "@/game/format";
+import { useGame } from "@/hooks/useGame";
 
 interface ShareButtonsProps {
   creds: number;
@@ -19,6 +20,9 @@ interface ShareButtonsProps {
 
 export function ShareButtons({ creds, score, prestige = 0, achievementsUnlocked = 0 }: ShareButtonsProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { state, handleUpdatePlayerName } = useGame();
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState(state?.playerName || "");
 
   /**
    * Generate an image with game stats on a theme-based gradient background
@@ -65,10 +69,11 @@ export function ShareButtons({ creds, score, prestige = 0, achievementsUnlocked 
       ctx.textBaseline = "middle";
       ctx.fillText("Clickfluencer Idle", canvas.width / 2, 150);
 
-      // Subtitle
+      // Subtitle - use player name if available
       ctx.font = "32px sans-serif";
       ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-      ctx.fillText("My Progress", canvas.width / 2, 210);
+      const displayName = state?.playerName?.trim() || "Player";
+      ctx.fillText(`${displayName}'s Progress`, canvas.width / 2, 210);
 
       // Row 1: Score + Prestige
       ctx.fillStyle = "#ffffff";
@@ -95,7 +100,7 @@ export function ShareButtons({ creds, score, prestige = 0, achievementsUnlocked 
       // Convert to data URL
       resolve(canvas.toDataURL("image/png"));
     });
-  }, [creds, score, prestige, achievementsUnlocked]);
+  }, [creds, score, prestige, achievementsUnlocked, state]);
 
   /**
    * Share on X (Twitter)
@@ -131,12 +136,71 @@ export function ShareButtons({ creds, score, prestige = 0, achievementsUnlocked 
     link.click();
   }, [generateShareImage]);
 
+  const handleSaveName = useCallback(() => {
+    if (handleUpdatePlayerName) {
+      handleUpdatePlayerName(nameInput);
+    }
+    setIsEditingName(false);
+  }, [nameInput, handleUpdatePlayerName]);
+
+  const handleCancelEdit = useCallback(() => {
+    setNameInput(state?.playerName || "");
+    setIsEditingName(false);
+  }, [state?.playerName]);
+
+  const displayName = state?.playerName?.trim() || "Player";
+
   return (
     <div className="space-y-5">
       {/* Header */}
       <div className="text-center mb-1">
-        <h3 className="text-lg font-bold text-foreground mb-1">Your Progress</h3>
+        <h3 className="text-lg font-bold text-foreground mb-1">{displayName}'s Progress</h3>
         <p className="text-xs text-muted">Share your achievements with the world</p>
+      </div>
+
+      {/* Player Name Editor */}
+      <div className="mb-3">
+        {!isEditingName ? (
+          <button
+            onClick={() => setIsEditingName(true)}
+            className="w-full px-3 py-2 rounded-lg bg-surface/70 hover:bg-surface border border-border/50 hover:border-accent/30 transition-all text-sm text-muted hover:text-foreground"
+            aria-label="Edit player name"
+          >
+            <span className="text-xs">Player Name: </span>
+            <span className="font-semibold">{displayName}</span>
+            <span className="ml-2 text-xs opacity-50">✏️</span>
+          </button>
+        ) : (
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={nameInput}
+              onChange={(e) => setNameInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSaveName();
+                if (e.key === "Escape") handleCancelEdit();
+              }}
+              maxLength={20}
+              placeholder="Enter your name"
+              className="flex-1 px-3 py-2 rounded-lg bg-surface border border-accent/50 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+              autoFocus
+            />
+            <button
+              onClick={handleSaveName}
+              className="px-3 py-2 rounded-lg bg-accent text-accent-foreground hover:opacity-90 transition-opacity text-sm font-semibold"
+              aria-label="Save player name"
+            >
+              ✓
+            </button>
+            <button
+              onClick={handleCancelEdit}
+              className="px-3 py-2 rounded-lg bg-surface border border-border hover:bg-muted/20 transition-colors text-sm"
+              aria-label="Cancel"
+            >
+              ✕
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Stats Display - Option C Enhanced Layout */}

@@ -184,6 +184,9 @@ export interface GameState {
     ftueCompleted: boolean; // First-Time User Experience completed
   };
 
+  // Player customization
+  playerName?: string; // Player-editable name for Share screen
+
   // Cached Values (computed each tick for efficiency)
   followersPerSecond?: number;
 

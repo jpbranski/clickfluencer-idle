@@ -772,3 +772,16 @@ export function updateSetting<K extends keyof GameState["settings"]>(
     },
   };
 }
+
+/**
+ * Update player name
+ */
+export function updatePlayerName(
+  state: GameState,
+  playerName: string,
+): GameState {
+  return {
+    ...state,
+    playerName: playerName.trim(),
+  };
+}
