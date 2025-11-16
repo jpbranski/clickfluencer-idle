@@ -42,6 +42,7 @@ import {
   getCacheValueBonus,
 } from "./logic/notorietyLogic";
 import { NOTORIETY_GENERATORS, NOTORIETY_UPGRADES } from "@/data/notoriety";
+import { checkAchievements } from "@/lib/achievements";
 
 // ============================================================================
 // CONSTANTS
@@ -77,6 +78,27 @@ export function getAwardDropRate(state: GameState): number {
     });
 
   return dropRate;
+}
+
+/**
+ * Update high-score metrics (Phase 2)
+ * Tracks highest values achieved for stats display
+ */
+function updateHighScoreMetrics(state: GameState, clickPower: number, credsPerSecond: number): GameState {
+  const stats = state.stats;
+
+  return {
+    ...state,
+    stats: {
+      ...stats,
+      highestClickPower: Math.max(stats.highestClickPower || 0, clickPower),
+      highestCredsPerSecond: Math.max(stats.highestCredsPerSecond || 0, credsPerSecond),
+      highestCredsOwned: Math.max(stats.highestCredsOwned || 0, state.creds),
+      highestAwardsOwned: Math.max(stats.highestAwardsOwned || 0, state.awards),
+      highestPrestigeOwned: Math.max(stats.highestPrestigeOwned || 0, state.prestige),
+      highestNotorietyOwned: Math.max(stats.highestNotorietyOwned || 0, state.notoriety || 0),
+    },
+  };
 }
 
 // ============================================================================
@@ -525,6 +547,7 @@ export function removeExpiredEvents(state: GameState): GameState {
  * - Unlocks generators based on cred count
  * - Removes expired events
  * - Updates statistics
+ * - Checks achievements (Phase 2)
  */
 export function tick(state: GameState, deltaTime: number): GameState {
   const secondsElapsed = deltaTime / 1000;
@@ -561,11 +584,25 @@ export function tick(state: GameState, deltaTime: number): GameState {
       ...state.stats,
       totalCredsEarned: state.stats.totalCredsEarned + Math.max(0, credsGained),
       lastTickTime: Date.now(),
+      playTime: state.stats.playTime + deltaTime,
     },
   };
 
   // Clean up expired events
   newState = removeExpiredEvents(newState);
+
+  // Phase 2: Update high-score metrics
+  const clickPower = getClickPower(newState);
+  newState = updateHighScoreMetrics(newState, clickPower, credsPerSecond);
+
+  // Phase 2: Check achievements
+  const { updatedAchievements, newlyUnlocked } = checkAchievements(newState);
+  if (newlyUnlocked.length > 0) {
+    newState = {
+      ...newState,
+      achievements: updatedAchievements,
+    };
+  }
 
   return newState;
 }
