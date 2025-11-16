@@ -188,6 +188,34 @@
   .snap-item {
     scroll-snap-align: start;
   }
+
+  /* Mobile Polish - Prevent horizontal overflow */
+  @media (max-width: 1023px) {
+    body {
+      overflow-x: hidden;
+    }
+
+    /* Ensure proper hit targets for accessibility */
+    button, a {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    /* Prevent text overflow on mobile */
+    .number-display {
+      word-break: break-all;
+    }
+  }
+
+  /* Smooth scrolling for tabs on mobile */
+  .mobile-tabs-scroll {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .mobile-tabs-scroll::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* -------------------------------------------------------
@@ -259,7 +287,7 @@
   /* Accent helpers */
   .bg-accent   { background-color: var(--accent); }
   .ring-accent { --tw-ring-color: var(--accent); }
-  .shadow-accent { box-shadow: 0 0 12px var(--accent); }
+  .shadow-accent { box-shadow: 0 0 10px rgb(from var(--accent) r g b / 0.15); }
 
   /* Typography utilities are defined in tailwind.config.ts */
   /* Use them directly via className (e.g., className="text-heading-1") */
@@ -276,12 +304,14 @@
   }
 
   .card-premium {
-    @apply card shadow-game-card;
+    @apply card;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
   }
 
   .card-premium:hover {
-    @apply shadow-game-card-hover;
-    border-color: rgb(from var(--accent) r g b / 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+    border-color: rgb(from var(--accent) r g b / 0.2);
   }
 
   .card-interactive {
@@ -290,6 +320,21 @@
 
   .card-interactive:active {
     transform: scale(0.98);
+  }
+
+  /* Cardless Feed - Individual feed card styling */
+  .card-feed {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: 1.4rem;
+    transition: all 0.2s ease-out;
+    box-shadow: 0 0 10px rgb(from var(--accent) r g b / 0.15);
+  }
+
+  .card-feed:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
   }
 
   /* Enhanced button system */
@@ -396,32 +441,32 @@
     100% { background-position: 200% 0; }
   }
 
-  /* Premium glow effect - Refined for Phase 3 */
+  /* Premium glow effect - Softened for Cardless Feed */
   .glow {
     box-shadow:
-      0 0 12px rgb(from var(--accent) r g b / 0.25),
-      0 0 24px rgb(from var(--accent) r g b / 0.08);
+      0 0 6px rgb(from var(--accent) r g b / 0.15),
+      0 0 12px rgb(from var(--accent) r g b / 0.05);
   }
 
   .glow-strong {
     box-shadow:
-      0 0 14px rgb(from var(--accent) r g b / 0.3),
-      0 0 28px rgb(from var(--accent) r g b / 0.15),
-      0 0 42px rgb(from var(--accent) r g b / 0.05);
+      0 0 8px rgb(from var(--accent) r g b / 0.2),
+      0 0 16px rgb(from var(--accent) r g b / 0.1),
+      0 0 24px rgb(from var(--accent) r g b / 0.03);
     animation: pulse-glow 3s ease-in-out infinite;
   }
 
   @keyframes pulse-glow {
     0%, 100% {
       box-shadow:
-        0 0 14px rgb(from var(--accent) r g b / 0.3),
-        0 0 28px rgb(from var(--accent) r g b / 0.15);
+        0 0 8px rgb(from var(--accent) r g b / 0.2),
+        0 0 16px rgb(from var(--accent) r g b / 0.1);
     }
     50% {
       box-shadow:
-        0 0 16px rgb(from var(--accent) r g b / 0.35),
-        0 0 32px rgb(from var(--accent) r g b / 0.18),
-        0 0 48px rgb(from var(--accent) r g b / 0.08);
+        0 0 10px rgb(from var(--accent) r g b / 0.22),
+        0 0 18px rgb(from var(--accent) r g b / 0.12),
+        0 0 28px rgb(from var(--accent) r g b / 0.05);
     }
   }
 
