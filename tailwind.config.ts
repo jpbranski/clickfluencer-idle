@@ -56,8 +56,8 @@ const config: Config = {
           '100%': { backgroundPosition: '200% center' },
         },
         glow: {
-          '0%, 100%': { opacity: '0.4' },
-          '50%': { opacity: '0.7' },
+          '0%, 100%': { opacity: '0.25' },
+          '50%': { opacity: '0.35' },
         },
       },
       // Typography scale for consistent hierarchy

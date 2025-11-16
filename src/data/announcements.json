@@ -1,0 +1,13 @@
+[
+  {
+    "id": "welcome-phase-3",
+    "title": "Welcome to Phase 3!",
+    "date": "2025-11-16",
+    "body": "We're excited to announce Phase 3 of Clickfluencer Idle! This update brings major improvements to the game including live-ops events, developer tools, enhanced offline progress, and much more. Thank you for playing!",
+    "link": {
+      "text": "Read the Full Changelog",
+      "url": "/news"
+    },
+    "priority": 1
+  }
+]

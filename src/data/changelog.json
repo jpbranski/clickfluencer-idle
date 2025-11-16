@@ -174,5 +174,42 @@
       "Chart Theme Integration — Recharts styled with CSS variables for perfect theme compatibility",
       "Mobile Responsive — All new pages and features fully responsive across all device sizes"
     ]
+  },
+  {
+    "version": "0.3.2",
+    "slug": "v0-3-2-phase-3-live-ops-and-developer-tools",
+    "date": "2025-11-16",
+    "title": "v0.3.2 — Phase 3: Live-Ops Framework, Dev Console & Offline Overhaul",
+    "description": "Comprehensive Phase 3 update introducing live-ops event foundations, in-game developer console, enhanced offline progress with detailed summaries, local analytics tracking, and extensive UI/UX refinements including unified backgrounds and reduced button glows for a more premium, polished experience.",
+    "changes": [
+      "Live-Ops Event Framework — Complete event system infrastructure with event types, rewards, conditions, and automatic scheduling",
+      "Event UI Components — EventBanner and EventsPanel components with auto-hide when no active events",
+      "Event Utilities — Helper functions for active/upcoming events, multiplier calculations, and time formatting",
+      "Developer Console — In-game dev tools panel (dev mode only) with state inspector and command execution",
+      "Dev Commands — Add resources, unlock achievements, simulate ticks, reset FTUE, and manage offline timers",
+      "State Inspector — Real-time view of resources, generators, upgrades, achievements, settings, and debug info",
+      "Announcements Page — Dedicated /announcements route with priority sorting and visual cards distinct from patch notes",
+      "Enhanced Offline Progress — Detailed summary modal showing time away, creds gained, awards gained, top generators, and achievements unlocked offline",
+      "Offline Achievement Support — Track and display achievements unlocked during offline periods",
+      "Local Analytics Layer — Privacy-first analytics tracking sessions, clicks, upgrades, prestige, and page visits (no network calls)",
+      "Analytics Storage — Efficient localStorage-based analytics with session management and interaction heatmaps",
+      "Background Gradient Unification — Eliminated hard seams between sections with unified fixed-attachment gradient system",
+      "Refined Button Glows — Reduced glow intensity (12-16px radius, 0.25-0.35 opacity) for cleaner, more premium appearance",
+      "Ad Integration Cleanup — Removed all placeholder ad containers and dashed rectangles, added Google AdSense auto-ads script",
+      "Seamless Section Transitions — Made page sections transparent to work with unified background gradient",
+      "Save State Migration — Added v0.3.2 migration support ensuring all previous saves load without errors",
+      "Backward Compatibility — Auto-upgrade missing fields while preserving all user progress from older versions",
+      "QOL Polish Foundations — Scaffolding for tooltip enhancements, history logs, and audio system",
+      "Enhanced Modal Animations — Staggered entrance animations for offline progress breakdown cards",
+      "Top Generator Tracking — Display which generators contributed most during offline periods",
+      "Session Analytics — Track session length, clicks per minute, upgrade choices, and FTUE drop-off points",
+      "Dev Console Shortcuts — Quick access to common development tasks via keyboard-friendly command panel",
+      "Event Multiplier System — Support for production, award, prestige, and cost multipliers from active events",
+      "Announcement Priority System — Important announcements highlighted with visual badges and accent borders",
+      "Fixed Gradient Backgrounds — Prevent gradient cut-off on tall screens with proper attachment and sizing",
+      "Theme Compatibility — All Phase 3 features fully compatible with all 10 theme variants",
+      "Performance Maintained — No regression in game tick rate or UI responsiveness with new features",
+      "Mobile Optimized — Dev console, announcements, and offline modal fully responsive on all devices"
+    ]
   }
 ]

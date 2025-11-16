@@ -68,23 +68,22 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-screen text-foreground">
       <Head>
         <Link rel="canonical" href="https://www.clickfluenceridle.com/" />
       </Head>
 
       {/* Hero Section - Premium Landing */}
       <section className="relative flex flex-col items-center justify-center text-center min-h-screen px-6 overflow-hidden">
-        {/* Animated Background Mesh Gradient */}
-        <div className="absolute inset-0 bg-gradient-mesh opacity-60" />
+        {/* Subtle animated accent overlay - works with unified background */}
         <motion.div
-          className="absolute inset-0"
+          className="absolute inset-0 pointer-events-none"
           style={{
-            background: "radial-gradient(circle at 50% 50%, rgb(from var(--accent) r g b / 0.15), transparent 70%)",
+            background: "radial-gradient(circle at 50% 50%, rgb(from var(--accent) r g b / 0.08), transparent 70%)",
           }}
           animate={{
             scale: [1, 1.1, 1],
-            opacity: [0.3, 0.5, 0.3]
+            opacity: [0.5, 0.8, 0.5]
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
