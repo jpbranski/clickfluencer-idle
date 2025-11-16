@@ -132,42 +132,70 @@ export function ShareButtons({ creds, score, prestige = 0, achievementsUnlocked 
   }, [generateShareImage]);
 
   return (
-    <div className="space-y-4">
-      {/* Stats Display - Updated structure */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
+    <div className="space-y-5">
+      {/* Header */}
+      <div className="text-center mb-1">
+        <h3 className="text-lg font-bold text-foreground mb-1">Your Progress</h3>
+        <p className="text-xs text-muted">Share your achievements with the world</p>
+      </div>
+
+      {/* Stats Display - Option C Enhanced Layout */}
+      <div className="grid grid-cols-2 gap-3 mb-3">
         {/* Score */}
-        <div className="text-center p-4 rounded-lg bg-surface/30">
-          <div className="text-xs text-muted mb-1">📊 Score</div>
-          <div className="text-lg font-bold text-foreground number-display">
+        <div
+          className="text-center p-5 rounded-2xl bg-gradient-to-br from-surface/60 to-surface/30 border border-border/50 shadow-lg hover:shadow-xl transition-all"
+          style={{
+            background: "linear-gradient(135deg, rgb(from var(--surface) r g b / 0.6), rgb(from var(--surface) r g b / 0.3))"
+          }}
+        >
+          <div className="text-3xl mb-2">📊</div>
+          <div className="text-[10px] uppercase tracking-wider text-muted font-bold mb-2">Score</div>
+          <div className="text-2xl font-black text-accent number-display" style={{ textShadow: "0 2px 8px rgb(from var(--accent) r g b / 0.3)" }}>
             {formatNumber(score)}
           </div>
         </div>
 
         {/* Prestige */}
-        <div className="text-center p-4 rounded-lg bg-surface/30">
-          <div className="text-xs text-muted mb-1">🔱 Prestige</div>
-          <div className="text-lg font-bold text-foreground number-display">
+        <div
+          className="text-center p-5 rounded-2xl bg-gradient-to-br from-surface/60 to-surface/30 border border-border/50 shadow-lg hover:shadow-xl transition-all"
+          style={{
+            background: "linear-gradient(135deg, rgb(from var(--surface) r g b / 0.6), rgb(from var(--surface) r g b / 0.3))"
+          }}
+        >
+          <div className="text-3xl mb-2">⭐</div>
+          <div className="text-[10px] uppercase tracking-wider text-muted font-bold mb-2">Prestige</div>
+          <div className="text-2xl font-black text-accent number-display" style={{ textShadow: "0 2px 8px rgb(from var(--accent) r g b / 0.3)" }}>
             {formatNumber(prestige)}
           </div>
         </div>
       </div>
 
       {/* Total Achievements - Centered below */}
-      <div className="text-center p-4 rounded-lg bg-surface/30">
-        <div className="text-xs text-muted mb-1">🏆 Achievements</div>
-        <div className="text-lg font-bold text-foreground">
-          {achievementsUnlocked} Unlocked
+      <div
+        className="text-center p-5 rounded-2xl bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/30 shadow-lg lg:bg-gradient-to-br"
+        style={{
+          background: "linear-gradient(to bottom, rgb(from var(--accent) r g b / 0.12), rgb(from var(--accent) r g b / 0.04))"
+        }}
+      >
+        <div className="text-4xl mb-2">🏆</div>
+        <div className="text-[10px] uppercase tracking-wider text-muted font-bold mb-2">Total Achievements</div>
+        <div className="text-3xl font-black text-accent" style={{ textShadow: "0 2px 10px rgb(from var(--accent) r g b / 0.4)" }}>
+          {achievementsUnlocked}
         </div>
+        <div className="text-xs text-muted mt-1">Unlocked</div>
       </div>
 
+      {/* Divider */}
+      <div className="border-t border-border/50 my-4" />
+
       {/* Share Icons - Arranged cleanly */}
-      <div className="flex items-center justify-center gap-4 pt-2">
-        <span className="text-sm text-muted">Share:</span>
+      <div className="flex items-center justify-center gap-3 pt-1">
+        <span className="text-sm font-semibold text-muted">Share:</span>
 
         {/* X (Twitter) Button */}
         <button
           onClick={handleShareX}
-          className="p-2 rounded-lg bg-surface/50 hover:bg-surface transition-colors"
+          className="p-3 rounded-xl bg-surface/70 hover:bg-accent/20 border border-border/50 hover:border-accent/50 transition-all shadow-md hover:shadow-lg hover:scale-105"
           aria-label="Share on X"
           title="Share on X"
         >
@@ -179,7 +207,7 @@ export function ShareButtons({ creds, score, prestige = 0, achievementsUnlocked 
         {/* Facebook Button */}
         <button
           onClick={handleShareFacebook}
-          className="p-2 rounded-lg bg-surface/50 hover:bg-surface transition-colors"
+          className="p-3 rounded-xl bg-surface/70 hover:bg-accent/20 border border-border/50 hover:border-accent/50 transition-all shadow-md hover:shadow-lg hover:scale-105"
           aria-label="Share on Facebook"
           title="Share on Facebook"
         >
@@ -191,7 +219,7 @@ export function ShareButtons({ creds, score, prestige = 0, achievementsUnlocked 
         {/* Download Image Button */}
         <button
           onClick={handleDownloadImage}
-          className="p-2 rounded-lg bg-surface/50 hover:bg-surface transition-colors"
+          className="p-3 rounded-xl bg-surface/70 hover:bg-accent/20 border border-border/50 hover:border-accent/50 transition-all shadow-md hover:shadow-lg hover:scale-105"
           aria-label="Download Progress"
           title="Download Progress Image"
         >

@@ -238,5 +238,35 @@
       "Improved visual consistency across all 10 themes with reduced button glow intensity",
       "All changes tested and verified across mobile, tablet, and ultra-wide viewports"
     ]
+  },
+  {
+    "version": "0.4.0",
+    "slug": "v0-4-0-option-c-game-dashboard",
+    "date": "2025-11-16",
+    "title": "v0.4.0 — Option C: Complete Game Dashboard Overhaul",
+    "description": "Major layout redesign implementing the Option C Game Dashboard layout. This comprehensive refactor transforms Clickfluencer Idle from a vertical feed into a proper game dashboard with two-column desktop layout, game-first mobile experience, and numerous visual improvements across all systems.",
+    "changes": [
+      "Full layout redesign to Option C Game Dashboard style",
+      "Massive UI overhaul with improved mobile gameplay experience",
+      "Implemented two-column desktop dashboard (42-48% sidebar, 52-58% action zone)",
+      "POST button relocated to primary action zone in top-right prominence on desktop",
+      "Currency HUD condensed into a single-line module with 4 currencies always visible",
+      "Mobile layout completely refactored to game-first approach (POST button appears before tabs)",
+      "Horizontal scrollable pill-style tabs on mobile for better touch interaction",
+      "Continuous background gradients across all themes with no visible seams",
+      "Complete achievements redesign with visible requirements for all non-hidden achievements",
+      "Achievement cards now display tier-based rarity colors (Common, Uncommon, Rare, Epic)",
+      "Achievements layout: 2-wide on desktop, 1-wide on mobile with improved spacing",
+      "Share Card updated with theme-based gradient matching active theme colors",
+      "Share Card displays Score, Prestige, and Total Achievements with improved typography",
+      "Enhanced Share Card design with rounded corners, better shadows, and cleaner spacing",
+      "POST button glow intensity reduced to rgba(var(--accent-rgb), 0.35) for softer appearance",
+      "Sidebar content area now independently scrollable with custom scrollbar styling",
+      "Quick Stats positioned below POST button in action zone instead of above",
+      "Improved code structure and component organization throughout",
+      "Performance improvements with reduced shadow and glow effects",
+      "Accessibility improvements with better touch targets and contrast ratios",
+      "All changes maintain full backwards compatibility with existing save data"
+    ]
   }
 ]
