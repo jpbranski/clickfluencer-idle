@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { AdSlot } from "@/components/AdSlot";
 import changelog from "@/data/changelog.json";
 
 export default function ShowcasePage() {
@@ -10,19 +9,18 @@ export default function ShowcasePage() {
   const latestUpdate = changelog[changelog.length - 1];
 
   return (
-    <div className="min-h-screen bg-gradient-sophisticated text-foreground">
+    <div className="min-h-screen text-foreground">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6">
-        {/* Animated Background */}
-        <div className="absolute inset-0 bg-gradient-mesh opacity-40" />
+        {/* Subtle animated accent overlay */}
         <motion.div
-          className="absolute inset-0"
+          className="absolute inset-0 pointer-events-none"
           style={{
-            background: "radial-gradient(circle at 50% 50%, rgb(from var(--accent) r g b / 0.2), transparent 60%)",
+            background: "radial-gradient(circle at 50% 50%, rgb(from var(--accent) r g b / 0.12), transparent 60%)",
           }}
           animate={{
             scale: [1, 1.2, 1],
-            opacity: [0.3, 0.6, 0.3],
+            opacity: [0.4, 0.7, 0.4],
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
@@ -133,13 +131,6 @@ export default function ShowcasePage() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </motion.div>
-      </section>
-
-      {/* Top Ad Slot */}
-      <section className="py-8">
-        <div className="max-w-7xl mx-auto px-6 flex justify-center">
-          <AdSlot format="leaderboard" />
-        </div>
       </section>
 
       {/* Features Section */}
@@ -260,18 +251,6 @@ export default function ShowcasePage() {
         </div>
       </section>
 
-      {/* Rectangle Ad Slots */}
-      <section className="py-8">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="flex justify-center">
-            <AdSlot format="rectangle" />
-          </div>
-          <div className="hidden md:flex justify-center">
-            <AdSlot format="rectangle" />
-          </div>
-        </div>
-      </section>
-
       {/* What's New Section */}
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
@@ -384,7 +363,6 @@ export default function ShowcasePage() {
 
       {/* Final CTA Section */}
       <section className="py-32 px-6 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-mesh opacity-50" />
 
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <motion.div
@@ -417,13 +395,6 @@ export default function ShowcasePage() {
               </Link>
             </div>
           </motion.div>
-        </div>
-      </section>
-
-      {/* Footer Ad Slot */}
-      <section className="py-8 bg-surface/50">
-        <div className="max-w-7xl mx-auto px-6 flex justify-center">
-          <AdSlot format="leaderboard" />
         </div>
       </section>
     </div>

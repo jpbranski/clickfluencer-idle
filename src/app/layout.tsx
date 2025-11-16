@@ -83,9 +83,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             />
           </>
         )}
+
+        {/* Google AdSense - Auto Ads */}
+        {process.env.NEXT_PUBLIC_ADS_CLIENT && (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADS_CLIENT}`}
+            crossOrigin="anonymous"
+          />
+        )}
       </head>
 
-      <body className="antialiased bg-background text-foreground min-h-screen flex flex-col">
+      <body className="antialiased bg-unified-gradient text-foreground min-h-screen flex flex-col">
         <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
