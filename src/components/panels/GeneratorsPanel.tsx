@@ -35,43 +35,44 @@ export function GeneratorsPanel({
   const [activeSubTab, setActiveSubTab] = useState<"content" | "notoriety">("content");
 
   return (
-    <div className="p-6 space-y-4">
-      <div>
-        <h2 className="text-2xl font-bold mb-2 text-foreground">
+    <div className="space-y-6">
+      {/* Header - No heavy padding */}
+      <div className="text-center">
+        <h2 className="text-3xl font-bold mb-2 text-foreground">
           Generators
         </h2>
-        <p className="text-sm text-muted mb-4">
+        <p className="text-sm text-muted">
           Purchase automated systems to generate resources passively
         </p>
-
-        {/* Sub-Tabs */}
-        <div className="flex gap-2 mb-4">
-          <button
-            onClick={() => setActiveSubTab("content")}
-            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
-              activeSubTab === "content"
-                ? "bg-accent text-accent-foreground"
-                : "bg-surface text-muted hover:text-foreground"
-            }`}
-          >
-            📈 Content
-          </button>
-          <button
-            onClick={() => setActiveSubTab("notoriety")}
-            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
-              activeSubTab === "notoriety"
-                ? "bg-accent text-accent-foreground"
-                : "bg-surface text-muted hover:text-foreground"
-            }`}
-          >
-            😎 Notoriety
-          </button>
-        </div>
       </div>
 
-      {/* Content Tab */}
+      {/* Sub-Tabs - Centered pill style */}
+      <div className="flex justify-center gap-3">
+        <button
+          onClick={() => setActiveSubTab("content")}
+          className={`px-6 py-2.5 rounded-full font-semibold transition-all ${
+            activeSubTab === "content"
+              ? "bg-accent text-accent-foreground shadow-md"
+              : "bg-surface/50 text-muted hover:text-foreground hover:bg-surface"
+          }`}
+        >
+          📈 Content
+        </button>
+        <button
+          onClick={() => setActiveSubTab("notoriety")}
+          className={`px-6 py-2.5 rounded-full font-semibold transition-all ${
+            activeSubTab === "notoriety"
+              ? "bg-accent text-accent-foreground shadow-md"
+              : "bg-surface/50 text-muted hover:text-foreground hover:bg-surface"
+          }`}
+        >
+          😎 Notoriety
+        </button>
+      </div>
+
+      {/* Content Tab - Feed of Cards */}
       {activeSubTab === "content" && (
-        <div className="space-y-3">
+        <div className="space-y-4 max-w-3xl mx-auto">
           {generators.map((generator) => {
             const cost = getGeneratorCost(generator);
             const totalProduction =
@@ -92,10 +93,10 @@ export function GeneratorsPanel({
         </div>
       )}
 
-      {/* Notoriety Tab */}
+      {/* Notoriety Tab - Feed of Cards */}
       {activeSubTab === "notoriety" && (
-        <div className="space-y-3">
-          <div className="mb-4">
+        <div className="space-y-4 max-w-3xl mx-auto">
+          <div className="text-center mb-6">
             <p className="text-sm text-muted">
               Generate Notoriety/second but consume Creds/second as upkeep
             </p>

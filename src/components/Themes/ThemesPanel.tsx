@@ -25,14 +25,18 @@ export function ThemesPanel({
   onActivateTheme,
 }: ThemesPanelProps) {
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-2 text-foreground">Themes</h2>
-      <p className="text-sm text-muted mb-6">
-        Unlock cosmetic themes with awards. Bonuses apply{" "}
-        <strong>permanently</strong> once unlocked!
-      </p>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="text-center">
+        <h2 className="text-3xl font-bold mb-2 text-foreground">Themes</h2>
+        <p className="text-sm text-muted">
+          Unlock cosmetic themes with awards. Bonuses apply{" "}
+          <strong>permanently</strong> once unlocked!
+        </p>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* Theme Grid - 2 columns desktop, 1 mobile */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
         {themes.map((theme) => (
           <ThemeCard
             key={theme.id}
@@ -49,14 +53,15 @@ export function ThemesPanel({
         ))}
       </div>
 
-      <div className="mt-6 p-4 rounded-lg bg-surface border border-border">
-        <div className="flex items-start gap-2 text-sm text-muted">
-          <span className="text-accent">💡</span>
+      {/* Info Box */}
+      <div className="max-w-2xl mx-auto p-5 rounded-xl bg-surface/50 border border-border">
+        <div className="flex items-start gap-3 text-sm text-muted">
+          <span className="text-2xl">💡</span>
           <div>
-            <div className="font-semibold text-foreground mb-1">
+            <div className="font-semibold text-foreground mb-2 text-base">
               How to earn Awards:
             </div>
-            <p>
+            <p className="leading-relaxed">
               Awards have a small chance to drop from each click. Keep
               clicking to collect them!
               <br />

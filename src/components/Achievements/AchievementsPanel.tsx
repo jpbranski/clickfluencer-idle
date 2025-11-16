@@ -58,27 +58,27 @@ export function AchievementsPanel({ achievements }: AchievementsPanelProps) {
   );
 
   return (
-    <div className="p-6">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-2 text-foreground">Achievements</h2>
+      <div className="text-center">
+        <h2 className="text-3xl font-bold mb-2 text-foreground">Achievements</h2>
         <p className="text-sm text-muted">
           {unlockedCount} / {totalCount} unlocked
           {selectedCategory !== "all" && ` • ${filteredUnlockedCount} / ${filteredAchievements.length} in ${CATEGORY_LABELS[selectedCategory]}`}
         </p>
       </div>
 
-      {/* Category Filter */}
+      {/* Category Filter - Centered pills */}
       {achievements.length > 0 && (
-        <div className="mb-6 flex flex-wrap gap-2">
+        <div className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto">
           <button
             onClick={() => setSelectedCategory("all")}
             className={`
-              px-4 py-2 rounded-lg text-sm font-medium transition-all
+              px-4 py-2 rounded-full text-sm font-medium transition-all
               ${
                 selectedCategory === "all"
                   ? "bg-accent text-accent-foreground shadow-md"
-                  : "bg-surface text-muted hover:bg-surface/80 border border-border"
+                  : "bg-surface/50 text-muted hover:bg-surface border border-border"
               }
             `}
           >
@@ -91,11 +91,11 @@ export function AchievementsPanel({ achievements }: AchievementsPanelProps) {
                 key={category}
                 onClick={() => setSelectedCategory(category)}
                 className={`
-                  px-4 py-2 rounded-lg text-sm font-medium transition-all
+                  px-4 py-2 rounded-full text-sm font-medium transition-all
                   ${
                     selectedCategory === category
                       ? "bg-accent text-accent-foreground shadow-md"
-                      : "bg-surface text-muted hover:bg-surface/80 border border-border"
+                      : "bg-surface/50 text-muted hover:bg-surface border border-border"
                   }
                 `}
               >
@@ -106,8 +106,8 @@ export function AchievementsPanel({ achievements }: AchievementsPanelProps) {
         </div>
       )}
 
-      {/* Achievements Grid - 2 columns desktop, 3 on ultra-wide, 1 on mobile */}
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
+      {/* Achievements Grid - 2 columns desktop, 1 on mobile */}
+      <div className="grid gap-5 grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto">
         {filteredAchievements.map((achievement) => (
           <AchievementCard key={achievement.id} achievement={achievement} />
         ))}
@@ -115,8 +115,8 @@ export function AchievementsPanel({ achievements }: AchievementsPanelProps) {
 
       {/* Empty State */}
       {achievements.length === 0 && (
-        <div className="text-center p-8 bg-surface rounded-lg border border-border">
-          <div className="text-4xl mb-2">🏆</div>
+        <div className="text-center p-8 bg-surface/50 rounded-xl border border-border max-w-md mx-auto">
+          <div className="text-5xl mb-3">🏆</div>
           <div className="text-lg font-bold text-accent mb-2">
             Achievements Loading...
           </div>

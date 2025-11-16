@@ -132,51 +132,84 @@ export function ShareButtons({ creds, score, prestige = 0, achievementsUnlocked 
   }, [generateShareImage]);
 
   return (
-    <div className="flex items-center justify-center gap-4 text-sm opacity-80">
-      <span>Share on:</span>
+    <div className="space-y-4">
+      {/* Stats Display - Updated structure */}
+      <div className="grid grid-cols-2 gap-4 mb-4">
+        {/* Score */}
+        <div className="text-center p-4 rounded-lg bg-surface/30">
+          <div className="text-xs text-muted mb-1">📊 Score</div>
+          <div className="text-lg font-bold text-foreground number-display">
+            {formatNumber(score)}
+          </div>
+        </div>
 
-      {/* X (Twitter) Button */}
-      <button
-        onClick={handleShareX}
-        className="hover:opacity-70 transition-opacity"
-        aria-label="Share on X"
-      >
-        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-        </svg>
-      </button>
+        {/* Prestige */}
+        <div className="text-center p-4 rounded-lg bg-surface/30">
+          <div className="text-xs text-muted mb-1">🔱 Prestige</div>
+          <div className="text-lg font-bold text-foreground number-display">
+            {formatNumber(prestige)}
+          </div>
+        </div>
+      </div>
 
-      {/* Facebook Button */}
-      <button
-        onClick={handleShareFacebook}
-        className="hover:opacity-70 transition-opacity"
-        aria-label="Share on Facebook"
-      >
-        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-        </svg>
-      </button>
+      {/* Total Achievements - Centered below */}
+      <div className="text-center p-4 rounded-lg bg-surface/30">
+        <div className="text-xs text-muted mb-1">🏆 Achievements</div>
+        <div className="text-lg font-bold text-foreground">
+          {achievementsUnlocked} Unlocked
+        </div>
+      </div>
 
-      {/* Download Image Button */}
-      <button
-        onClick={handleDownloadImage}
-        className="hover:opacity-70 transition-opacity"
-        aria-label="Download Progress"
-      >
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+      {/* Share Icons - Arranged cleanly */}
+      <div className="flex items-center justify-center gap-4 pt-2">
+        <span className="text-sm text-muted">Share:</span>
+
+        {/* X (Twitter) Button */}
+        <button
+          onClick={handleShareX}
+          className="p-2 rounded-lg bg-surface/50 hover:bg-surface transition-colors"
+          aria-label="Share on X"
+          title="Share on X"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-          />
-        </svg>
-      </button>
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+          </svg>
+        </button>
+
+        {/* Facebook Button */}
+        <button
+          onClick={handleShareFacebook}
+          className="p-2 rounded-lg bg-surface/50 hover:bg-surface transition-colors"
+          aria-label="Share on Facebook"
+          title="Share on Facebook"
+        >
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+          </svg>
+        </button>
+
+        {/* Download Image Button */}
+        <button
+          onClick={handleDownloadImage}
+          className="p-2 rounded-lg bg-surface/50 hover:bg-surface transition-colors"
+          aria-label="Download Progress"
+          title="Download Progress Image"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+            />
+          </svg>
+        </button>
+      </div>
 
       {/* Hidden canvas for image generation */}
       <canvas ref={canvasRef} className="hidden" />
