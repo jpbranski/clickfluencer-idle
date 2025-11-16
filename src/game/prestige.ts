@@ -171,6 +171,18 @@ export function applyPrestige(
     key_client: 0,
   };
 
+  // Preserve only infinite notoriety upgrades (cred_boost, notoriety_boost)
+  const infiniteNotorietyUpgrades: Record<string, number> = {};
+  const infiniteNotorietyUpgradeIds = ['cred_boost', 'notoriety_boost'];
+
+  if (state.notorietyUpgrades) {
+    for (const upgradeId of infiniteNotorietyUpgradeIds) {
+      if (state.notorietyUpgrades[upgradeId]) {
+        infiniteNotorietyUpgrades[upgradeId] = state.notorietyUpgrades[upgradeId];
+      }
+    }
+  }
+
   // Construct clean new state
   const newState: GameState = {
     ...initial,
@@ -182,7 +194,7 @@ export function applyPrestige(
     themes: preservedThemes,
     achievements: preservedAchievements,
     notorietyGenerators: resetNotorietyGenerators,
-    notorietyUpgrades: {}, // Optional: keep or clear
+    notorietyUpgrades: infiniteNotorietyUpgrades, // Preserve only infinite notoriety upgrades
     settings: preservedSettings,
     activeEvents: [],
     stats: {

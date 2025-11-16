@@ -89,7 +89,7 @@ export const NOTORIETY_UPGRADES: NotorietyUpgrade[] = [
   {
     id: 'cred_boost',
     name: '💰 Cred Boost',
-    description: '+1% to all Cred production (infinite, persists on prestige)',
+    description: '+1% to all Cred production (infinite)',
     baseCost: 10,
     costFormula: (level: number) => Math.floor(10 * Math.pow(1.5, level)),
     cap: Infinity,
@@ -101,7 +101,7 @@ export const NOTORIETY_UPGRADES: NotorietyUpgrade[] = [
   {
     id: 'notoriety_boost',
     name: '🌟 Notoriety Boost',
-    description: '+1% to all Notoriety production (infinite, persists on prestige)',
+    description: '+1% to all Notoriety production (infinite)',
     baseCost: 15,
     costFormula: (level: number) => Math.floor(15 * Math.pow(1.5, level)),
     cap: Infinity,
@@ -115,7 +115,7 @@ export const NOTORIETY_UPGRADES: NotorietyUpgrade[] = [
   {
     id: 'cache_value',
     name: '💎 Cache Value',
-    description: '+5% to Cred Cache bonus amount (max 5 levels, resets on prestige)',
+    description: '+5% to Cred Cache bonus amount (max 5 levels)',
     baseCost: 5,
     costFormula: (level: number) => Math.floor(5 * Math.pow(3, level)),
     cap: 5,
@@ -127,7 +127,7 @@ export const NOTORIETY_UPGRADES: NotorietyUpgrade[] = [
   {
     id: 'drama_boost',
     name: '🎭 Drama Boost',
-    description: '+0.2% global prestige bonus (max 10 levels, resets on prestige)',
+    description: '+0.2% global prestige bonus (max 10 levels)',
     baseCost: 20,
     costFormula: (level: number) => Math.floor(20 * Math.pow(2, level)),
     cap: 10,
@@ -139,7 +139,7 @@ export const NOTORIETY_UPGRADES: NotorietyUpgrade[] = [
   {
     id: 'influencer_endorsement',
     name: '🤝 Influencer Endorsement',
-    description: '+10% to prestige gain multiplier (max 3 levels, resets on prestige)',
+    description: '+10% to prestige gain multiplier (max 3 levels)',
     baseCost: 100,
     costFormula: (level: number) => Math.floor(100 * Math.pow(5, level)),
     cap: 3,
