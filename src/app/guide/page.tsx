@@ -16,25 +16,38 @@ export default function GuidePage() {
       </Head>
 
       <div className="container mx-auto px-4 py-12">
-        <article className="max-w-3xl mx-auto prose prose-invert">
-          <h1 className="text-4xl font-bold text-accent mb-6">
-            Clickfluencer Idle – Complete Player Guide
-          </h1>
+        <article className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <h1
+              className="text-heading-1 sm:text-display-2 mb-4"
+              style={{
+                background: "linear-gradient(135deg, var(--foreground) 0%, var(--accent) 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Complete Player Guide
+            </h1>
+            <p className="text-body-lg text-muted max-w-2xl mx-auto">
+              Master the mechanics, strategies, and systems that fuel your rise to digital stardom.
+            </p>
+          </div>
 
           {/* Introduction */}
-          <div className="bg-card rounded-lg p-6 border border-border mb-6">
-            <p className="text-muted text-lg leading-relaxed">
+          <div className="card-premium p-8 mb-8">
+            <p className="text-body text-muted leading-relaxed mb-4">
               Welcome to{" "}
               <strong className="text-foreground">Clickfluencer Idle</strong>,
               an idle-incremental game where your clicks shape an empire of
               influence. Every tap, every follower, and every viral moment is a
-              step toward becoming the ultimate digital mogul. Whether you’re a
+              step toward becoming the ultimate digital mogul. Whether you're a
               veteran of prestige systems or brand-new to idle games, this guide
               will help you understand not just how to play—but how to thrive.
             </p>
 
-            <p className="text-muted mt-4 leading-relaxed">
-              This document covers the game’s fundamental mechanics, advanced
+            <p className="text-body text-muted leading-relaxed">
+              This document covers the game's fundamental mechanics, advanced
               progression strategies, prestige and notoriety systems, and a few
               subtle tricks from the dev team. Think of it as part strategy
               manual, part developer commentary. If you like seeing the numbers
@@ -44,8 +57,8 @@ export default function GuidePage() {
           </div>
 
           {/* How to Play */}
-          <div className="bg-card rounded-lg p-6 border border-border mb-6">
-            <h2 className="text-2xl font-semibold text-foreground mb-4">
+          <div className="card-premium p-8 mb-8">
+            <h2 className="text-heading-3 text-foreground mb-4">
               How to Play
             </h2>
             <p className="text-muted leading-relaxed mb-4">

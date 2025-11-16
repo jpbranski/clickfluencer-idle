@@ -34,10 +34,14 @@ export const ThemeCard = memo(function ThemeCard({
     <div
       className={`
         relative flex flex-col items-start justify-between
-        w-full max-w-[160px] rounded-lg border-2 p-3 transition-all duration-200
-        bg-card text-foreground overflow-hidden
-        ${isActive ? 'border-[var(--accent)] shadow-accent ring-1 ring-accent' : 'border-border'}
+        w-full max-w-[180px] rounded-xl p-4 transition-all duration-200
+        overflow-hidden
+        ${isActive ? 'card-premium shadow-accent-lg' : 'card-premium'}
       `}
+      style={{
+        borderWidth: isActive ? '2px' : '1px',
+        borderColor: isActive ? 'var(--accent)' : 'var(--border)',
+      }}
     >
       {/* --- Status badges --- */}
       {isActive && (
@@ -68,19 +72,19 @@ export const ThemeCard = memo(function ThemeCard({
         <button
           onClick={handleActivate}
           disabled={isActive}
-          className={`w-full text-xs py-1.5 px-2 ${isActive ? 'btn-muted cursor-default' : 'btn-accent'}`}
+          className={`w-full text-sm py-2 px-3 rounded-lg font-semibold ${isActive ? 'btn-muted cursor-default' : 'btn-primary'}`}
         >
-          {isActive ? 'Active' : 'Activate'}
+          {isActive ? '✓ Active' : 'Activate'}
         </button>
       ) : (
         <button
           onClick={handlePurchase}
           disabled={!affordable}
-          className={`w-full text-xs py-1.5 px-2 ${affordable ? 'btn-accent' : 'btn-muted cursor-not-allowed'}`}
+          className={`w-full text-sm py-2 px-3 rounded-lg font-semibold ${affordable ? 'btn-primary' : 'btn-muted cursor-not-allowed'}`}
         >
           {affordable
-            ? `${theme.cost} 💎`
-            : `${theme.cost} 💎`}
+            ? `💎 ${theme.cost}`
+            : `💎 ${theme.cost}`}
         </button>
       )}
     </div>

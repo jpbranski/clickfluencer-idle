@@ -60,18 +60,10 @@ export const GeneratorCard = memo(function GeneratorCard({
   return (
     <div
       className={`
-        relative p-4 rounded-lg border-2 transition-all duration-200
+        relative p-4 rounded-xl transition-all duration-200
         motion-reduce:transition-none
-        ${
-          generator.unlocked
-            ? "bg-surface border-border"
-            : "bg-card border-border opacity-60"
-        }
-        ${
-          canAfford && generator.unlocked
-            ? "shadow-lg hover:shadow-xl hover:border-[var(--accent)]"
-            : "shadow"
-        }
+        ${generator.unlocked ? "card-premium" : "card opacity-60"}
+        ${!canAfford && generator.unlocked ? "grayscale-[30%]" : ""}
       `}
     >
       {/* Header: Name and Count */}
@@ -146,12 +138,11 @@ export const GeneratorCard = memo(function GeneratorCard({
               onClick={() => handleBuy(1)}
               disabled={!canAfford}
               className={`
-                flex-1 px-3 py-2 rounded font-semibold text-sm
+                flex-1 px-3 py-2 rounded-lg font-semibold text-sm
                 transition-all duration-150
                 focus-visible:outline-none focus-visible:ring-2 ring-accent
                 motion-reduce:transition-none
-                ${canAfford ? "active:scale-95" : "cursor-not-allowed"}
-                ${canAfford ? "btn-accent" : "btn-muted"}
+                ${canAfford ? "btn-primary" : "btn-muted"}
               `}
               aria-label={`Buy one ${generator.name} for ${formatNumber(generator.cost)} creds`}
             >
@@ -163,12 +154,11 @@ export const GeneratorCard = memo(function GeneratorCard({
                 onClick={() => handleBuy(10)}
                 disabled={!canAffordBulk}
                 className={`
-                  px-3 py-2 rounded font-semibold text-sm
+                  px-3 py-2 rounded-lg font-semibold text-sm
                   transition-all duration-150
                   focus-visible:outline-none focus-visible:ring-2 ring-accent
                   motion-reduce:transition-none
-                  ${canAffordBulk ? "active:scale-95" : "cursor-not-allowed"}
-                  ${canAffordBulk ? "btn-accent" : "btn-muted"}
+                  ${canAffordBulk ? "btn-primary" : "btn-muted"}
                 `}
                 aria-label={`Buy 10 ${generator.name}`}
                 title={!canAffordBulk ? `Need ${formatNumber(bulkCost)} Creds for ×10` : `Buy 10 for ${formatNumber(bulkCost)} Creds`}

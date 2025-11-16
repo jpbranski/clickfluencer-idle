@@ -148,54 +148,84 @@ export default function PostButton() {
 
   return (
     <div className="relative flex flex-col items-center justify-center">
-      {/* CLICK BUTTON */}
-      <button
-        onClick={handleClickWrapper}
-        disabled={disabled}
-        className={`
-          relative w-48 h-48 rounded-full
-          transition-all duration-150 ease-out
-          disabled:cursor-not-allowed
-          shadow-2xl hover:shadow-accent
-          ${isPressed ? "scale-95" : "scale-100 hover:scale-105"}
-          ${disabled ? "opacity-50" : "opacity-100"}
-        `}
-        style={{
-          background: disabled ? "var(--muted)" : "var(--accent)",
-          color: "var(--accent-foreground)",
-        }}
-        aria-label={`Click to gain ${actualYield} followers`}
-        aria-disabled={disabled}
-      >
-        <div className="flex flex-col items-center justify-center text-accent-foreground">
-          <span className="text-6xl animate-bounce-slow">👆</span>
-          <span className="mt-2 text-sm font-semibold uppercase tracking-wide">
-            Post
-          </span>
-        </div>
-
+      {/* PREMIUM CLICK BUTTON */}
+      <div className="relative">
+        {/* Glow Effect */}
         {!disabled && (
           <div
-            className={`
-              absolute inset-0 rounded-full
-              bg-white/20 blur-md
-              ${isPressed ? "animate-ping" : "hidden"}
-            `}
+            className="absolute inset-0 rounded-full opacity-40 blur-3xl animate-glow"
+            style={{
+              background: "var(--accent)",
+            }}
           />
         )}
-      </button>
+
+        <button
+          onClick={handleClickWrapper}
+          disabled={disabled}
+          className={`
+            relative w-52 h-52 sm:w-56 sm:h-56 rounded-full
+            transition-all duration-200 ease-out
+            disabled:cursor-not-allowed
+            overflow-hidden group
+            ${isPressed ? "scale-95" : "scale-100 hover:scale-105"}
+            ${disabled ? "opacity-50" : "opacity-100"}
+          `}
+          style={{
+            background: disabled
+              ? "var(--muted)"
+              : "linear-gradient(135deg, var(--accent) 0%, rgb(from var(--accent) r g b) 100%)",
+            color: "var(--accent-foreground)",
+            boxShadow: disabled
+              ? "none"
+              : "0 8px 32px rgb(from var(--accent) r g b / 0.3), 0 0 0 2px rgb(from var(--accent) r g b / 0.1)",
+          }}
+          aria-label={`Click to gain ${actualYield} followers`}
+          aria-disabled={disabled}
+        >
+          {/* Shine Effect on Hover */}
+          {!disabled && (
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              style={{
+                background: "linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)",
+              }}
+            />
+          )}
+
+          <div className="flex flex-col items-center justify-center text-accent-foreground relative z-10">
+            <span className="text-7xl mb-2 group-hover:scale-110 transition-transform duration-200">
+              👆
+            </span>
+            <span className="text-base font-bold uppercase tracking-wider">
+              Post
+            </span>
+          </div>
+
+          {/* Click Ripple Effect */}
+          {!disabled && (
+            <div
+              className={`
+                absolute inset-0 rounded-full
+                bg-white/30 blur-md
+                ${isPressed ? "animate-ping" : "hidden"}
+              `}
+            />
+          )}
+        </button>
+      </div>
 
       {/* FLOATING NUMBERS */}
       <div className="pointer-events-none absolute inset-0">
         {floatingNumbers.map((f) => (
           <div
             key={f.id}
-            className="absolute text-2xl font-bold animate-float-up"
+            className="absolute text-2xl font-bold animate-float-up drop-shadow-lg"
             style={{
               color: "var(--success)",
               left: f.x,
               top: f.y,
-              textShadow: "0 0 4px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.6)",
+              textShadow: "0 0 8px rgba(0,0,0,0.8), 0 2px 4px rgba(0,0,0,0.6)",
             }}
           >
             +{f.value}
@@ -204,11 +234,11 @@ export default function PostButton() {
       </div>
 
       {/* PER CLICK VALUE */}
-      <div className="mt-6 text-center">
-        <div className="text-sm text-muted uppercase tracking-wide">
+      <div className="mt-8 text-center">
+        <div className="stat-label mb-1">
           Per Click
         </div>
-        <div className="text-3xl font-bold number-display gradient-text">
+        <div className="stat-value text-4xl">
           {formatNumber(actualYield)}
         </div>
       </div>

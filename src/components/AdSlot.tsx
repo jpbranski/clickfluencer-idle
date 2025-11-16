@@ -3,24 +3,26 @@
 /**
  * AdSlot.tsx - Google AdSense Placeholder Component
  *
- * Styled placeholder for future AdSense integration
- * Currently displays a styled box with TODO comments for implementation
+ * Premium-styled placeholder for future AdSense integration.
+ * Tastefully integrated with the game's design system.
+ * Uses theme-aware styling that works across all 10 themes.
  */
+
+import { memo } from "react";
 
 interface AdSlotProps {
   slot?: string;
-  format?: "auto" | "rectangle" | "horizontal" | "vertical";
+  format?: "auto" | "rectangle" | "horizontal" | "vertical" | "leaderboard";
   className?: string;
 }
 
-export function AdSlot({
+export const AdSlot = memo(function AdSlot({
   slot = "ad-slot-1",
   format = "auto",
   className = "",
 }: AdSlotProps) {
   // TODO: Implement Google AdSense
-  // 1. Add Google AdSense script to layout.tsx:
-  //    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXX" crossorigin="anonymous"></script>
+  // 1. Add Google AdSense script to layout.tsx
   // 2. Replace ca-pub-XXXXXXXXXX with your AdSense publisher ID
   // 3. Create ad units in AdSense dashboard
   // 4. Replace data-ad-slot values below with actual slot IDs
@@ -29,11 +31,13 @@ export function AdSlot({
   const getDimensions = (format: string) => {
     switch (format) {
       case "rectangle":
-        return "min-h-[250px]";
+        return "min-h-[250px] max-w-[300px]";
       case "horizontal":
-        return "min-h-[90px]";
+        return "min-h-[90px] w-full";
       case "vertical":
         return "min-h-[600px] max-w-[160px]";
+      case "leaderboard":
+        return "min-h-[90px] w-full max-w-[728px]";
       default:
         return "min-h-[200px]";
     }
@@ -42,14 +46,16 @@ export function AdSlot({
   return (
     <div
       className={`
-        relative w-full ${getDimensions(format)}
-        bg-gradient-to-br from-gray-100 to-gray-200 
-        dark:from-gray-800 dark:to-gray-900
-        rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700
+        relative ${getDimensions(format)}
+        rounded-xl border-2 border-dashed
         flex items-center justify-center
-        overflow-hidden
+        overflow-hidden transition-all duration-200
         ${className}
       `}
+      style={{
+        borderColor: "rgb(from var(--border) r g b / 0.3)",
+        backgroundColor: "rgb(from var(--surface) r g b / 0.2)",
+      }}
       aria-label="Advertisement placeholder"
     >
       {/* TODO: Uncomment when AdSense is configured */}
@@ -64,43 +70,47 @@ export function AdSlot({
 
       {/* Placeholder Content - Remove when ads are live */}
       <div className="text-center p-6">
-        <div
-          className="text-4xl mb-2 opacity-50"
-          role="img"
-          aria-label="advertisement"
-        >
-          📢
+        <div className="text-xs uppercase tracking-wider text-muted opacity-40 mb-1">
+          Ad Space
         </div>
-        <div className="text-sm font-semibold text-gray-500 dark:text-gray-500 mb-1">
-          Advertisement Space
-        </div>
-        <div className="text-xs text-gray-400 dark:text-gray-600">
-          {format.toUpperCase()} • Slot: {slot}
+        <div className="text-xs font-mono text-muted opacity-25">
+          {format} • {slot}
         </div>
 
         {/* Development Info */}
         {process.env.NODE_ENV === "development" && (
-          <div className="mt-3 p-2 bg-yellow-100 dark:bg-yellow-900/20 rounded text-xs text-left">
-            <div className="font-semibold text-yellow-800 dark:text-yellow-400 mb-1">
-              🚧 Development Mode
+          <div
+            className="mt-3 p-3 rounded-lg text-xs text-left max-w-xs"
+            style={{
+              backgroundColor: "rgb(from var(--warning) r g b / 0.1)",
+              border: "1px solid rgb(from var(--warning) r g b / 0.3)",
+            }}
+          >
+            <div className="font-semibold mb-1.5" style={{ color: "var(--warning)" }}>
+              Development Mode
             </div>
-            <div className="text-yellow-700 dark:text-yellow-500 space-y-1">
-              <div>• Configure AdSense in layout.tsx</div>
+            <div className="space-y-1 text-muted text-xs">
+              <div>• Configure AdSense</div>
               <div>• Add publisher ID</div>
               <div>• Create ad units</div>
-              <div>• Update slot IDs</div>
             </div>
           </div>
         )}
       </div>
 
       {/* Corner Label */}
-      <div className="absolute top-2 right-2 px-2 py-1 rounded bg-gray-300 dark:bg-gray-700 text-xs font-mono text-gray-600 dark:text-gray-400">
+      <div
+        className="absolute top-2 right-2 px-2 py-0.5 rounded text-xs font-mono"
+        style={{
+          backgroundColor: "rgb(from var(--border) r g b / 0.5)",
+          color: "var(--muted)",
+        }}
+      >
         AD
       </div>
     </div>
   );
-}
+});
 
 /**
  * AdSense Integration Checklist:

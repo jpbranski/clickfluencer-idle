@@ -71,14 +71,12 @@ export const UpgradeCard = memo(function UpgradeCard({
   return (
     <div
       className={`
-        relative p-4 rounded-lg border-2 transition-all duration-200
+        relative p-4 rounded-xl transition-all duration-200
         motion-reduce:transition-none
         ${
           isPurchased && !isInfinite
-            ? "bg-card border-border shadow opacity-40 grayscale"
-            : canAfford
-              ? "bg-surface shadow-lg hover:shadow-xl hover:border-[var(--accent)]"
-              : "bg-surface border-border shadow"
+            ? "card opacity-40 grayscale"
+            : "card-premium"
         }
       `}
     >
@@ -157,12 +155,11 @@ export const UpgradeCard = memo(function UpgradeCard({
             onClick={onPurchase}
             disabled={!canAfford || isPurchased}
             className={`
-              w-full px-4 py-2 rounded-lg font-semibold text-sm
+              w-full px-4 py-2.5 rounded-lg font-semibold text-sm
               transition-all duration-150
               focus-visible:outline-none focus-visible:ring-2 ring-accent
               motion-reduce:transition-none
-              ${canAfford && !isPurchased ? "active:scale-95" : "cursor-not-allowed"}
-              ${canAfford && !isPurchased ? "btn-accent" : "btn-muted"}
+              ${canAfford && !isPurchased ? "btn-primary" : "btn-muted"}
               ${isPurchased ? "opacity-60" : ""}
             `}
             aria-label={`Purchase ${upgrade.name} for ${formatNumber(currentCost)} followers`}
