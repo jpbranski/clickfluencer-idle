@@ -105,7 +105,29 @@ export interface Statistics {
   playTime: number; // milliseconds
   lastTickTime: number;
   runStartTime: number;
+
+  // Phase 2: Expanded Metrics
+  sessionCount: number; // Total number of game sessions
+  highestClickPower: number; // Highest single click power achieved
+  highestCredsPerSecond: number; // Highest creds/sec achieved
+  highestCredsOwned: number; // Highest creds held at once
+  highestAwardsOwned: number; // Highest awards held at once
+  highestPrestigeOwned: number; // Highest prestige currency held at once
+  highestNotorietyOwned: number; // Highest notoriety held at once
+  totalActivePlayTime: number; // Time actively playing (in focus)
+  totalAfkTime: number; // Time away from keyboard
+  firstPlayDate: number; // Timestamp of first play
+  lastPlayDate: number; // Timestamp of last play (for "Welcome Back" achievement)
 }
+
+export type AchievementCategory =
+  | "progression"
+  | "currency"
+  | "generators"
+  | "clicks"
+  | "prestige"
+  | "meta"
+  | "hidden";
 
 export interface Achievement {
   id: string;
@@ -113,6 +135,10 @@ export interface Achievement {
   description: string;
   unlocked: boolean;
   icon: string; // emoji or icon identifier
+  category: AchievementCategory;
+  hidden: boolean; // True if hidden until unlocked
+  tier?: number; // Optional tier indicator (1-4 for tiered achievements)
+  unlockedAt?: number; // Timestamp when unlocked
 }
 
 
@@ -152,7 +178,10 @@ export interface GameState {
     autoSave: boolean;
     showNotifications: boolean;
     soundEnabled: boolean;
+    masterVolume: number; // 0.0 to 1.0
     offlineProgressEnabled: boolean;
+    reducedMotion: boolean; // Accessibility: reduce animations
+    ftueCompleted: boolean; // First-Time User Experience completed
   };
 
   // Cached Values (computed each tick for efficiency)
@@ -355,78 +384,19 @@ export const INITIAL_UPGRADES: Upgrade[] = [
   },
 ];
 
-export const INITIAL_ACHIEVEMENTS: Achievement[] = [
-  {
-    id: "first_click",
-    name: "First Click",
-    description: "Click your first post",
-    unlocked: false,
-    icon: "👆",
-  },
-  {
-    id: "hundred_followers",
-    name: "Rising Star",
-    description: "Reach 100 followers",
-    unlocked: false,
-    icon: "⭐",
-  },
-  {
-    id: "first_generator",
-    name: "Content Creator",
-    description: "Purchase your first generator",
-    unlocked: false,
-    icon: "📸",
-  },
-  {
-    id: "first_upgrade",
-    name: "Self Improvement",
-    description: "Purchase your first upgrade",
-    unlocked: false,
-    icon: "🔧",
-  },
-  {
-    id: "million_followers",
-    name: "Influencer Status",
-    description: "Reach 1 million followers",
-    unlocked: false,
-    icon: "💫",
-  },
-  {
-    id: "first_prestige",
-    name: "Fresh Start",
-    description: "Perform your first prestige",
-    unlocked: false,
-    icon: "🔄",
-  },
-  {
-    id: "collector",
-    name: "Award Collector",
-    description: "Collect 100 Awards",
-    unlocked: false,
-    icon: "💎",
-  },
-  {
-    id: "theme_master",
-    name: "Fashion Icon",
-    description: "Unlock all themes",
-    unlocked: false,
-    icon: "🎨",
-  },
-  {
-    id: "notorious",
-    name: "Notorious",
-    description: "Reach 100 Notoriety",
-    unlocked: false,
-    icon: "😎",
-  },
-  {
-    id: "prestige_veteran",
-    name: "Prestige Veteran",
-    description: "Reach prestige level 10",
-    unlocked: false,
-    icon: "🏆",
-  },
-];
+// Import achievement definitions from data file
+import { ALL_ACHIEVEMENTS } from "@/data/achievements";
+
+export const INITIAL_ACHIEVEMENTS: Achievement[] = ALL_ACHIEVEMENTS.map((def) => ({
+  id: def.id,
+  name: def.name,
+  description: def.description,
+  unlocked: false,
+  icon: def.icon,
+  category: def.category,
+  hidden: def.hidden,
+  tier: def.tier,
+}));
 
 export function createInitialState(): GameState {
   const now = Date.now();
@@ -448,6 +418,18 @@ export function createInitialState(): GameState {
       playTime: 0,
       lastTickTime: now,
       runStartTime: now,
+      // Phase 2: Expanded Metrics
+      sessionCount: 1, // First session
+      highestClickPower: 0,
+      highestCredsPerSecond: 0,
+      highestCredsOwned: 0,
+      highestAwardsOwned: 0,
+      highestPrestigeOwned: 0,
+      highestNotorietyOwned: 0,
+      totalActivePlayTime: 0,
+      totalAfkTime: 0,
+      firstPlayDate: now,
+      lastPlayDate: now,
     },
     notorietyGenerators: {
       smm: 0,
@@ -466,9 +448,12 @@ export function createInitialState(): GameState {
       autoSave: true,
       showNotifications: true,
       soundEnabled: true,
+      masterVolume: 0.7, // Default 70% volume
       offlineProgressEnabled: true,
+      reducedMotion: false,
+      ftueCompleted: false, // Show FTUE on first run
     },
-    version: "v1.0.0",
+    version: "v0.4.0", // Phase 2 version
     lastSaveTime: now,
     themes: baseThemes.map((t) => ({
       ...t,
