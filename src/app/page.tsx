@@ -110,7 +110,7 @@ export default function HomePage() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ backgroundColor: "var(--accent)" }} />
                 <span className="relative inline-flex rounded-full h-2 w-2" style={{ backgroundColor: "var(--accent)" }} />
               </span>
-              Free to Play • No Ads • Privacy First
+              Free to Play • Privacy First
             </span>
           </motion.div>
 
