@@ -9,7 +9,7 @@ export const themes: Theme[] = [
     description: 'Default stormy slate theme.',
     cost: 0,
     unlocked: true,
-    preview: 'linear-gradient(to bottom right, #1b2330, #2b3350)',
+    preview: 'linear-gradient(135deg, #12141b 0%, #1e2230 100%)',
     active: true,
     bonusMultiplier: 1.0, // No bonus (default)
     backgroundImage: '/themes/default-bg.webp',
@@ -35,7 +35,7 @@ export const themes: Theme[] = [
     description: 'Cool purples and silvers under starlight. +10% follower generation.',
     cost: 5,
     unlocked: false,
-    preview: 'linear-gradient(to bottom right, #1b1f3b 0%, #2a2450 50%, #0b0d1e 100%)',
+    preview: 'linear-gradient(135deg, #1a1440 0%, #362f7a 50%, #4b5ac8 100%)',
     active: false,
     bonusMultiplier: 1.1, // +10% follower generation
     backgroundImage: '/themes/default-bg.webp',
@@ -48,7 +48,7 @@ export const themes: Theme[] = [
     description: 'A peaceful palette of greens and sunlight. +8% follower generation.',
     cost: 10,
     unlocked: false,
-    preview: 'linear-gradient(to bottom right, #d8f3dc 0%, #b7e4c7 50%, #95d5b2 100%)',
+    preview: 'linear-gradient(135deg, #d6f7d7 0%, #9df2b2 50%, #6ed38d 100%)',
     active: false,
     bonusMultiplier: 1.08, // +8% follower generation
     backgroundImage: '/themes/default-bg.webp',
@@ -61,7 +61,7 @@ export const themes: Theme[] = [
     description: 'Monokai dark for true hackers. +12% follower generation.',
     cost: 25,
     unlocked: false,
-    preview: 'linear-gradient(to bottom right, #2a2b24 0%, #272822 50%, #1e1f1c 100%)',
+    preview: 'linear-gradient(135deg, #1b1d17 0%, #2f3322 50%, #515b2d 100%)',
     active: false,
     bonusMultiplier: 1.12, // +12% follower generation
     backgroundImage: '/themes/default-bg.webp',
@@ -74,7 +74,7 @@ export const themes: Theme[] = [
     description: 'Soft pinks drifting through spring air. +7% follower generation.',
     cost: 50,
     unlocked: false,
-    preview: 'linear-gradient(to bottom right, #fff1f5 0%, #ffd9e5 50%, #ffc1d6 100%)',
+    preview: 'linear-gradient(135deg, #ffe0ec 0%, #f7b8d1 50%, #e48cb1 100%)',
     active: false,
     bonusMultiplier: 1.07, // +7% follower generation
     backgroundImage: '/themes/default-bg.webp',
@@ -87,7 +87,7 @@ export const themes: Theme[] = [
     description: 'Largely white and black (like a panda), with red accents like a crayon. +6.9% click power.',
     cost: 69,
     unlocked: false,
-    preview: 'linear-gradient(to bottom right, #FFFFFF 0%, #000000 50%, #FF2B2B 100%)',
+    preview: 'linear-gradient(135deg, #0d0b0c 0%, #301316 50%, #862328 100%)',
     active: false,
     bonusMultiplier: 1.0, // No production bonus
     bonusClickPower: 6.9, // +6.9 to base click power
@@ -99,7 +99,7 @@ export const themes: Theme[] = [
     description: 'Belladonna tones of violet and green. +15% follower generation.',
     cost: 100,
     unlocked: false,
-    preview: 'linear-gradient(to bottom right, #211326 0%, #311b3a 50%, #0c0c0d 100%)',
+    preview: 'linear-gradient(135deg, #140e24 0%, #361c5a 50%, #5a2f83 100%)',
     active: false,
     bonusMultiplier: 1.15, // +15% follower generation
     backgroundImage: '/themes/default-bg.webp',
@@ -112,7 +112,7 @@ export const themes: Theme[] = [
     description: 'Inspired by Extra Life\'s heroic blue. +20% follower generation.',
     cost: 500,
     unlocked: false,
-    preview: 'linear-gradient(to bottom right, #0a192f 0%, #112240 50%, #0d2742 100%)',
+    preview: 'linear-gradient(135deg, #0b1b40 0%, #123d8a 50%, #1a6aff 100%)',
     active: false,
     bonusMultiplier: 1.2, // +20% follower generation
     backgroundImage: '/themes/default-bg.webp',
@@ -125,7 +125,7 @@ export const themes: Theme[] = [
     description: 'Luxury that shines bright and bold. +25% follower generation.',
     cost: 1000,
     unlocked: false,
-    preview: 'linear-gradient(to bottom right, #3a2a10 0%, #6f5215 50%, #d4af37 100%)',
+    preview: 'linear-gradient(135deg, #5d4500 0%, #c9a034 60%, #f5d97d 100%)',
     active: false,
     bonusMultiplier: 1.25, // +25% follower generation
     backgroundImage: '/themes/default-bg.webp',
