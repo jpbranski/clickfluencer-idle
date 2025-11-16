@@ -34,7 +34,7 @@ export default function AchievementsPage() {
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
           {achievements.map((achievement) => (
             <AchievementCard key={achievement.id} achievement={achievement} />
           ))}
@@ -55,31 +55,59 @@ interface AchievementCardProps {
 }
 
 function AchievementCard({ achievement }: AchievementCardProps) {
-  const { name, description, unlocked, icon } = achievement;
+  const { name, description, unlocked, icon, hidden } = achievement;
+
+  const displayName = hidden && !unlocked ? "???" : name;
+  const displayDescription = hidden && !unlocked ? "" : description;
+  const displayIcon = hidden && !unlocked ? "❓" : icon;
 
   return (
     <div
       className={`
-        relative p-6 rounded-lg border
-        ${unlocked
-          ? "bg-surface border-accent shadow-lg"
-          : "bg-surface/50 border-border opacity-60"
+        relative p-3 rounded-lg border transition-all
+        ${
+          unlocked
+            ? "bg-gradient-to-br from-surface to-surface/50 border-accent/40 shadow-md hover:shadow-lg"
+            : "bg-surface/30 border-border/50"
         }
-        transition-all hover:scale-105
+        ${unlocked ? "hover:scale-[1.01]" : ""}
       `}
+      style={unlocked ? {
+        boxShadow: "0 0 16px rgb(from var(--success) r g b / 0.15), 0 4px 8px rgb(0 0 0 / 0.1)"
+      } : undefined}
     >
       {/* Lock overlay for locked achievements */}
       {!unlocked && (
-        <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-background/80 backdrop-blur-sm">
-          <span className="text-4xl">🔒</span>
+        <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-background/70 backdrop-blur-[2px] z-10">
+          <span className="text-4xl opacity-40">🔒</span>
         </div>
       )}
 
-      <div className="text-center">
-        <div className="text-5xl mb-3">{icon}</div>
-        <h3 className="text-lg font-bold mb-2">{name}</h3>
-        <p className="text-sm text-muted">{description}</p>
+      <div className="text-center pt-6 pb-2">
+        <div
+          className={`text-5xl mb-2 ${hidden && !unlocked ? "opacity-30 grayscale" : ""}`}
+          style={hidden && !unlocked ? { filter: "grayscale(100%) opacity(0.3)" } : undefined}
+        >
+          {displayIcon}
+        </div>
+        <h3 className={`text-sm font-bold mb-1.5 px-2 ${unlocked ? "text-foreground" : "text-muted"}`}>
+          {displayName}
+        </h3>
+        {displayDescription && (
+          <p className={`text-xs leading-relaxed px-2 ${unlocked ? "text-muted" : "text-muted/60"}`}>
+            {displayDescription}
+          </p>
+        )}
+        {hidden && !unlocked && (
+          <p className="text-xs text-muted/40 italic px-2">???</p>
+        )}
       </div>
+
+      {unlocked && (
+        <div className="absolute bottom-2 right-2 text-success z-20">
+          <span className="text-base font-bold">✓</span>
+        </div>
+      )}
     </div>
   );
 }

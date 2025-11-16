@@ -75,15 +75,15 @@ export default function HomePage() {
 
       {/* Hero Section - Premium Landing */}
       <section className="relative flex flex-col items-center justify-center text-center min-h-screen px-6 overflow-hidden">
-        {/* Subtle animated accent overlay - works with unified background */}
+        {/* Very subtle animated accent overlay - works with unified background */}
         <motion.div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: "radial-gradient(circle at 50% 50%, rgb(from var(--accent) r g b / 0.08), transparent 70%)",
+            background: "radial-gradient(circle at 50% 50%, rgb(from var(--accent) r g b / 0.05), transparent 80%)",
           }}
           animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.5, 0.8, 0.5]
+            scale: [1, 1.05, 1],
+            opacity: [0.4, 0.6, 0.4]
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
@@ -279,6 +279,8 @@ export default function HomePage() {
             <ShareButtons
               creds={state.creds}
               score={state.stats.totalCredsEarned}
+              prestige={state.prestige}
+              achievementsUnlocked={state.achievements?.filter((a) => a.unlocked).length || 0}
             />
           }
           generatorsTab={

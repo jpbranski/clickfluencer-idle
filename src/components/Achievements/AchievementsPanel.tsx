@@ -106,8 +106,8 @@ export function AchievementsPanel({ achievements }: AchievementsPanelProps) {
         </div>
       )}
 
-      {/* Achievements Grid */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+      {/* Achievements Grid - 2 columns desktop, 3 on ultra-wide, 1 on mobile */}
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
         {filteredAchievements.map((achievement) => (
           <AchievementCard key={achievement.id} achievement={achievement} />
         ))}
@@ -138,56 +138,78 @@ function AchievementCard({ achievement }: AchievementCardProps) {
 
   // Hidden achievements show ??? until unlocked
   const displayName = hidden && !unlocked ? "???" : name;
-  const displayDescription = hidden && !unlocked ? "Unlock to reveal" : description;
+  const displayDescription = hidden && !unlocked ? "" : description;
   const displayIcon = hidden && !unlocked ? "❓" : icon;
 
   return (
     <div
       className={`
-        relative p-4 rounded-lg border
+        relative p-3 rounded-lg border transition-all
         ${
           unlocked
-            ? "bg-gradient-to-br from-surface to-surface/50 border-accent shadow-lg ring-1 ring-accent/20"
-            : "bg-surface/30 border-border/50"
+            ? "bg-gradient-to-br from-surface to-surface/50 border-accent/40 shadow-md hover:shadow-lg ring-1 ring-success/10"
+            : "bg-surface/30 border-border/50 hover:border-border"
         }
-        transition-all hover:scale-[1.02] group
+        ${unlocked ? "hover:scale-[1.01]" : ""}
       `}
+      style={unlocked ? {
+        boxShadow: "0 0 16px rgb(from var(--success) r g b / 0.15), 0 4px 8px rgb(0 0 0 / 0.1)"
+      } : undefined}
     >
       {/* Lock overlay for locked achievements */}
       {!unlocked && (
-        <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-background/70 backdrop-blur-[2px]">
-          <span className="text-4xl opacity-50">🔒</span>
+        <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-background/70 backdrop-blur-[2px] z-10">
+          <span className="text-4xl opacity-40">🔒</span>
         </div>
       )}
 
-      {/* Tier Badge */}
-      {tier && unlocked && (
-        <div className="absolute top-2 right-2 px-2 py-1 rounded-md bg-accent/20 border border-accent/40">
-          <span className="text-xs font-bold text-accent">Tier {tier}</span>
+      {/* Tier Badge - positioned to not overlap icon */}
+      {tier && (
+        <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-accent/20 border border-accent/30 z-20">
+          <span className="text-[10px] font-bold text-accent">T{tier}</span>
         </div>
       )}
 
-      {/* Category Badge (for unlocked achievements) */}
-      {unlocked && (
-        <div className="absolute top-2 left-2 text-xs opacity-60">
-          {CATEGORY_ICONS[category]}
-        </div>
-      )}
-
-      <div className="text-center">
-        <div className={`text-4xl mb-2 ${!unlocked && "opacity-40"}`}>{displayIcon}</div>
-        <h3 className={`text-base font-bold mb-1 ${unlocked ? "text-foreground" : "text-muted"}`}>
-          {displayName}
-        </h3>
-        <p className={`text-xs ${unlocked ? "text-muted" : "text-muted/60"}`}>
-          {displayDescription}
-        </p>
+      {/* Category Badge */}
+      <div className="absolute top-2 left-2 text-xs opacity-50 z-20">
+        {CATEGORY_ICONS[category]}
       </div>
 
-      {/* Unlocked indicator */}
+      <div className="text-center pt-6 pb-2">
+        {/* Icon - larger and with secret achievement effect */}
+        <div
+          className={`text-5xl mb-2 ${hidden && !unlocked ? "opacity-30 grayscale" : ""}`}
+          style={hidden && !unlocked ? { filter: "grayscale(100%) opacity(0.3)" } : undefined}
+        >
+          {displayIcon}
+        </div>
+
+        {/* Name */}
+        <h3 className={`text-sm font-bold mb-1.5 px-2 ${unlocked ? "text-foreground" : "text-muted"}`}>
+          {displayName}
+        </h3>
+
+        {/* Requirement/Description */}
+        {displayDescription && (
+          <div className="px-2">
+            <p className={`text-xs leading-relaxed ${unlocked ? "text-muted" : "text-muted/60"}`}>
+              {displayDescription}
+            </p>
+          </div>
+        )}
+
+        {/* Secret achievement placeholder */}
+        {hidden && !unlocked && (
+          <p className="text-xs text-muted/40 italic px-2">
+            ???
+          </p>
+        )}
+      </div>
+
+      {/* Unlocked checkmark indicator */}
       {unlocked && (
-        <div className="absolute bottom-2 right-2 text-success">
-          <span className="text-lg">✓</span>
+        <div className="absolute bottom-2 right-2 text-success z-20">
+          <span className="text-base font-bold">✓</span>
         </div>
       )}
     </div>
