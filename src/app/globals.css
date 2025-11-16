@@ -385,6 +385,59 @@
       transparent 100%
     );
     background-size: 200% 100%;
+    animation: shimmer 2s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* Premium glow effect */
+  .glow {
+    box-shadow:
+      0 0 20px rgb(from var(--accent) r g b / 0.3),
+      0 0 40px rgb(from var(--accent) r g b / 0.1);
+  }
+
+  .glow-strong {
+    box-shadow:
+      0 0 30px rgb(from var(--accent) r g b / 0.5),
+      0 0 60px rgb(from var(--accent) r g b / 0.2),
+      0 0 90px rgb(from var(--accent) r g b / 0.1);
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow:
+        0 0 30px rgb(from var(--accent) r g b / 0.5),
+        0 0 60px rgb(from var(--accent) r g b / 0.2);
+    }
+    50% {
+      box-shadow:
+        0 0 40px rgb(from var(--accent) r g b / 0.7),
+        0 0 80px rgb(from var(--accent) r g b / 0.3),
+        0 0 120px rgb(from var(--accent) r g b / 0.1);
+    }
+  }
+
+  /* Sophisticated gradient overlays */
+  .bg-gradient-sophisticated {
+    background:
+      radial-gradient(ellipse at top left, rgb(from var(--accent) r g b / 0.12), transparent 50%),
+      radial-gradient(ellipse at bottom right, rgb(from var(--accent) r g b / 0.08), transparent 50%),
+      radial-gradient(ellipse at top right, rgb(from var(--accent) r g b / 0.05), transparent 40%),
+      var(--background);
+  }
+
+  /* Ultra-smooth transitions */
+  .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .transition-bounce {
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
 
   /* Text utilities */

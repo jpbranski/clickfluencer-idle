@@ -10,6 +10,7 @@
 import { ReactNode, useState } from "react";
 import { SidebarColumn } from "./SidebarColumn";
 import { BottomNav } from "./BottomNav";
+import { AdSlot } from "@/components/AdSlot";
 
 interface GameShellProps {
   children: ReactNode;
@@ -74,6 +75,10 @@ export function GameShell({
             <div className="w-full max-w-md">
               {quickStats}
             </div>
+            {/* Desktop Ad Slot */}
+            <div className="mt-4">
+              <AdSlot format="rectangle" />
+            </div>
           </div>
         </div>
       </div>
@@ -92,6 +97,11 @@ export function GameShell({
           {activeTab === "upgrades" && upgradesTab}
           {activeTab === "themes" && themesTab}
           {activeTab === "achievements" && achievementsTab}
+
+          {/* Mobile Ad Slot */}
+          <div className="p-4 flex justify-center">
+            <AdSlot format="rectangle" />
+          </div>
         </div>
 
         {/* Bottom Navigation - Always Visible */}

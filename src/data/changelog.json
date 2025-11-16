@@ -1,32 +1,5 @@
 [
   {
-    "version": "0.3.0",
-    "slug": "v0-3-0-design-ux-overhaul",
-    "date": "2025-11-15",
-    "title": "v0.3.0 — Premium Design & UX Overhaul",
-    "description": "Major visual redesign transforming Clickfluencer Idle into a polished, commercial-quality idle game. This update introduces a comprehensive design system, enhanced typography, premium component styling, and improved visual hierarchy across every screen. The game now feels like a top-chart idle experience with cohesive theming, smoother animations, and professional polish throughout.",
-    "changes": [
-      "Comprehensive Design System — Implemented professional typography scale with 7 heading levels and consistent font sizing",
-      "Premium Shadow System — Added game-card shadows, accent glows, and elevation levels for depth and polish",
-      "Enhanced Button Styles — New btn-primary and btn-secondary classes with micro-interactions, hover lifts, and press states",
-      "Premium Click Button — Redesigned main Post button with animated glow effect, gradient backgrounds, and shine-on-hover",
-      "Card Component Overhaul — All Generator, Upgrade, and Theme cards now use card-premium styling with better hover states",
-      "Hero Section Redesign — New animated mesh gradient background with staggered entrance animations and improved CTAs",
-      "Typography Improvements — Added gradient text for headings, stat-value and stat-label utilities for consistent number displays",
-      "Theme-Aware Gradients — All new gradients use CSS variables and rgb(from var()) for perfect theme compatibility across all 10 themes",
-      "Enhanced AdSlot Component — Future-proof ad placeholder with theme-aware styling and tasteful development indicators",
-      "About & Guide Pages Polish — Redesigned information pages with card-premium layouts and improved readability",
-      "Improved Floating Numbers — Better text shadows and drop-shadow effects for click feedback visibility",
-      "New Animation System — Added shimmer and glow keyframes for premium visual effects",
-      "Gradient Mesh Backgrounds — New bg-gradient-mesh and bg-gradient-radial utilities for hero sections",
-      "Badge System Refresh — Updated badge styles with better padding and font weights",
-      "Performance Preserved — All visual enhancements maintain existing React.memo optimizations and CSS containment",
-      "Accessibility Maintained — Focus states, ARIA labels, and reduced-motion preferences fully supported in new design system",
-      "Mobile Optimizations — Responsive typography and touch-friendly button sizes across all screen sizes",
-      "Consistent Border Radius — Unified rounded-xl and rounded-2xl usage across all interactive elements"
-    ]
-  },
-  {
     "version": "0.1.0",
     "slug": "v0-1-0-initial-release",
     "date": "2025-11-01",
@@ -139,6 +112,67 @@
       "Improved banner spacing and layout with additional bottom padding to create clearer separation between UI sections",
       "Improved formatting of large numbers in the prestige cost display for easier readability across themes",
       "Added internal safeguards to prevent corrupted upgrades from blocking progression in imported save files"
+    ]
+  },
+  {
+    "version": "0.3.0",
+    "slug": "v0-3-0-design-ux-overhaul",
+    "date": "2025-11-15",
+    "title": "v0.3.0 — Premium Design & UX Overhaul",
+    "description": "Major visual redesign transforming Clickfluencer Idle into a polished, commercial-quality idle game. This update introduces a comprehensive design system, enhanced typography, premium component styling, and improved visual hierarchy across every screen. The game now feels like a top-chart idle experience with cohesive theming, smoother animations, and professional polish throughout.",
+    "changes": [
+      "Comprehensive Design System — Implemented professional typography scale with 7 heading levels and consistent font sizing",
+      "Premium Shadow System — Added game-card shadows, accent glows, and elevation levels for depth and polish",
+      "Enhanced Button Styles — New btn-primary and btn-secondary classes with micro-interactions, hover lifts, and press states",
+      "Premium Click Button — Redesigned main Post button with animated glow effect, gradient backgrounds, and shine-on-hover",
+      "Card Component Overhaul — All Generator, Upgrade, and Theme cards now use card-premium styling with better hover states",
+      "Hero Section Redesign — New animated mesh gradient background with staggered entrance animations and improved CTAs",
+      "Typography Improvements — Added gradient text for headings, stat-value and stat-label utilities for consistent number displays",
+      "Theme-Aware Gradients — All new gradients use CSS variables and rgb(from var()) for perfect theme compatibility across all 10 themes",
+      "Enhanced AdSlot Component — Future-proof ad placeholder with theme-aware styling and tasteful development indicators",
+      "About & Guide Pages Polish — Redesigned information pages with card-premium layouts and improved readability",
+      "Improved Floating Numbers — Better text shadows and drop-shadow effects for click feedback visibility",
+      "New Animation System — Added shimmer and glow keyframes for premium visual effects",
+      "Gradient Mesh Backgrounds — New bg-gradient-mesh and bg-gradient-radial utilities for hero sections",
+      "Badge System Refresh — Updated badge styles with better padding and font weights",
+      "Performance Preserved — All visual enhancements maintain existing React.memo optimizations and CSS containment",
+      "Accessibility Maintained — Focus states, ARIA labels, and reduced-motion preferences fully supported in new design system",
+      "Mobile Optimizations — Responsive typography and touch-friendly button sizes across all screen sizes",
+      "Consistent Border Radius — Unified rounded-xl and rounded-2xl usage across all interactive elements"
+    ]
+  },
+  {
+    "version": "0.3.1",
+    "slug": "v0-3-1-phase-1-economy-polish-showcase",
+    "date": "2025-11-16",
+    "title": "v0.3.1 — Phase 1: Economy Tools + Ultra Polish + Showcase",
+    "description": "Major development update introducing professional economy balancing tools, enhanced UI polish with sophisticated gradients and animations, and a stunning marketing showcase page. This update also refines ad slot support across the entire application and delivers the highest level of visual quality to date.",
+    "changes": [
+      "Economy Balancer DevTool — New interactive simulation tool at /devtools/economy with real-time charts, parameter editing, and save/load profiles",
+      "Live Economy Simulation — Visualize production, prestige gains, and cost curves over configurable time periods with interactive charts",
+      "Parameter Testing — Edit generator multipliers, cost scaling, upgrade values, and prestige thresholds in real-time",
+      "Preset Configurations — Quick-load balanced, fast, and slow economy configurations for rapid testing",
+      "Chart Visualizations — Production graphs, total creds accumulation, prestige point tracking, generator costs, and upgrade comparisons using Recharts",
+      "Ultra UI Polish Pass — Added sophisticated gradient overlays (bg-gradient-sophisticated), premium glow effects, and pulse animations",
+      "Enhanced Animation System — New shimmer, glow, and pulse-glow keyframes with theme-aware styling",
+      "Smooth Transitions — Added cubic-bezier easing functions (transition-smooth, transition-bounce) for premium feel",
+      "Marketing Showcase Page — Professional game studio landing page at /showcase with hero section, features, screenshots, and testimonials",
+      "SEO Optimization — Comprehensive metadata, Open Graph tags, and Twitter Card support for the showcase page",
+      "Changelog Integration — Dynamic latest update section on showcase page pulling from changelog data",
+      "Enhanced Ad Support — Added strategic ad slot placements throughout the app (desktop sidebar, mobile tabs, showcase page)",
+      "Multiple Ad Formats — Leaderboard, rectangle, and vertical ad slot positions with theme-aware placeholder styling",
+      "Corrected Hero Badge — Removed 'No Ads' messaging to reflect future monetization plans while maintaining privacy-first approach",
+      "Gradient Enhancements — New bg-gradient-sophisticated with multi-layer radial gradients for premium visual depth",
+      "Glow Effects — Added .glow and .glow-strong utility classes with animated pulsing for important UI elements",
+      "Performance Optimized — All new animations respect prefers-reduced-motion and use GPU-accelerated properties",
+      "Theme Compatibility — All new gradients, glows, and effects adapt perfectly to all 10 theme variants",
+      "Testimonials Section — Player review cards with 5-star ratings and authentic feedback on showcase page",
+      "Feature Grid — Six key features highlighted with icons, titles, and descriptions on showcase page",
+      "Screenshot Placeholders — Attractive placeholders for game screens with thematic icons and descriptions",
+      "Final CTA Section — Compelling call-to-action with gradient background and prominent play button",
+      "Developer Tools — Economy balancer positioned for future expansion with additional dev utilities",
+      "Chart Theme Integration — Recharts styled with CSS variables for perfect theme compatibility",
+      "Mobile Responsive — All new pages and features fully responsive across all device sizes"
     ]
   }
 ]

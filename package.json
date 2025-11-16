@@ -1,6 +1,6 @@
 {
   "name": "clickfluencer-idle",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -21,7 +21,8 @@
     "next": "^16.0.0",
     "next-sitemap": "^4.2.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "recharts": "^3.4.1"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^16.0.0",
