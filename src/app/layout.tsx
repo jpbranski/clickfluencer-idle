@@ -94,7 +94,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         )}
       </head>
 
-      <body className="antialiased bg-unified-gradient text-foreground min-h-screen flex flex-col">
+      <body className="antialiased text-foreground min-h-screen flex flex-col">
         <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
