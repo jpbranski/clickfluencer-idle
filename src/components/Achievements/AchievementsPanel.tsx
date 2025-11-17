@@ -179,9 +179,9 @@ function AchievementCard({ achievement }: AchievementCardProps) {
         boxShadow: "0 0 20px rgb(from var(--success) r g b / 0.15), 0 4px 10px rgb(0 0 0 / 0.15)"
       } : undefined}
     >
-      {/* Lock overlay for locked achievements */}
+      {/* Lock overlay for locked achievements - only blur for hidden/secret achievements */}
       {!unlocked && (
-        <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-background/75 backdrop-blur-[2px] z-10">
+        <div className={`absolute inset-0 flex items-center justify-center rounded-xl ${hidden ? 'bg-background/75 backdrop-blur-[2px]' : 'bg-background/40'} z-10`}>
           <span className="text-5xl opacity-30">🔒</span>
         </div>
       )}

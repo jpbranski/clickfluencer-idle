@@ -30,8 +30,9 @@ export function ThemesPanel({
       <div className="text-center">
         <h2 className="text-3xl font-bold mb-2 text-foreground">Themes</h2>
         <p className="text-sm text-muted">
-          Unlock cosmetic themes with awards. Bonuses apply{" "}
-          <strong>permanently</strong> once unlocked!
+          Unlock themes with awards. <strong>ALL owned themes</strong> apply their bonuses simultaneously!
+          <br />
+          <span className="text-xs opacity-75">Active theme only changes appearance</span>
         </p>
       </div>
 
@@ -65,9 +66,9 @@ export function ThemesPanel({
               Awards have a small chance to drop from each click. Keep
               clicking to collect them!
               <br />
-              <strong>Bonuses are permanent</strong> - once you
-              unlock a theme, its bonus applies forever, even when
-              not active!
+              <strong>All owned themes stack!</strong> Once you unlock a theme,
+              its bonus applies permanently alongside all other unlocked themes.
+              The "Active" theme only affects visual appearance.
             </p>
           </div>
         </div>
