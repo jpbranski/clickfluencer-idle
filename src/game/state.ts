@@ -535,11 +535,14 @@ export function getClickPower(state: GameState): number {
       basePower += u.effect.value;
     });
 
-  // Apply active theme click power bonus (additive to base power)
-  const activeTheme = state.themes.find((t) => t.active);
-  if (activeTheme && activeTheme.bonusClickPower) {
-    basePower += activeTheme.bonusClickPower;
-  }
+  // Apply ALL owned themes' click power bonuses (additive to base power)
+  state.themes
+    .filter((t) => t.unlocked)
+    .forEach((theme) => {
+      if (theme.bonusClickPower) {
+        basePower += theme.bonusClickPower;
+      }
+    });
 
   let power = basePower;
 
@@ -576,10 +579,12 @@ export function getClickPower(state: GameState): number {
   // Apply prestige bonus (+10% per prestige point)
   power *= 1 + state.prestige * 0.1;
 
-  // Apply active theme multiplier bonus (only the active theme)
-  if (activeTheme) {
-    power *= activeTheme.bonusMultiplier;
-  }
+  // Apply ALL owned themes' multiplier bonuses (multiplicative)
+  state.themes
+    .filter((t) => t.unlocked)
+    .forEach((theme) => {
+      power *= theme.bonusMultiplier;
+    });
 
   return power;
 }
@@ -649,11 +654,12 @@ export function getFollowersPerSecond(state: GameState): number {
   // Apply prestige bonus (+10% per prestige point)
   total *= 1 + state.prestige * 0.1;
 
-  // Apply active theme bonus (only the active theme)
-  const activeTheme = state.themes.find((t) => t.active);
-  if (activeTheme) {
-    total *= activeTheme.bonusMultiplier;
-  }
+  // Apply ALL owned themes' multiplier bonuses (multiplicative)
+  state.themes
+    .filter((t) => t.unlocked)
+    .forEach((theme) => {
+      total *= theme.bonusMultiplier;
+    });
 
   // Apply active event multipliers
   state.activeEvents.forEach((event) => {

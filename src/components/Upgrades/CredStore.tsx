@@ -45,12 +45,13 @@ export function CredStore({
               </div>
 
               <div className="text-sm mt-1">
-                Reset your progress to gain{" "}
-                <span className="font-bold">{prestigeGain} Prestige</span>
+                Purchase{" "}
+                <span className="font-bold">{prestigeGain} Prestige Point</span>
+                {" "}for {formatNumber(prestigeCost(prestige))} Creds
               </div>
 
               <div className="text-xs opacity-90 mt-1">
-                New bonus: ×{(1 + (prestige + prestigeGain) * 0.1).toFixed(1)} production
+                New bonus: ×{(1 + (prestige + prestigeGain) * 0.1).toFixed(1)} production • Prestige Level: {prestige} → {prestige + prestigeGain}
               </div>
             </div>
 
