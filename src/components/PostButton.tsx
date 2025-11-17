@@ -100,12 +100,14 @@ export default function PostButton() {
         });
       });
 
-    // Theme additive
-    const activeTheme = state.themes.find((t) => t.active);
-    if (activeTheme?.bonusClickPower) {
+    // Theme additive (sum of all owned themes with bonusClickPower)
+    const totalThemeClickPower = state.themes
+      .filter((t) => t.unlocked && t.bonusClickPower)
+      .reduce((sum, t) => sum + (t.bonusClickPower || 0), 0);
+    if (totalThemeClickPower > 0) {
       breakdownItems.push({
-        label: `Theme Bonus (${activeTheme.name})`,
-        value: `+${activeTheme.bonusClickPower}`,
+        label: `Theme Bonus (All Owned)`,
+        value: `+${totalThemeClickPower}`,
       });
     }
 
@@ -131,15 +133,18 @@ export default function PostButton() {
     if (state.prestige > 0) {
       breakdownItems.push({
         label: `Prestige Bonus`,
-        value: `×${1 + state.prestige * 0.1}`,
+        value: `×${(1 + state.prestige * 0.1).toFixed(2)}`,
       });
     }
 
-    // Theme multiplier
-    if (activeTheme) {
+    // Theme multiplier (product of all owned themes' bonusMultiplier)
+    const totalThemeMultiplier = state.themes
+      .filter((t) => t.unlocked)
+      .reduce((product, t) => product * t.bonusMultiplier, 1);
+    if (totalThemeMultiplier > 1) {
       breakdownItems.push({
-        label: `Theme Multiplier (${activeTheme.name})`,
-        value: `×${activeTheme.bonusMultiplier}`,
+        label: `Theme Multiplier (All Owned)`,
+        value: `×${totalThemeMultiplier.toFixed(2)}`,
       });
     }
 
