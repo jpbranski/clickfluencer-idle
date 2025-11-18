@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/ads.txt",
+      "destination": "https://www.clickfluenceridle.com/ads.txt"
+    }
+  ]
+}
