@@ -41,41 +41,31 @@ export const NOTORIETY_GENERATORS: NotorietyGenerator[] = [
   {
     id: 'smm',
     name: '📱 Social Media Manager',
-    description: 'Builds your online presence and reputation',
-    baseCost: 50000,
-    costMultiplier: 1.15,
-    baseNotorietyPerSecond: 0.1,
-    baseUpkeep: 5, // Costs 5 Creds/s
+    description: 'Builds your online presence and reputation (+2 notoriety/hour)',
+    baseCost: 100000, // 100k Creds (buffed from 50k)
+    costMultiplier: 1.8, // Higher scaling
+    baseNotorietyPerSecond: 2 / 3600, // 2 per hour = 0.000556/s (buffed 2x)
+    baseUpkeep: 2000, // 2k Creds/s (reduced from 5)
     unlocked: true,
   },
   {
     id: 'pr_team',
     name: '📰 PR Team',
-    description: 'Handles publicity and media relations',
-    baseCost: 500000,
-    costMultiplier: 1.14,
-    baseNotorietyPerSecond: 1.0,
-    baseUpkeep: 50,
+    description: 'Handles publicity and media relations (+10 notoriety/hour)',
+    baseCost: 50000000, // 50M Creds (reduced from 100M)
+    costMultiplier: 2.2, // Higher scaling
+    baseNotorietyPerSecond: 10 / 3600, // 10 per hour = 0.00278/s (buffed 2x)
+    baseUpkeep: 10000, // 10k Creds/s (reduced from 25k)
     unlocked: false,
   },
   {
     id: 'key_client',
     name: '💼 Key Client',
-    description: 'High-profile partnerships boost your notoriety',
-    baseCost: 5000000,
-    costMultiplier: 1.13,
-    baseNotorietyPerSecond: 8.0,
-    baseUpkeep: 400,
-    unlocked: false,
-  },
-  {
-    id: 'celebrity_sponsor',
-    name: '⭐ Celebrity Sponsor',
-    description: 'Famous endorsements skyrocket your reputation',
-    baseCost: 50000000,
-    costMultiplier: 1.12,
-    baseNotorietyPerSecond: 50.0,
-    baseUpkeep: 3000,
+    description: 'High-profile partnerships boost your notoriety (+50 notoriety/hour)',
+    baseCost: 5000000000, // 5B Creds (reduced from 10B)
+    costMultiplier: 2.5, // Higher scaling
+    baseNotorietyPerSecond: 50 / 3600, // 50 per hour = 0.0139/s (buffed 2x)
+    baseUpkeep: 100000, // 100k Creds/s (reduced from 250k)
     unlocked: false,
   },
 ];

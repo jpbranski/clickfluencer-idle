@@ -1,8 +1,17 @@
 /**
- * useGameZustand.tsx - Zustand-Based Game Hook
+ * useGame.tsx - Game State Management Hook
  *
- * New implementation using Zustand stores instead of GameEngine.
- * Maintains same interface as old useGame for backward compatibility.
+ * Provides React context and custom hook for game state management.
+ * Connects UI components to game engine and storage.
+ *
+ * Features:
+ * - Game engine integration
+ * - State subscription and updates
+ * - Action dispatching
+ * - Auto-save management
+ * - Theme switching with persistence
+ * - Offline progress detection
+ * - Theme merge and active theme persistence
  */
 
 "use client";
@@ -13,11 +22,12 @@ import {
   useEffect,
   useState,
   useCallback,
+  useRef,
   useMemo,
   ReactNode,
 } from "react";
-import { useGameStore } from "@/state/gameStore";
-import { GameState, Upgrade, INITIAL_UPGRADES } from "@/game/state";
+import { GameEngine, createGameEngine, OfflineProgress } from "@/game/engine";
+import { GameState, Upgrade } from "@/game/state";
 import {
   clickPost,
   buyGenerator,
@@ -34,6 +44,9 @@ import {
 import {
   getClickPower,
   getFollowersPerSecond,
+  getGeneratorCost,
+  canAfford,
+  canAffordAwards,
 } from "@/game/state";
 import {
   getNotorietyGainPerSecond,
@@ -43,21 +56,23 @@ import { canPrestige, prestigeCost } from "@/game/prestige";
 import {
   saveGame,
   loadGame,
+  autoSaveGame,
   exportSave,
   importSave,
   deleteSave,
 } from "@/lib/storage";
-import { canClick } from "@/lib/clickLimiter";
-import { useGameLoop } from "./useGameLoop";
+import { autoMigrate } from "@/lib/storage/migrations";
+import { GAMEPLAY } from "@/app-config";
 import { themes as baseThemes } from "@/data/themes";
 import { uiLogger as logger } from "@/lib/logger";
-import { processOfflineTick } from "@/engine/tick";
-import { OFFLINE_PROGRESS_CAP } from "@/game/balance";
+import { INITIAL_UPGRADES } from "@/game/state";
 
 // ============================================================================
 // UTILITIES
 // ============================================================================
 
+// Merge saved theme data with base theme definitions.
+// Ensures new themes appear even if not in the player's save file.
 function mergeThemes<T extends { id: string }>(savedThemes?: T[]): T[] {
   const savedMap = new Map(savedThemes?.map((t) => [t.id, t]) || []);
 
@@ -70,6 +85,8 @@ function mergeThemes<T extends { id: string }>(savedThemes?: T[]): T[] {
   });
 }
 
+// Merge saved upgrade data with base upgrade definitions.
+// Ensures new upgrades appear even if not in the player's save file.
 function mergeUpgrades<T extends { id: string }>(savedUpgrades?: T[]): Upgrade[] {
   const savedMap = new Map(savedUpgrades?.map((u) => [u.id, u]) || []);
 
@@ -82,41 +99,32 @@ function mergeUpgrades<T extends { id: string }>(savedUpgrades?: T[]): Upgrade[]
   });
 }
 
-// ============================================================================
-// OFFLINE PROGRESS
-// ============================================================================
-
-export interface OfflineProgress {
-  timeAway: number;
-  timeProcessed: number;
-  credsGained: number;
-  wasCapped: boolean;
-}
-
-function calculateOfflineProgress(state: GameState, lastSaveTime: number): OfflineProgress | null {
-  const now = Date.now();
-  const timeAway = now - lastSaveTime;
-
-  // Only show if away for more than 1 minute
-  if (timeAway < 60000) return null;
-
-  // Cap at 72 hours
-  const timeProcessed = Math.min(timeAway, OFFLINE_PROGRESS_CAP);
-  const wasCapped = timeAway > OFFLINE_PROGRESS_CAP;
-
-  // Calculate offline gains (50% efficiency)
-  const credsBefore = state.creds;
-  const stateAfter = processOfflineTick(state, timeProcessed, 0.5);
-  const credsGained = stateAfter.creds - credsBefore;
-
+// Ensure notoriety generators exist in the save data
+function ensureNotorietyGenerators(
+  saved?: Record<string, number>
+): Record<string, number> {
   return {
-    timeAway,
-    timeProcessed,
-    credsGained,
-    wasCapped,
+    smm: 0,
+    pr_team: 0,
+    key_client: 0,
+    ...saved,
   };
 }
 
+// Ensure notoriety upgrades exist in the save data
+function ensureNotorietyUpgrades(
+  saved?: Record<string, number>
+): Record<string, number> {
+  return {
+    cache_value: 0,
+    drama_boost: 0,
+    buy_creds: 0,
+    cred_boost: 0,
+    notoriety_boost: 0,
+    influencer_endorsement: 0,
+    ...saved,
+  };
+}
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -171,18 +179,15 @@ interface GameProviderProps {
 }
 
 export function GameProvider({ children }: GameProviderProps) {
+  const [state, setState] = useState<GameState | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [offlineProgress, setOfflineProgress] = useState<OfflineProgress | null>(null);
+  const [offlineProgress, setOfflineProgress] =
+    useState<OfflineProgress | null>(null);
   const [currentTheme, setCurrentTheme] = useState("dark");
 
-  // Get state from Zustand store
-  const state = useGameStore((s) => s.state);
-  const setState = useGameStore((s) => s.setState);
-  const update = useGameStore((s) => s.update);
-
-  // Initialize game loop (tick + autosave)
-  useGameLoop();
+  const engineRef = useRef<GameEngine | null>(null);
+  const autoSaveIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // ============================================================================
   // INITIALIZATION
@@ -190,6 +195,7 @@ export function GameProvider({ children }: GameProviderProps) {
 
   useEffect(() => {
     let mounted = true;
+    let cleanup: (() => void) | undefined;
 
     async function initialize() {
       try {
@@ -199,20 +205,10 @@ export function GameProvider({ children }: GameProviderProps) {
         let initialState: GameState;
         if (result.success && result.data) {
           logger.debug("Loading saved state");
-          initialState = result.data;
-
-          // Calculate offline progress
-          if (initialState.lastSaveTime) {
-            const progress = calculateOfflineProgress(initialState, initialState.lastSaveTime);
-            if (progress && mounted) {
-              setOfflineProgress(progress);
-              // Apply offline gains
-              initialState = processOfflineTick(
-                initialState,
-                progress.timeProcessed,
-                0.5
-              );
-            }
+          // Apply migrations for backward compatibility (v0.2.3: followers→creds, shards→awards, reputation→prestige)
+          initialState = autoMigrate(result.data);
+          if (result.restoredFromBackup) {
+            logger.warn("Restored from backup due to corrupted save");
           }
         } else {
           logger.debug("No save found, creating initial state");
@@ -220,21 +216,22 @@ export function GameProvider({ children }: GameProviderProps) {
           initialState = createInitialState();
         }
 
-        // Merge themes and upgrades
+        // ✅ Merge theme data (adds new themes automatically)
         if (initialState?.themes) {
           initialState.themes = mergeThemes(initialState.themes);
         } else {
           initialState.themes = mergeThemes();
         }
 
+        // ✅ Merge upgrade data (adds new upgrades automatically)
         if (initialState?.upgrades) {
           initialState.upgrades = mergeUpgrades(initialState.upgrades);
         } else {
           initialState.upgrades = mergeUpgrades();
         }
 
-        // Ensure notoriety fields exist
-        if (typeof initialState.notoriety !== "number") {
+        // ✅ Initialize notoriety and notoriety generators if missing (for backward compatibility)
+        if (typeof initialState.notoriety !== 'number') {
           initialState.notoriety = 0;
         }
         if (!initialState.notorietyGenerators) {
@@ -245,27 +242,52 @@ export function GameProvider({ children }: GameProviderProps) {
           };
         }
         if (!initialState.notorietyUpgrades) {
-          initialState.notorietyUpgrades = {
-            cache_value: 0,
-            drama_boost: 0,
-            buy_creds: 0,
-            cred_boost: 0,
-            notoriety_boost: 0,
-            influencer_endorsement: 0,
-          };
+          initialState.notorietyUpgrades = ensureNotorietyUpgrades();
         }
-
-        // Update save time
-        initialState.lastSaveTime = Date.now();
 
         if (!mounted) return;
 
-        // Load state into Zustand store
-        setState(initialState);
+        // ✅ Create engine only once
+        if (!engineRef.current) {
+          engineRef.current = createGameEngine(initialState);
+        }
+
+        const engine = engineRef.current;
+
+        // Subscribe to state changes
+        const unsubscribe = engine.subscribe((newState) => {
+          if (mounted) setState(newState);
+        });
+
+        // Listen for offline progress
+        engine.on("offline:progress", (_, data) => {
+          if (mounted) setOfflineProgress(data as OfflineProgress);
+        });
+
+        engine.start();
         setIsLoading(false);
+
+        // Setup auto-save (interval-based only to avoid excessive I/O)
+        if (GAMEPLAY.autoSaveEnabled) {
+          autoSaveIntervalRef.current = setInterval(() => {
+            const currentState = engine.getState();
+            autoSaveGame(currentState);
+          }, GAMEPLAY.autoSaveInterval);
+        }
+
+        // Store cleanup function
+        cleanup = () => {
+          unsubscribe();
+          engine.stop();
+          if (autoSaveIntervalRef.current)
+            clearInterval(autoSaveIntervalRef.current);
+          saveGame(engine.getState());
+        };
       } catch (err) {
         if (mounted) {
-          setError(err instanceof Error ? err.message : "Failed to initialize game");
+          setError(
+            err instanceof Error ? err.message : "Failed to initialize game"
+          );
           setIsLoading(false);
         }
       }
@@ -275,15 +297,12 @@ export function GameProvider({ children }: GameProviderProps) {
 
     return () => {
       mounted = false;
-      // Save on unmount
-      if (state) {
-        saveGame(state).catch((err) => logger.error("Failed to save on unmount:", err));
-      }
+      if (cleanup) cleanup();
     };
   }, []);
 
   // ============================================================================
-  // THEME MANAGEMENT
+  // THEME MANAGEMENT (with persistence + visual sync)
   // ============================================================================
 
   const applyTheme = useCallback((themeId: string) => {
@@ -292,7 +311,7 @@ export function GameProvider({ children }: GameProviderProps) {
     const html = document.documentElement;
     const body = document.body;
 
-    // Clear previous theme classes
+    // Clear any previous theme-* and dark/light flags
     for (const el of [html, body]) {
       el.className = el.className
         .split(" ")
@@ -301,18 +320,20 @@ export function GameProvider({ children }: GameProviderProps) {
       el.removeAttribute("data-theme");
     }
 
-    // Add new theme
+    // Add new theme flags
     html.dataset.theme = themeId;
     body.dataset.theme = themeId;
+
     html.classList.add(`theme-${themeId}`);
     body.classList.add(`theme-${themeId}`);
 
+    // Only light disables dark mode
     if (themeId !== "light") {
       html.classList.add("dark");
       body.classList.add("dark");
     }
 
-    // Update meta theme-color
+    // Browser UI color
     const themeColors: Record<string, string> = {
       light: "#ffffff",
       dark: "#0d1117",
@@ -327,20 +348,27 @@ export function GameProvider({ children }: GameProviderProps) {
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute("content", themeColors[themeId] || "#0d1117");
 
+    // Persist + force refresh of CSS variables
     localStorage.setItem("active-theme", themeId);
     localStorage.setItem("game_theme", themeId);
+    requestAnimationFrame(() => {
+      document.body.offsetHeight; // force repaint
+    });
   }, []);
 
-  // Sync visual theme with game state
+  // Sync visual theme with game state's active theme
   useEffect(() => {
     if (!state?.themes) return;
 
+    // Find the active theme in game state
     const activeTheme = state.themes.find((t) => t.active);
 
     if (activeTheme) {
+      // Sync visual theme with game state's active theme
       setCurrentTheme(activeTheme.id);
       applyTheme(activeTheme.id);
     } else {
+      // Fallback: load from localStorage or default to 'dark'
       const savedTheme =
         localStorage.getItem("active-theme") ||
         localStorage.getItem("game_theme") ||
@@ -359,163 +387,152 @@ export function GameProvider({ children }: GameProviderProps) {
   );
 
   // ============================================================================
-  // COMPUTED VALUES
+  // COMPUTED VALUES (Memoized to prevent recalculation on every render)
   // ============================================================================
 
-  const clickPower = useMemo(
-    () => (state ? getClickPower(state) : 0),
-    [state?.upgrades, state?.prestige, state?.themes, state?.notoriety]
+  const clickPower = useMemo(() =>
+    state ? getClickPower(state) : 0,
+    [state?.upgrades, state?.prestige, state?.themes, state?.activeEvents]
   );
 
-  const credsPerSecond = useMemo(
-    () => (state ? getFollowersPerSecond(state) : 0),
-    [state?.generators, state?.upgrades, state?.prestige, state?.themes, state?.notoriety, state?.notorietyUpgrades]
+  const credsPerSecond = useMemo(() =>
+    state ? getFollowersPerSecond(state) : 0,
+    [state?.generators, state?.upgrades, state?.prestige, state?.themes, state?.activeEvents, state?.notorietyUpgrades]
   );
 
-  const notorietyPerSecond = useMemo(
-    () => (state ? getNotorietyGainPerSecond(state) : 0),
+  const notorietyPerSecond = useMemo(() =>
+    state ? getNotorietyGainPerSecond(state) : 0,
     [state?.notorietyGenerators, state?.notorietyUpgrades]
   );
 
-  const totalUpkeep = useMemo(
-    () => (state ? getNotorietyUpkeep(state) : 0),
+  const totalUpkeep = useMemo(() =>
+    state ? getNotorietyUpkeep(state) : 0,
     [state?.notorietyGenerators]
   );
 
-  const netCredsPerSecond = useMemo(
-    () => credsPerSecond - totalUpkeep,
+  const netCredsPerSecond = useMemo(() =>
+    state ? credsPerSecond - totalUpkeep : 0,
     [credsPerSecond, totalUpkeep]
   );
 
-  const canPrestigeNow = useMemo(
-    () => (state ? canPrestige(state.creds, state.prestige) : false),
+  const canPrestigeNow = useMemo(() =>
+    state ? canPrestige(state.creds, state.prestige) : false,
     [state?.creds, state?.prestige]
   );
 
-  const prestigeGain = 1;
+  const prestigeGain = 1; // Always gain 1 prestige point per purchase
 
-  const prestigeCostValue = useMemo(
-    () => (state ? prestigeCost(state.prestige) : 0),
+  const prestigeCostValue = useMemo(() =>
+    state ? prestigeCost(state.prestige) : 0,
     [state?.prestige]
   );
 
+
   // ============================================================================
-  // ACTIONS (Using Zustand Store)
+  // ACTIONS
   // ============================================================================
 
   const handleClick = useCallback(() => {
-    if (!state || !canClick()) return;
-
-    update((currentState) => {
-      const result = clickPost(currentState);
-      return result.state;
-    });
-  }, [state, update]);
+    if (!engineRef.current || !state) return;
+    engineRef.current.executeAction((currentState) => clickPost(currentState));
+  }, [state]);
 
   const handleBuyGenerator = useCallback(
     (generatorId: string, count = 1) => {
-      if (!state) return;
-
-      update((currentState) => {
+      if (!engineRef.current || !state) return;
+      engineRef.current.executeAction((currentState) => {
         let result: ActionResult = { success: false, state: currentState };
         for (let i = 0; i < count; i++) {
           result = buyGenerator(result.state, generatorId);
           if (!result.success) break;
         }
-        return result.state;
+        return result;
       });
     },
-    [state, update]
+    [state]
   );
 
   const handleBuyNotorietyGenerator = useCallback(
     (generatorId: string) => {
-      if (!state) return;
-
-      update((currentState) => {
-        const result = buyNotorietyGenerator(currentState, generatorId);
-        return result.state;
-      });
+      if (!engineRef.current || !state) return;
+      engineRef.current.executeAction((currentState) =>
+        buyNotorietyGenerator(currentState, generatorId)
+      );
     },
-    [state, update]
+    [state]
   );
 
   const handleBuyUpgrade = useCallback(
     (upgradeId: string) => {
-      if (!state) return;
-
-      update((currentState) => {
-        const result = buyUpgrade(currentState, upgradeId);
-        return result.state;
-      });
+      if (!engineRef.current || !state) return;
+      engineRef.current.executeAction((currentState) =>
+        buyUpgrade(currentState, upgradeId)
+      );
     },
-    [state, update]
+    [state]
   );
 
   const handlePurchaseTheme = useCallback(
     (themeId: string) => {
-      if (!state) return;
-
-      update((currentState) => {
-        const result = purchaseTheme(currentState, themeId);
-        return result.state;
-      });
+      if (!engineRef.current || !state) return;
+      engineRef.current.executeAction((currentState) =>
+        purchaseTheme(currentState, themeId)
+      );
     },
-    [state, update]
+    [state]
   );
 
   const handleActivateTheme = useCallback(
     (themeId: string) => {
-      if (!state) return;
-
-      update((currentState) => {
+      if (!engineRef.current || !state) return;
+      engineRef.current.executeAction((currentState) => {
         const result = activateTheme(currentState, themeId);
-        if (result.success) setTheme(themeId);
-        return result.state;
+        if (result.success) setTheme(themeId); // ✅ apply visual theme too
+        return result;
       });
     },
-    [state, update, setTheme]
+    [state, setTheme]
   );
 
   const handleBuyNotorietyUpgrade = useCallback(
     (upgradeId: string) => {
-      if (!state) return;
-
-      update((currentState) => {
-        const result = buyNotorietyUpgrade(currentState, upgradeId);
-        return result.state;
-      });
+      if (!engineRef.current || !state) return;
+      engineRef.current.executeAction((currentState) =>
+        buyNotorietyUpgrade(currentState, upgradeId)
+      );
     },
-    [state, update]
+    [state]
   );
 
   const handlePrestige = useCallback(() => {
-    if (!state) return;
-
-    update((currentState) => {
-      const result = prestige(currentState);
-      return result.state;
-    });
-  }, [state, update]);
+    if (!engineRef.current || !state) return;
+    engineRef.current.executeAction((currentState) => prestige(currentState));
+  }, [state]);
 
   const handleUpdateSetting = useCallback(
     (key: string, value: boolean) => {
-      if (!state) return;
-
-      update((currentState) =>
-        updateSetting(currentState, key as keyof GameState["settings"], value)
-      );
+      if (!engineRef.current || !state) return;
+      engineRef.current.executeAction((currentState) => ({
+        success: true,
+        state: updateSetting(
+          currentState,
+          key as keyof GameState["settings"],
+          value
+        ),
+      }));
     },
-    [state, update]
+    [state]
   );
 
   const handleUpdatePlayerName = useCallback(
     (playerName: string) => {
-      if (!state) return;
-
-      update((currentState) => updatePlayerName(currentState, playerName));
+      if (!engineRef.current || !state) return;
+      engineRef.current.executeAction((currentState) => ({
+        success: true,
+        state: updatePlayerName(currentState, playerName),
+      }));
     },
-    [state, update]
+    [state]
   );
 
   const handleExportSave = useCallback(async () => {
@@ -537,6 +554,7 @@ export function GameProvider({ children }: GameProviderProps) {
   }, [state]);
 
   const handleImportSave = useCallback(async (data: string) => {
+    if (!engineRef.current) return;
     try {
       const result = await importSave(data);
       if (result.success) window.location.reload();
@@ -547,12 +565,31 @@ export function GameProvider({ children }: GameProviderProps) {
 
   const handleResetGame = useCallback(async () => {
     try {
+      // Stop the game engine to prevent auto-saves during reset
+      if (engineRef.current) {
+        engineRef.current.stop();
+      }
+
+      // Clear auto-save interval
+      if (autoSaveIntervalRef.current) {
+        clearInterval(autoSaveIntervalRef.current);
+        autoSaveIntervalRef.current = null;
+      }
+
+      // Delete all save data from IndexedDB and backups
       await deleteSave();
+
+      // Clear all localStorage data (themes, settings, etc.)
       localStorage.clear();
-      await new Promise((resolve) => setTimeout(resolve, 200));
+
+      // Wait for cleanup to complete before reloading
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      // Force hard reload (bypasses cache completely)
       window.location.href = window.location.href;
     } catch (err) {
       logger.error("Failed to reset game:", err);
+      // Still attempt reload even if cleanup fails
       window.location.href = window.location.href;
     }
   }, []);

@@ -54,19 +54,44 @@ export {
 
 import { save, load, deleteSave, exists } from "./storage";
 import { GameState } from "../../game/state";
+import { SaveFile } from "@/types/save";
+import { loadAndMigrateSave, prepareForSave } from "./saveMigrations";
 
 /**
- * Save game state (typed convenience wrapper)
+ * Save game state with versioning (typed convenience wrapper)
+ * Wraps state in SaveFile format before saving
  */
 export async function saveGame(state: GameState) {
-  return save<GameState>(state);
+  const saveFile = prepareForSave(state);
+  return save<SaveFile>(saveFile);
 }
 
 /**
- * Load game state (typed convenience wrapper)
+ * Load game state with automatic migration (typed convenience wrapper)
+ * Unwraps SaveFile and returns GameState
  */
 export async function loadGame() {
-  return load<GameState>();
+  const result = await load<any>();
+
+  if (!result.success || !result.data) {
+    return result as { success: false; error: string };
+  }
+
+  try {
+    // Run migrations if needed
+    const saveFile = loadAndMigrateSave(result.data);
+
+    return {
+      success: true,
+      data: saveFile.state,
+      restoredFromBackup: result.restoredFromBackup,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: `Migration failed: ${error}`,
+    };
+  }
 }
 
 /**
@@ -86,9 +111,10 @@ export async function gameExists() {
 /**
  * Auto-save game state
  * Debounced wrapper for frequent save calls
+ * Updated to use new balance constant
  */
 let autoSaveTimeout: NodeJS.Timeout | null = null;
-const AUTO_SAVE_DELAY = 5000; // 5 seconds
+import { DEBOUNCE_SAVE_DELAY } from "@/game/balance";
 
 export function autoSaveGame(state: GameState): void {
   if (autoSaveTimeout) {
@@ -101,7 +127,7 @@ export function autoSaveGame(state: GameState): void {
     } catch (error) {
       console.error("Auto-save failed:", error);
     }
-  }, AUTO_SAVE_DELAY);
+  }, DEBOUNCE_SAVE_DELAY);
 }
 
 /**
