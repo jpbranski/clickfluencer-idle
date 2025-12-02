@@ -17,7 +17,15 @@ import { themes as baseThemes } from "@/data/themes";
 import {
   NOTORIETY_BASE_PER_SEC,
   NOTORIETY_UPKEEP_PER_SEC,
+  PRESTIGE_BONUS_PER_POINT,
+  PASSIVE_THEME_BONUS,
+  NOTORIETY_POWER_PER_LEVEL,
+  NOTORIETY_MILESTONE_STEP,
+  NOTORIETY_MILESTONE_BONUS,
+  CRED_CACHE_MIN_PERCENT,
+  CRED_CACHE_MAX_PERCENT,
 } from "./balance";
+import { applySynergies } from "./synergies";
 export interface Generator {
   id: string;
   name: string;
@@ -492,27 +500,21 @@ export function getGeneratorCost(generator: Generator): number {
 }
 
 /**
- * Calculate click power (followers per click)
+ * Calculate click power (creds per click) - REBALANCED
  *
- * **Calculation Order:**
+ * **New Calculation Order:**
  * 1. Base power starts at 1
  * 2. Add tier-based bonuses (Better Camera: +1 to +25 depending on tier)
  * 3. Add other additive click upgrades
- * 4. Add active theme click power bonus (if any)
- * 5. Apply click multipliers (Better Filters: 1.01^level)
- * 6. Apply global multipliers that affect clicks (AI Enhancements: 1.05^level)
- * 7. Apply prestige bonus (1 + prestige * 0.1)
- * 8. Apply active theme multiplier
+ * 4. Apply click multipliers (Better Filters: 1.01^level)
+ * 5. Apply global multipliers (AI Enhancements: 1.05^level)
+ * 6. Apply prestige bonus (1 + prestige * 0.20) [BUFFED from 0.10]
+ * 7. Apply notoriety bonus (1 + notoriety * 0.003 + milestones * 0.05) [NEW]
+ * 8. Apply passive theme bonuses (1 + unlocked_themes * 0.02) [CHANGED from active to passive]
+ * 9. Apply synergies [NEW]
  *
  * @param state - The current game state
  * @returns The total click power (creds gained per click)
- *
- * @example
- * ```ts
- * // With base=1, Better Camera tier 3 (+3), prestige 2 (+20%), theme 1.5x
- * // Result: (1 + 3) * 1.2 * 1.5 = 7.2 creds per click
- * const power = getClickPower(state);
- * ```
  */
 export function getClickPower(state: GameState): number {
   let basePower = 1;
@@ -535,15 +537,6 @@ export function getClickPower(state: GameState): number {
       basePower += u.effect.value;
     });
 
-  // Apply ALL owned themes' click power bonuses (additive to base power)
-  state.themes
-    .filter((t) => t.unlocked)
-    .forEach((theme) => {
-      if (theme.bonusClickPower) {
-        basePower += theme.bonusClickPower;
-      }
-    });
-
   let power = basePower;
 
   // Apply click multiplier upgrades
@@ -561,8 +554,7 @@ export function getClickPower(state: GameState): number {
       }
     });
 
-
-  // Apply AI Enhancements (global multiplier that applies to click power)
+  // Apply AI Enhancements (global multiplier)
   state.upgrades
     .filter(
       (u) =>
@@ -575,44 +567,43 @@ export function getClickPower(state: GameState): number {
       }
     });
 
+  // Apply prestige bonus (+20% per prestige point) [BUFFED]
+  power *= 1 + state.prestige * PRESTIGE_BONUS_PER_POINT;
 
-  // Apply prestige bonus (+10% per prestige point)
-  power *= 1 + state.prestige * 0.1;
+  // Apply notoriety bonus (linear + milestones) [NEW]
+  const notorietyLevel = state.notoriety || 0;
+  power *= 1 + notorietyLevel * NOTORIETY_POWER_PER_LEVEL;
 
-  // Apply ALL owned themes' multiplier bonuses (multiplicative)
-  state.themes
-    .filter((t) => t.unlocked)
-    .forEach((theme) => {
-      power *= theme.bonusMultiplier;
-    });
+  const notorietyMilestones = Math.floor(notorietyLevel / NOTORIETY_MILESTONE_STEP);
+  power *= 1 + notorietyMilestones * NOTORIETY_MILESTONE_BONUS;
+
+  // Apply passive theme bonuses (+2% per unlocked theme) [CHANGED]
+  const unlockedThemes = state.themes.filter((t) => t.unlocked).length;
+  power *= 1 + unlockedThemes * PASSIVE_THEME_BONUS;
+
+  // Apply synergies [NEW]
+  power = applySynergies(state, power);
 
   return power;
 }
 
 /**
- * Calculate total creds per second from all generators
+ * Calculate total creds per second from all generators - REBALANCED
  *
- * **Calculation Order:**
+ * **New Calculation Order:**
  * 1. For each generator: baseOutput * count
  * 2. Apply generator-specific multipliers (e.g., Photo Post 2x upgrade)
  * 3. Sum all generator outputs
  * 4. Apply global multipliers (Viral Strategy: 1.5x, etc.)
- * 5. Apply prestige bonus (+10% per prestige point)
- * 6. Apply active theme multiplier
- * 7. Apply active event multipliers (Viral Post: 3x, etc.)
- * 8. Apply notoriety cred boost (+1% per notoriety upgrade level)
+ * 5. Apply prestige bonus (1 + prestige * 0.20) [BUFFED from 0.10]
+ * 6. Apply notoriety bonus (linear + milestones) [NEW]
+ * 7. Apply passive theme bonuses (+2% per unlocked theme) [CHANGED]
+ * 8. Apply synergies [NEW]
+ * 9. Apply active event multipliers (Viral Post: 3x, etc.)
+ * 10. Apply notoriety cred boost (+1% per notoriety upgrade level)
  *
  * @param state - The current game state
  * @returns The total creds gained per second from passive generation
- *
- * @example
- * ```ts
- * // With 10 Photo Posts (0.1/s each) and Viral Strategy (1.5x)
- * // Result: (10 * 0.1) * 1.5 = 1.5 creds/second
- * const production = getFollowersPerSecond(state);
- * ```
- *
- * @see {@link getClickPower} for click-based income calculation
  */
 export function getFollowersPerSecond(state: GameState): number {
   let total = 0;
@@ -651,15 +642,22 @@ export function getFollowersPerSecond(state: GameState): number {
       }
     });
 
-  // Apply prestige bonus (+10% per prestige point)
-  total *= 1 + state.prestige * 0.1;
+  // Apply prestige bonus (+20% per prestige point) [BUFFED]
+  total *= 1 + state.prestige * PRESTIGE_BONUS_PER_POINT;
 
-  // Apply ALL owned themes' multiplier bonuses (multiplicative)
-  state.themes
-    .filter((t) => t.unlocked)
-    .forEach((theme) => {
-      total *= theme.bonusMultiplier;
-    });
+  // Apply notoriety bonus (linear + milestones) [NEW]
+  const notorietyLevel = state.notoriety || 0;
+  total *= 1 + notorietyLevel * NOTORIETY_POWER_PER_LEVEL;
+
+  const notorietyMilestones = Math.floor(notorietyLevel / NOTORIETY_MILESTONE_STEP);
+  total *= 1 + notorietyMilestones * NOTORIETY_MILESTONE_BONUS;
+
+  // Apply passive theme bonuses (+2% per unlocked theme) [CHANGED]
+  const unlockedThemes = state.themes.filter((t) => t.unlocked).length;
+  total *= 1 + unlockedThemes * PASSIVE_THEME_BONUS;
+
+  // Apply synergies [NEW]
+  total = applySynergies(state, total);
 
   // Apply active event multipliers
   state.activeEvents.forEach((event) => {

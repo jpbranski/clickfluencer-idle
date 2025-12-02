@@ -16,17 +16,20 @@
  */
 
 import { GameState, createInitialState, INITIAL_ACHIEVEMENTS } from "./state";
-import { PRESTIGE_THRESHOLD, PRESTIGE_BASE_COST } from "./balance";
+import {
+  PRESTIGE_THRESHOLD,
+  PRESTIGE_BASE_COST,
+  PRESTIGE_COST_EXPONENT,
+  PRESTIGE_BONUS_PER_POINT,
+} from "./balance";
 
 // ============================================================================
 // CONSTANTS
 // ============================================================================
 
-export const PRESTIGE_EXPONENT = 0.4;
-export const REPUTATION_BONUS_PERCENT = 0.1; // 10% per point
-
-// Export PRESTIGE_THRESHOLD for backward compatibility
+// Export for backward compatibility
 export { PRESTIGE_THRESHOLD };
+export const REPUTATION_BONUS_PERCENT = PRESTIGE_BONUS_PER_POINT; // Use new balance constant
 
 // ============================================================================
 // PRESTIGE CALCULATIONS
@@ -34,19 +37,19 @@ export { PRESTIGE_THRESHOLD };
 
 /**
  * Calculate cost to purchase next prestige point
- * Formula: C_p = C_0 × (P+1)^(1/E) = 1e7 × (P+1)^2.5
+ * Formula: C_p = C_0 × (P+1)^E = 10M × (P+1)^2
  *
- * Where P is current prestige level
+ * Where P is current prestige level, E = 2 (quadratic scaling)
  *
  * Examples:
- *   P=0 (1st prestige): 1.00e7 Creds
- *   P=1 (2nd prestige): 5.66e7 Creds
- *   P=2 (3rd prestige): 1.33e8 Creds
- *   P=5: 3.96e8 Creds
- *   P=10: 1.78e9 Creds
+ *   P=0 (1st prestige): 10M Creds
+ *   P=1 (2nd prestige): 40M Creds
+ *   P=2 (3rd prestige): 90M Creds
+ *   P=3 (4th prestige): 160M Creds
+ *   P=4 (5th prestige): 250M Creds
  */
 export function prestigeCost(currentPrestige: number): number {
-  return PRESTIGE_BASE_COST * Math.pow(currentPrestige + 1, 1 / PRESTIGE_EXPONENT);
+  return PRESTIGE_BASE_COST * Math.pow(currentPrestige + 1, PRESTIGE_COST_EXPONENT);
 }
 
 /**
@@ -58,16 +61,17 @@ export function canPrestige(creds: number, currentPrestige: number): boolean {
 
 /**
  * Calculate total production bonus from prestige
- * Formula: (1 + prestige * 0.10)
+ * Formula: (1 + prestige * 0.20)
  *
  * Examples:
  *   0 Prestige => 1.0x (no bonus)
- *   1 Prestige => 1.1x (+10%)
- *   5 Prestige => 1.5x (+50%)
- *   10 Prestige => 2.0x (+100%)
+ *   1 Prestige => 1.2x (+20%)
+ *   2 Prestige => 1.4x (+40%)
+ *   5 Prestige => 2.0x (+100%)
+ *   10 Prestige => 3.0x (+200%)
  */
 export function calculateReputationBonus(prestige: number): number {
-  return 1 + prestige * REPUTATION_BONUS_PERCENT;
+  return 1 + prestige * PRESTIGE_BONUS_PER_POINT;
 }
 
 // ============================================================================

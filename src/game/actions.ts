@@ -143,8 +143,11 @@ export function clickPost(state: GameState): ClickResult {
   let credCacheAmount = 0;
 
   if (credCacheTriggered) {
-    // Award 1-5% of current total creds
-    const percentage = 0.01 + Math.random() * 0.04; // Random between 1% and 5%
+    // Award 0.1-1.0% of current total creds (rebalanced from 1-5%)
+    const { CRED_CACHE_MIN_PERCENT, CRED_CACHE_MAX_PERCENT } = require("./balance");
+    const percentage =
+      CRED_CACHE_MIN_PERCENT +
+      Math.random() * (CRED_CACHE_MAX_PERCENT - CRED_CACHE_MIN_PERCENT);
     const baseAmount = Math.floor(state.creds * percentage);
     // Apply Notoriety Cache Value boost
     const cacheMultiplier = getCredCachePayoutMultiplier(state);
